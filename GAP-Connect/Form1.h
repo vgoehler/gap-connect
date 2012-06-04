@@ -1,4 +1,7 @@
 #pragma once
+#include "about.h"
+#include "drawingarea.h"
+#include "toolbar.h"
 
 namespace GAPConnect {
 
@@ -21,6 +24,14 @@ namespace GAPConnect {
 			//
 			//TODO: Konstruktorcode hier hinzufügen.
 			//
+			this->aboutDialog = gcnew about();
+			this->drawingArea = gcnew drawingarea();
+			this->toolBar = gcnew toolbar();
+			//Größe anpassen
+			this->Width = this->drawingArea->Width;
+			//Anzeigen
+			this->toolBar->Show(this);
+			this->drawingArea->Show(this);
 		}
 
 	protected:
@@ -34,8 +45,13 @@ namespace GAPConnect {
 				delete components;
 			}
 		}
-	private: System::Windows::Forms::MenuStrip^  menuStrip1;
+	private: System::Windows::Forms::MenuStrip^  mainmenuStrip;
 	protected: 
+
+	protected: 
+	private: about^ aboutDialog;//enthält den about Dialog
+	private: drawingarea^ drawingArea;//Hauptzeichenbereich
+	private: toolbar^ toolBar;//Zeichenpalette
 	private: System::Windows::Forms::ToolStripMenuItem^  dateiToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  bearbeitenToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  ansichtToolStripMenuItem;
@@ -43,8 +59,10 @@ namespace GAPConnect {
 	private: System::Windows::Forms::ToolStripMenuItem^  fensterToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  hilfeToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  aboutToolStripMenuItem;
-	private: System::Windows::Forms::StatusStrip^  statusStrip1;
-	private: System::Windows::Forms::ToolStrip^  toolStrip1;
+	private: System::Windows::Forms::StatusStrip^  mainstatusStrip;
+	private: System::Windows::Forms::ToolStrip^  maintoolStrip;
+
+
 	private: System::Windows::Forms::ToolStripButton^  toolStripButton1;
 	private: System::Windows::Forms::ToolStripButton^  toolStripButton2;
 
@@ -62,9 +80,7 @@ namespace GAPConnect {
 		void InitializeComponent(void)
 		{
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Form1::typeid));
-			this->menuStrip1 = (gcnew System::Windows::Forms::MenuStrip());
-			this->statusStrip1 = (gcnew System::Windows::Forms::StatusStrip());
-			this->toolStrip1 = (gcnew System::Windows::Forms::ToolStrip());
+			this->mainmenuStrip = (gcnew System::Windows::Forms::MenuStrip());
 			this->dateiToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->bearbeitenToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->ansichtToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -72,40 +88,24 @@ namespace GAPConnect {
 			this->fensterToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->hilfeToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->aboutToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->mainstatusStrip = (gcnew System::Windows::Forms::StatusStrip());
+			this->maintoolStrip = (gcnew System::Windows::Forms::ToolStrip());
 			this->toolStripButton1 = (gcnew System::Windows::Forms::ToolStripButton());
 			this->toolStripButton2 = (gcnew System::Windows::Forms::ToolStripButton());
-			this->menuStrip1->SuspendLayout();
-			this->toolStrip1->SuspendLayout();
+			this->mainmenuStrip->SuspendLayout();
+			this->maintoolStrip->SuspendLayout();
 			this->SuspendLayout();
 			// 
-			// menuStrip1
+			// mainmenuStrip
 			// 
-			this->menuStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(6) {this->dateiToolStripMenuItem, 
+			this->mainmenuStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(6) {this->dateiToolStripMenuItem, 
 				this->bearbeitenToolStripMenuItem, this->ansichtToolStripMenuItem, this->optionenToolStripMenuItem, this->fensterToolStripMenuItem, 
 				this->hilfeToolStripMenuItem});
-			this->menuStrip1->Location = System::Drawing::Point(0, 0);
-			this->menuStrip1->Name = L"menuStrip1";
-			this->menuStrip1->Size = System::Drawing::Size(373, 24);
-			this->menuStrip1->TabIndex = 0;
-			this->menuStrip1->Text = L"menuStrip1";
-			// 
-			// statusStrip1
-			// 
-			this->statusStrip1->Location = System::Drawing::Point(0, 48);
-			this->statusStrip1->Name = L"statusStrip1";
-			this->statusStrip1->Size = System::Drawing::Size(373, 22);
-			this->statusStrip1->TabIndex = 1;
-			this->statusStrip1->Text = L"statusStrip1";
-			// 
-			// toolStrip1
-			// 
-			this->toolStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {this->toolStripButton1, 
-				this->toolStripButton2});
-			this->toolStrip1->Location = System::Drawing::Point(0, 24);
-			this->toolStrip1->Name = L"toolStrip1";
-			this->toolStrip1->Size = System::Drawing::Size(373, 25);
-			this->toolStrip1->TabIndex = 2;
-			this->toolStrip1->Text = L"toolStrip1";
+			this->mainmenuStrip->Location = System::Drawing::Point(0, 0);
+			this->mainmenuStrip->Name = L"mainmenuStrip";
+			this->mainmenuStrip->Size = System::Drawing::Size(394, 24);
+			this->mainmenuStrip->TabIndex = 0;
+			this->mainmenuStrip->Text = L"menuStrip1";
 			// 
 			// dateiToolStripMenuItem
 			// 
@@ -147,8 +147,29 @@ namespace GAPConnect {
 			// aboutToolStripMenuItem
 			// 
 			this->aboutToolStripMenuItem->Name = L"aboutToolStripMenuItem";
-			this->aboutToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->aboutToolStripMenuItem->Size = System::Drawing::Size(107, 22);
 			this->aboutToolStripMenuItem->Text = L"&About";
+			this->aboutToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::aboutToolStripMenuItem_Click);
+			// 
+			// mainstatusStrip
+			// 
+			this->mainstatusStrip->Location = System::Drawing::Point(0, 64);
+			this->mainstatusStrip->Name = L"mainstatusStrip";
+			this->mainstatusStrip->Size = System::Drawing::Size(394, 22);
+			this->mainstatusStrip->SizingGrip = false;
+			this->mainstatusStrip->TabIndex = 1;
+			this->mainstatusStrip->Text = L"statusStrip1";
+			// 
+			// maintoolStrip
+			// 
+			this->maintoolStrip->GripStyle = System::Windows::Forms::ToolStripGripStyle::Hidden;
+			this->maintoolStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {this->toolStripButton1, 
+				this->toolStripButton2});
+			this->maintoolStrip->Location = System::Drawing::Point(0, 24);
+			this->maintoolStrip->Name = L"maintoolStrip";
+			this->maintoolStrip->Size = System::Drawing::Size(394, 25);
+			this->maintoolStrip->TabIndex = 2;
+			this->maintoolStrip->Text = L"toolStrip1";
 			// 
 			// toolStripButton1
 			// 
@@ -172,22 +193,29 @@ namespace GAPConnect {
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(373, 70);
-			this->Controls->Add(this->toolStrip1);
-			this->Controls->Add(this->statusStrip1);
-			this->Controls->Add(this->menuStrip1);
-			this->MainMenuStrip = this->menuStrip1;
+			this->ClientSize = System::Drawing::Size(394, 86);
+			this->Controls->Add(this->maintoolStrip);
+			this->Controls->Add(this->mainstatusStrip);
+			this->Controls->Add(this->mainmenuStrip);
+			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedToolWindow;
+			this->MainMenuStrip = this->mainmenuStrip;
+			this->MinimumSize = System::Drawing::Size(400, 110);
 			this->Name = L"Form1";
-			this->Text = L"Form1";
-			this->menuStrip1->ResumeLayout(false);
-			this->menuStrip1->PerformLayout();
-			this->toolStrip1->ResumeLayout(false);
-			this->toolStrip1->PerformLayout();
+			this->ShowInTaskbar = false;
+			this->Text = L"Main";
+			this->TopMost = true;
+			this->mainmenuStrip->ResumeLayout(false);
+			this->mainmenuStrip->PerformLayout();
+			this->maintoolStrip->ResumeLayout(false);
+			this->maintoolStrip->PerformLayout();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
 		}
 #pragma endregion
-	};
+	private: System::Void aboutToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {//KLICK auf About Button im Menü
+				 if (this->aboutDialog->Visible == false) this->aboutDialog->Show(this);//Anzeige des About Dialogs
+			 }
+};
 }
 

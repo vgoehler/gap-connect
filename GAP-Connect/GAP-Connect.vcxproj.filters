@@ -30,6 +30,15 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="toolbar.cpp">
+      <Filter>Headerdateien</Filter>
+    </ClCompile>
+    <ClCompile Include="drawingarea.cpp">
+      <Filter>Headerdateien</Filter>
+    </ClCompile>
+    <ClCompile Include="about.cpp">
+      <Filter>Headerdateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Form1.h">
@@ -41,10 +50,24 @@
     <ClInclude Include="resource.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="toolbar.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="drawingarea.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="about.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc">
       <Filter>Ressourcendateien</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Form1.resX">
+      <Filter>Ressourcendateien</Filter>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>
