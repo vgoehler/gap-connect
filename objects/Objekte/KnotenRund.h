@@ -3,7 +3,8 @@
 ref class KnotenRund :
 public Knoten
 {
-	int radius;
+public:
+	double radius;
 public:
 	KnotenRund(void);
 	KnotenRund(System::String^ string_label);

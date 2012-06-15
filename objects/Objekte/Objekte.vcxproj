@@ -87,6 +87,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="Graph.cpp" />
+    <ClCompile Include="Kante.cpp" />
     <ClCompile Include="Knoten.cpp" />
     <ClCompile Include="KnotenEckig.cpp" />
     <ClCompile Include="KnotenRund.cpp" />
@@ -101,6 +103,8 @@
     <ClInclude Include="Form1.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="Graph.h" />
+    <ClInclude Include="Kante.h" />
     <ClInclude Include="Knoten.h" />
     <ClInclude Include="KnotenEckig.h" />
     <ClInclude Include="KnotenRund.h" />

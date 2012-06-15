@@ -8,12 +8,20 @@ Kommentar::Kommentar(System::String^ string_label,int coord_x,int coord_y)
 	label=string_label;
 	x=coord_x;
 	y=coord_y;
-	hoehe=10;
-	breite=10;
+	height=10;
+	width=10;
 }
 
 Kommentar::~Kommentar(void)
-{	if(label)
+{	
+	if(label)
 		delete[] label;
+}
+
+void Kommentar::set_label( System::String^ string_label )
+{
+	if (label)
+		delete[] label;
+	label=string_label;
 }
 
