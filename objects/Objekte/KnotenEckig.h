@@ -4,11 +4,11 @@ ref class KnotenEckig :
 public Knoten
 {
 public:
-	int height;
-	int width;
+	double height;
+	double width;
 public:
 	KnotenEckig(void);
-	KnotenEckig(System::String^ string_label);
+	KnotenEckig(Graph^ graph_init,System::String^ string_label,System::String^ string_tooltip,double height_init,double width_init);
 	~KnotenEckig(void);
 
 };

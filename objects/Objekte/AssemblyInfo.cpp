@@ -7,8 +7,8 @@ using namespace System::Runtime::InteropServices;
 using namespace System::Security::Permissions;
 
 //
-// Allgemeine Informationen über eine Assembly werden über die folgenden
-// Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
+// Allgemeine InKantenFormationen über eine Assembly werden über die folgenden
+// Attribute gesteuert. Ändern Sie diese Attributwerte, um die InKantenFormationen zu ändern,
 // die mit einer Assembly verknüpft sind.
 //
 [assembly:AssemblyTitleAttribute("Objekte")];
@@ -21,7 +21,7 @@ using namespace System::Security::Permissions;
 [assembly:AssemblyCultureAttribute("")];
 
 //
-// Versionsinformationen für eine Assembly bestehen aus den folgenden vier Werten:
+// VersionsinKantenFormationen für eine Assembly bestehen aus den folgenden vier Werten:
 //
 //      Hauptversion
 //      Nebenversion

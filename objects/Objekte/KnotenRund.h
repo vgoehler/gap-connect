@@ -7,7 +7,7 @@ public:
 	double radius;
 public:
 	KnotenRund(void);
-	KnotenRund(System::String^ string_label);
+	KnotenRund(Graph^ graph_init,System::String^ string_label,System::String^ string_tooltip,double radius_init);
 	~KnotenRund(void);
 };
 

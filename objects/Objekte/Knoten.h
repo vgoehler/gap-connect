@@ -3,18 +3,22 @@
 #include "Kommentar.h"
 #include "Kante.h"
 
+ref class Graph;
+
 using namespace System::Collections::Generic;
 ref class Knoten
 {
 public:
 	int coord_x;
 	int coord_y;
-		Kommentar^ comment;//protected !?
-		System::Collections::Generic::List<Kante^> ^edges;//protected !?
+	Kommentar^ comment;
+
 protected:
+	System::Collections::Generic::List<Kante^> ^edges;
 	System::String^ label;
 	System::String^ tooltip;
-
+	Graph^ owning_graph;			/*achtung! hält "Graph" am leben, auch wenn dieser deleted wird, sofern nicht auch alle zugehörigen 
+								 *kanten freigegeben werden! */
 
 public:
 	//Knoten(void);   //abstrakte klasse
@@ -25,9 +29,9 @@ public:
 	 */
 	void set_tooltip(System::String^ string_tooltip);
 	void set_label(System::String^ string_label);
-	void set_comment(Kommentar^ handle_comment);
+//	void add_comment(Kommentar^ comment_init);  //im moment nicht nötig
 	void add_edge(Kante^ handle_edge);
-	void delete_edge(Kante^ handle_edge);
+	bool deleted_edge(Kante^ handle_edge); //wird nur von Kante aufgerufen - manueller Aufruf nicht empfohlen
 	
 };
 

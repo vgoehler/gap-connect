@@ -5,6 +5,7 @@
 #include "KnotenRund.h"
 #include "KnotenEckig.h"
 #include "Kante.h"
+#include "Graph.h"
 
 using namespace Objekte;
 
@@ -12,21 +13,23 @@ using namespace Objekte;
 int main(array<System::String ^> ^args)
 {
 	//*******test start**********
+	{
 	System::Diagnostics::Debug::WriteLine("test-main-begin");
-	KnotenEckig knot("hans");
-	KnotenRund knor("hasi");
-	knot.width=20;
-	knot.set_tooltip("freak");
-	Kommentar comy("das ist ein kommentar",10,5);
-	knot.set_comment(%comy);
-	if (knot.comment==nullptr)
-		System::Diagnostics::Debug::WriteLine("comment=comy");
-	else
-		System::Diagnostics::Debug::WriteLine("comment!=comy");
-	Kante kanti(%knot,%knor,1,PUNKTE);
-	
-	knot.~KnotenEckig();
-	
+	Graph^ graphi=gcnew Graph();
+	graphi->create_vertex("A","erster Knoten",10.4);
+	graphi->create_vertex("B","zweiter knoten",20,30);
+	graphi->create_edge(graphi->verticles[0],graphi->verticles[1],2,STREIFEN);
+	graphi->edges[0];
+	delete graphi->verticles[1];
+
+
+	System::Diagnostics::Debug::WriteLine("noch da?{0}",0);
+//	System::Diagnostics::Debug::WriteLine("comment=comy:{0}",(knot.comment==%comy));
+
+	}
+	int breakpoint=0;
+	/*
+
 	// Aktivieren visueller Effekte von Windows XP, bevor Steuerelemente erstellt werden
 	Application::EnableVisualStyles();
 	Application::SetCompatibleTextRenderingDefault(false); 
@@ -34,7 +37,7 @@ int main(array<System::String ^> ^args)
 	// Hauptfenster erstellen und ausführen
 	Application::Run(gcnew Form1());
 
-
+	*/
 
 	return 0;
 }

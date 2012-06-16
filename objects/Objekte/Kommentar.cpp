@@ -20,8 +20,7 @@ Kommentar::~Kommentar(void)
 
 void Kommentar::set_label( System::String^ string_label )
 {
-	if (label)
-		delete[] label;
+	delete[] label;
 	label=string_label;
 }
 
