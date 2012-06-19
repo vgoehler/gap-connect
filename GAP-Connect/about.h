@@ -37,8 +37,9 @@ namespace GAPConnect {
 	private: System::Windows::Forms::Button^  button1;
 	protected: 
 	private: System::Windows::Forms::Label^  label1;
-	private: System::Windows::Forms::Label^  label2;
+
 	private: System::Windows::Forms::PictureBox^  pictureBox1;
+	private: System::Windows::Forms::RichTextBox^  richTextBox1;
 
 
 
@@ -60,8 +61,8 @@ namespace GAPConnect {
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(about::typeid));
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->label1 = (gcnew System::Windows::Forms::Label());
-			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
+			this->richTextBox1 = (gcnew System::Windows::Forms::RichTextBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox1))->BeginInit();
 			this->SuspendLayout();
 			// 
@@ -88,23 +89,29 @@ namespace GAPConnect {
 			this->label1->Text = L"GAP-Connect";
 			this->label1->TextAlign = System::Drawing::ContentAlignment::TopCenter;
 			// 
-			// label2
-			// 
-			this->label2->AutoSize = true;
-			this->label2->Location = System::Drawing::Point(12, 90);
-			this->label2->Name = L"label2";
-			this->label2->Size = System::Drawing::Size(268, 13);
-			this->label2->TabIndex = 2;
-			this->label2->Text = L"Ein Projekt (12) im Softwaretechnologieprojekt SS 2012";
-			// 
 			// pictureBox1
 			// 
+			this->pictureBox1->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Left | System::Windows::Forms::AnchorStyles::Right));
 			this->pictureBox1->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"pictureBox1.Image")));
 			this->pictureBox1->Location = System::Drawing::Point(79, 37);
 			this->pictureBox1->Name = L"pictureBox1";
 			this->pictureBox1->Size = System::Drawing::Size(119, 36);
 			this->pictureBox1->TabIndex = 3;
 			this->pictureBox1->TabStop = false;
+			// 
+			// richTextBox1
+			// 
+			this->richTextBox1->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
+			this->richTextBox1->BackColor = System::Drawing::SystemColors::Control;
+			this->richTextBox1->BorderStyle = System::Windows::Forms::BorderStyle::None;
+			this->richTextBox1->Cursor = System::Windows::Forms::Cursors::Default;
+			this->richTextBox1->Location = System::Drawing::Point(15, 79);
+			this->richTextBox1->Name = L"richTextBox1";
+			this->richTextBox1->ReadOnly = true;
+			this->richTextBox1->Size = System::Drawing::Size(257, 142);
+			this->richTextBox1->TabIndex = 4;
+			this->richTextBox1->Text = L"Projekt 12\n\"Optimale Darstellung von Graphen\"\nSoftwaretechnologieprojekt SS 2012\n" 
+				L"Volker Göhler\nJonas Kopcsek";
 			// 
 			// about
 			// 
@@ -114,13 +121,13 @@ namespace GAPConnect {
 			this->CancelButton = this->button1;
 			this->ClientSize = System::Drawing::Size(284, 262);
 			this->ControlBox = false;
+			this->Controls->Add(this->richTextBox1);
 			this->Controls->Add(this->pictureBox1);
-			this->Controls->Add(this->label2);
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->button1);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedToolWindow;
 			this->Name = L"about";
-			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 			this->Text = L"About";
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox1))->EndInit();
 			this->ResumeLayout(false);
@@ -131,5 +138,5 @@ namespace GAPConnect {
 	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
 				 this->Hide();
 			 }
-	};
+};
 }

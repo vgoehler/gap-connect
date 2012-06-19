@@ -1,7 +1,6 @@
 // GAP-Connect.cpp: Hauptprojektdatei.
 
 #include "stdafx.h"
-#include "Form1.h"
 
 using namespace GAPConnect;
 

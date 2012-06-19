@@ -30,16 +30,7 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="menu.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="drawingarea.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="about.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="toolbar.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
@@ -53,16 +44,7 @@
     <ClInclude Include="resource.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="toolbar.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="drawingarea.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="about.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="menu.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>
