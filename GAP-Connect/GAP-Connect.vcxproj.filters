@@ -30,14 +30,17 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="toolbar.cpp">
-      <Filter>Headerdateien</Filter>
+    <ClCompile Include="menu.cpp">
+      <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="drawingarea.cpp">
-      <Filter>Headerdateien</Filter>
+      <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="about.cpp">
-      <Filter>Headerdateien</Filter>
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="toolbar.cpp">
+      <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -59,6 +62,9 @@
     <ClInclude Include="about.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="menu.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc">
@@ -67,6 +73,18 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Form1.resX">
+      <Filter>Ressourcendateien</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="about.resx">
+      <Filter>Ressourcendateien</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="drawingarea.resx">
+      <Filter>Ressourcendateien</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="toolbar.resx">
+      <Filter>Ressourcendateien</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="menu.resx">
       <Filter>Ressourcendateien</Filter>
     </EmbeddedResource>
   </ItemGroup>

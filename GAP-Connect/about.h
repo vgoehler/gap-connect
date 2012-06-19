@@ -38,6 +38,7 @@ namespace GAPConnect {
 	protected: 
 	private: System::Windows::Forms::Label^  label1;
 	private: System::Windows::Forms::Label^  label2;
+	private: System::Windows::Forms::PictureBox^  pictureBox1;
 
 
 
@@ -56,9 +57,12 @@ namespace GAPConnect {
 		/// </summary>
 		void InitializeComponent(void)
 		{
+			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(about::typeid));
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->label2 = (gcnew System::Windows::Forms::Label());
+			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox1))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// button1
@@ -87,11 +91,20 @@ namespace GAPConnect {
 			// label2
 			// 
 			this->label2->AutoSize = true;
-			this->label2->Location = System::Drawing::Point(12, 31);
+			this->label2->Location = System::Drawing::Point(12, 90);
 			this->label2->Name = L"label2";
 			this->label2->Size = System::Drawing::Size(268, 13);
 			this->label2->TabIndex = 2;
 			this->label2->Text = L"Ein Projekt (12) im Softwaretechnologieprojekt SS 2012";
+			// 
+			// pictureBox1
+			// 
+			this->pictureBox1->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"pictureBox1.Image")));
+			this->pictureBox1->Location = System::Drawing::Point(79, 37);
+			this->pictureBox1->Name = L"pictureBox1";
+			this->pictureBox1->Size = System::Drawing::Size(119, 36);
+			this->pictureBox1->TabIndex = 3;
+			this->pictureBox1->TabStop = false;
 			// 
 			// about
 			// 
@@ -101,12 +114,15 @@ namespace GAPConnect {
 			this->CancelButton = this->button1;
 			this->ClientSize = System::Drawing::Size(284, 262);
 			this->ControlBox = false;
+			this->Controls->Add(this->pictureBox1);
 			this->Controls->Add(this->label2);
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->button1);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedToolWindow;
 			this->Name = L"about";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			this->Text = L"About";
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox1))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 

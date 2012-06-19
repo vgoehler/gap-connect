@@ -1,4 +1,5 @@
 #pragma once
+#include "stdafx.h"
 
 namespace GAPConnect {
 
@@ -15,14 +16,12 @@ namespace GAPConnect {
 	public ref class drawingarea : public System::Windows::Forms::Form
 	{
 	public:
-		drawingarea(void)
+		drawingarea(void): m_changed(false), m_closing(false), m_new(true)
 		{
 			InitializeComponent();
 			//
 			//TODO: Konstruktorcode hier hinzuf¸gen.
 			//
-			this->isChanged=false;
-			this->isNew=true;
 		}
 
 	protected:
@@ -42,8 +41,33 @@ namespace GAPConnect {
 		/// Erforderliche Designervariable.
 		/// </summary>
 		System::ComponentModel::Container ^components;
-		bool isChanged;//auf True wenn sich Inhalt ge‰ndert hat
-		bool isNew;//auf True wenn es sich um ein leeres Fenster handelt
+		///<summary>Anzeigen der ƒnderung am Inhalt</summary>
+		bool m_changed;//auf True wenn sich Inhalt ge‰ndert hat
+		///<summary>Anzeigen ob neu Erzeugtes Fenster</summary>
+		bool m_new;//auf True wenn es sich um ein leeres Fenster handelt
+		///<summary>Zeigt an ob das Form sich am schlieﬂen ist.</summary>
+		bool m_closing;
+
+	public:
+		property bool isNew{
+			bool get(){
+				return(this->m_new);
+			}
+		}
+		property bool isChanged{
+			bool get(){
+				return(this->m_changed);
+			}
+		}
+		property bool isClosing{
+			bool get(){
+				return(this->m_closing);
+			}
+			void set(bool value){
+				this->m_closing = value;
+			}
+		}
+
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -58,6 +82,7 @@ namespace GAPConnect {
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+			this->AutoScroll = true;
 			this->BackColor = System::Drawing::Color::White;
 			this->ClientSize = System::Drawing::Size(617, 567);
 			this->DoubleBuffered = true;
@@ -65,23 +90,13 @@ namespace GAPConnect {
 			this->MinimumSize = System::Drawing::Size(400, 38);
 			this->Name = L"drawingarea";
 			this->ShowIcon = false;
+			this->StartPosition = System::Windows::Forms::FormStartPosition::Manual;
 			this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &drawingarea::drawingarea_FormClosing);
 			this->ResumeLayout(false);
 
 		}
 #pragma endregion
-	private: System::Void drawingarea_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e) {
-				 if (this->isChanged){
-					 //TODO SavePrompt Dialog
-				 }else{
-					 //keine ƒnderungen
-					 if (this->isNew){
-						 //TODO Alles schlieﬂen
-						 //event raisen hier
-					 }else{
-						 //TODO nur Fenster schlieﬂen und Neu initialisieren
-					 }
-				 }
-			 }
+		///<subject>Schlieﬂen der Drawing Area</subject>
+	private: System::Void drawingarea_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e);
 	};
 }

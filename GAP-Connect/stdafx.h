@@ -4,3 +4,7 @@
 #pragma once
 
 // TODO: Hier auf zusätzliche Header, die das Programm erfordert, verweisen.
+#include "drawingarea.h"
+#include "toolbar.h"
+#include "menu.h"
+#include "Form1.h"

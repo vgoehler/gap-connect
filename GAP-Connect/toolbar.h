@@ -1,4 +1,5 @@
 #pragma once
+#include "stdafx.h"
 
 namespace GAPConnect {
 
@@ -15,8 +16,7 @@ namespace GAPConnect {
 	public ref class toolbar : public System::Windows::Forms::Form
 	{
 	public:
-		toolbar(void)
-		{
+		toolbar(void){
 			InitializeComponent();
 			//
 			//TODO: Konstruktorcode hier hinzufügen.
@@ -85,6 +85,7 @@ namespace GAPConnect {
 			this->Name = L"toolbar";
 			this->ShowIcon = false;
 			this->ShowInTaskbar = false;
+			this->StartPosition = System::Windows::Forms::FormStartPosition::Manual;
 			this->Text = L"Toolbar";
 			this->ResumeLayout(false);
 			this->PerformLayout();
