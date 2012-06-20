@@ -72,6 +72,17 @@ namespace GAPConnect {
 	private: System::Windows::Forms::Button^  button1;
 	private: System::Windows::Forms::Panel^  control;
 	private: System::Windows::Forms::Panel^  panel1;
+	private: System::Windows::Forms::GroupBox^  zeichentools;
+	private: System::Windows::Forms::ToolStrip^  zeichnenVertex;
+
+	private: System::Windows::Forms::ToolStripButton^  toolStripButtonVertexRound;
+	private: System::Windows::Forms::ToolStripButton^  toolStripButtonVertexSquare;
+	private: System::Windows::Forms::ToolStrip^  zeichnenEdge;
+	private: System::Windows::Forms::ToolStripButton^  toolStripButtonEdge;
+	private: System::Windows::Forms::ToolStripButton^  toolStripButtonDirection;
+	private: System::Windows::Forms::ToolStripButton^  toolStripButtonEdgeValue;
+	private: System::Windows::Forms::ToolStripButton^  toolStripButtonDirectionValue;
+
 
 
 
@@ -136,10 +147,23 @@ namespace GAPConnect {
 			this->saveFileDialog1 = (gcnew System::Windows::Forms::SaveFileDialog());
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->control = (gcnew System::Windows::Forms::Panel());
+			this->zeichentools = (gcnew System::Windows::Forms::GroupBox());
+			this->zeichnenEdge = (gcnew System::Windows::Forms::ToolStrip());
+			this->toolStripButtonEdge = (gcnew System::Windows::Forms::ToolStripButton());
+			this->toolStripButtonEdgeValue = (gcnew System::Windows::Forms::ToolStripButton());
+			this->toolStripButtonDirection = (gcnew System::Windows::Forms::ToolStripButton());
+			this->toolStripButtonDirectionValue = (gcnew System::Windows::Forms::ToolStripButton());
+			this->zeichnenVertex = (gcnew System::Windows::Forms::ToolStrip());
+			this->toolStripButtonVertexRound = (gcnew System::Windows::Forms::ToolStripButton());
+			this->toolStripButtonVertexSquare = (gcnew System::Windows::Forms::ToolStripButton());
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
 			this->mainmenuStrip->SuspendLayout();
 			this->maintoolStrip->SuspendLayout();
 			this->mainstatusStrip->SuspendLayout();
+			this->control->SuspendLayout();
+			this->zeichentools->SuspendLayout();
+			this->zeichnenEdge->SuspendLayout();
+			this->zeichnenVertex->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// mainmenuStrip
@@ -167,6 +191,7 @@ namespace GAPConnect {
 			this->neuToolStripMenuItem->Name = L"neuToolStripMenuItem";
 			this->neuToolStripMenuItem->Size = System::Drawing::Size(143, 22);
 			this->neuToolStripMenuItem->Text = L"&Neu";
+			this->neuToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::neuMenu_Click);
 			// 
 			// ladenToolStripMenuItem
 			// 
@@ -241,6 +266,7 @@ namespace GAPConnect {
 				this->toolStripButtonOpen, this->toolStripButtonSave});
 			this->maintoolStrip->Location = System::Drawing::Point(0, 24);
 			this->maintoolStrip->Name = L"maintoolStrip";
+			this->maintoolStrip->RenderMode = System::Windows::Forms::ToolStripRenderMode::System;
 			this->maintoolStrip->Size = System::Drawing::Size(992, 25);
 			this->maintoolStrip->TabIndex = 3;
 			this->maintoolStrip->Text = L"toolStrip1";
@@ -254,6 +280,7 @@ namespace GAPConnect {
 			this->toolStripButtonNew->Size = System::Drawing::Size(23, 22);
 			this->toolStripButtonNew->Text = L"Neuer Graph";
 			this->toolStripButtonNew->ToolTipText = L"Legt einen neuen Graphen an.";
+			this->toolStripButtonNew->Click += gcnew System::EventHandler(this, &Form1::neuMenu_Click);
 			// 
 			// toolStripButtonOpen
 			// 
@@ -320,12 +347,126 @@ namespace GAPConnect {
 			// control
 			// 
 			this->control->BackColor = System::Drawing::SystemColors::Control;
-			this->control->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
+			this->control->Controls->Add(this->zeichentools);
 			this->control->Dock = System::Windows::Forms::DockStyle::Left;
 			this->control->Location = System::Drawing::Point(0, 49);
 			this->control->Name = L"control";
 			this->control->Size = System::Drawing::Size(198, 584);
 			this->control->TabIndex = 6;
+			// 
+			// zeichentools
+			// 
+			this->zeichentools->AutoSize = true;
+			this->zeichentools->Controls->Add(this->zeichnenEdge);
+			this->zeichentools->Controls->Add(this->zeichnenVertex);
+			this->zeichentools->Dock = System::Windows::Forms::DockStyle::Top;
+			this->zeichentools->Location = System::Drawing::Point(0, 0);
+			this->zeichentools->Name = L"zeichentools";
+			this->zeichentools->Size = System::Drawing::Size(198, 231);
+			this->zeichentools->TabIndex = 0;
+			this->zeichentools->TabStop = false;
+			this->zeichentools->Text = L"Zeichnen";
+			// 
+			// zeichnenEdge
+			// 
+			this->zeichnenEdge->GripStyle = System::Windows::Forms::ToolStripGripStyle::Hidden;
+			this->zeichnenEdge->ImageScalingSize = System::Drawing::Size(32, 32);
+			this->zeichnenEdge->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(4) {this->toolStripButtonEdge, 
+				this->toolStripButtonEdgeValue, this->toolStripButtonDirection, this->toolStripButtonDirectionValue});
+			this->zeichnenEdge->LayoutStyle = System::Windows::Forms::ToolStripLayoutStyle::VerticalStackWithOverflow;
+			this->zeichnenEdge->Location = System::Drawing::Point(3, 70);
+			this->zeichnenEdge->Name = L"zeichnenEdge";
+			this->zeichnenEdge->RenderMode = System::Windows::Forms::ToolStripRenderMode::System;
+			this->zeichnenEdge->Size = System::Drawing::Size(192, 158);
+			this->zeichnenEdge->TabIndex = 1;
+			// 
+			// toolStripButtonEdge
+			// 
+			this->toolStripButtonEdge->CheckOnClick = true;
+			this->toolStripButtonEdge->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"toolStripButtonEdge.Image")));
+			this->toolStripButtonEdge->ImageAlign = System::Drawing::ContentAlignment::MiddleLeft;
+			this->toolStripButtonEdge->ImageTransparentColor = System::Drawing::Color::Magenta;
+			this->toolStripButtonEdge->Name = L"toolStripButtonEdge";
+			this->toolStripButtonEdge->Size = System::Drawing::Size(190, 36);
+			this->toolStripButtonEdge->Text = L"Kante";
+			this->toolStripButtonEdge->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
+			this->toolStripButtonEdge->Click += gcnew System::EventHandler(this, &Form1::toolStripButtonsOnlyOneChecked);
+			// 
+			// toolStripButtonEdgeValue
+			// 
+			this->toolStripButtonEdgeValue->CheckOnClick = true;
+			this->toolStripButtonEdgeValue->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"toolStripButtonEdgeValue.Image")));
+			this->toolStripButtonEdgeValue->ImageAlign = System::Drawing::ContentAlignment::MiddleLeft;
+			this->toolStripButtonEdgeValue->ImageTransparentColor = System::Drawing::Color::Magenta;
+			this->toolStripButtonEdgeValue->Name = L"toolStripButtonEdgeValue";
+			this->toolStripButtonEdgeValue->Size = System::Drawing::Size(190, 36);
+			this->toolStripButtonEdgeValue->Text = L"Kante mit Wert";
+			this->toolStripButtonEdgeValue->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
+			this->toolStripButtonEdgeValue->ToolTipText = L"Zeichnet eine Kante mit Kantenbewertung";
+			this->toolStripButtonEdgeValue->Click += gcnew System::EventHandler(this, &Form1::toolStripButtonsOnlyOneChecked);
+			// 
+			// toolStripButtonDirection
+			// 
+			this->toolStripButtonDirection->CheckOnClick = true;
+			this->toolStripButtonDirection->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"toolStripButtonDirection.Image")));
+			this->toolStripButtonDirection->ImageAlign = System::Drawing::ContentAlignment::MiddleLeft;
+			this->toolStripButtonDirection->ImageTransparentColor = System::Drawing::Color::Magenta;
+			this->toolStripButtonDirection->Name = L"toolStripButtonDirection";
+			this->toolStripButtonDirection->Size = System::Drawing::Size(190, 36);
+			this->toolStripButtonDirection->Text = L"gerichtete Kante";
+			this->toolStripButtonDirection->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
+			this->toolStripButtonDirection->ToolTipText = L"Zeichnet eine gerichtete Kante";
+			this->toolStripButtonDirection->Click += gcnew System::EventHandler(this, &Form1::toolStripButtonsOnlyOneChecked);
+			// 
+			// toolStripButtonDirectionValue
+			// 
+			this->toolStripButtonDirectionValue->CheckOnClick = true;
+			this->toolStripButtonDirectionValue->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"toolStripButtonDirectionValue.Image")));
+			this->toolStripButtonDirectionValue->ImageAlign = System::Drawing::ContentAlignment::MiddleLeft;
+			this->toolStripButtonDirectionValue->ImageTransparentColor = System::Drawing::Color::Magenta;
+			this->toolStripButtonDirectionValue->Name = L"toolStripButtonDirectionValue";
+			this->toolStripButtonDirectionValue->Size = System::Drawing::Size(190, 36);
+			this->toolStripButtonDirectionValue->Text = L"gerichtete Kante mit Wert";
+			this->toolStripButtonDirectionValue->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
+			this->toolStripButtonDirectionValue->Click += gcnew System::EventHandler(this, &Form1::toolStripButtonsOnlyOneChecked);
+			// 
+			// zeichnenVertex
+			// 
+			this->zeichnenVertex->GripStyle = System::Windows::Forms::ToolStripGripStyle::Hidden;
+			this->zeichnenVertex->ImageScalingSize = System::Drawing::Size(32, 32);
+			this->zeichnenVertex->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {this->toolStripButtonVertexRound, 
+				this->toolStripButtonVertexSquare});
+			this->zeichnenVertex->LayoutStyle = System::Windows::Forms::ToolStripLayoutStyle::Flow;
+			this->zeichnenVertex->Location = System::Drawing::Point(3, 16);
+			this->zeichnenVertex->Margin = System::Windows::Forms::Padding(0, 0, 0, 5);
+			this->zeichnenVertex->Name = L"zeichnenVertex";
+			this->zeichnenVertex->RenderMode = System::Windows::Forms::ToolStripRenderMode::System;
+			this->zeichnenVertex->Size = System::Drawing::Size(192, 54);
+			this->zeichnenVertex->TabIndex = 0;
+			// 
+			// toolStripButtonVertexRound
+			// 
+			this->toolStripButtonVertexRound->CheckOnClick = true;
+			this->toolStripButtonVertexRound->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"toolStripButtonVertexRound.Image")));
+			this->toolStripButtonVertexRound->ImageTransparentColor = System::Drawing::Color::Magenta;
+			this->toolStripButtonVertexRound->Name = L"toolStripButtonVertexRound";
+			this->toolStripButtonVertexRound->Size = System::Drawing::Size(90, 51);
+			this->toolStripButtonVertexRound->Text = L"Runder Knoten";
+			this->toolStripButtonVertexRound->TextImageRelation = System::Windows::Forms::TextImageRelation::ImageAboveText;
+			this->toolStripButtonVertexRound->ToolTipText = L"Zeichnet einen runden Knoten";
+			this->toolStripButtonVertexRound->Click += gcnew System::EventHandler(this, &Form1::toolStripButtonsOnlyOneChecked);
+			// 
+			// toolStripButtonVertexSquare
+			// 
+			this->toolStripButtonVertexSquare->CheckOnClick = true;
+			this->toolStripButtonVertexSquare->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"toolStripButtonVertexSquare.Image")));
+			this->toolStripButtonVertexSquare->ImageTransparentColor = System::Drawing::Color::Magenta;
+			this->toolStripButtonVertexSquare->Name = L"toolStripButtonVertexSquare";
+			this->toolStripButtonVertexSquare->Size = System::Drawing::Size(90, 51);
+			this->toolStripButtonVertexSquare->Text = L"Eckiger Knoten";
+			this->toolStripButtonVertexSquare->TextImageRelation = System::Windows::Forms::TextImageRelation::ImageAboveText;
+			this->toolStripButtonVertexSquare->ToolTipText = L"Zeichnet einen eckigen Knoten";
+			this->toolStripButtonVertexSquare->Click += gcnew System::EventHandler(this, &Form1::toolStripButtonsOnlyOneChecked);
 			// 
 			// panel1
 			// 
@@ -351,6 +492,7 @@ namespace GAPConnect {
 			this->Controls->Add(this->mainstatusStrip);
 			this->Controls->Add(this->maintoolStrip);
 			this->Controls->Add(this->mainmenuStrip);
+			this->Icon = (cli::safe_cast<System::Drawing::Icon^  >(resources->GetObject(L"$this.Icon")));
 			this->MinimumSize = System::Drawing::Size(400, 110);
 			this->Name = L"Form1";
 			this->Text = L"GAP-Connect";
@@ -362,6 +504,14 @@ namespace GAPConnect {
 			this->maintoolStrip->PerformLayout();
 			this->mainstatusStrip->ResumeLayout(false);
 			this->mainstatusStrip->PerformLayout();
+			this->control->ResumeLayout(false);
+			this->control->PerformLayout();
+			this->zeichentools->ResumeLayout(false);
+			this->zeichentools->PerformLayout();
+			this->zeichnenEdge->ResumeLayout(false);
+			this->zeichnenEdge->PerformLayout();
+			this->zeichnenVertex->ResumeLayout(false);
+			this->zeichnenVertex->PerformLayout();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -421,6 +571,15 @@ private: System::Void DrawArea_MouseMove(System::Object^  sender, System::Window
 private: System::Void DrawArea_MouseLeave(System::Object^  sender, System::EventArgs^  e) {
 			 this->toolStripLabelMouseX->Text = L"X: ";
 			 this->toolStripLabelMouseY->Text = L"Y: ";
+		 }
+///<summary> Neues Dokument </summary>
+ private: System::Void neuMenu_Click(System::Object^ sender, System::EventArgs^ e){
+			  //TODO alle daten löschen, nachfragen ob gespeichert werden soll
+
+		  }
+///<summary> Überprüft beim Auswählen von Toolbuttons, dass auch nur einer ausgewählt ist.</summary>
+private: System::Void toolStripButtonsOnlyOneChecked(System::Object^  sender, System::EventArgs^  e) {
+			 this->zeichentools->Controls;
 		 }
 };
 }
