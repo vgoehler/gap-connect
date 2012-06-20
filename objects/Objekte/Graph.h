@@ -23,6 +23,9 @@ public:
 	void deleted_edge(Kante^ kante_del);
 	void deleted_vertex(Knoten^ knoten_del);
 
+	array<int,2>^ convert_to_adjacency();	//array wieder löschen nach verwendung
+	bool convert_from_adjacency();
+
 	//addcomment-system?
 
 	

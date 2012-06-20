@@ -21,9 +21,20 @@ int main(array<System::String ^> ^args)
 	graphi->create_edge(graphi->verticles[0],graphi->verticles[1],2,STREIFEN);
 	graphi->edges[0];
 	delete graphi->verticles[1];
-
-
-	System::Diagnostics::Debug::WriteLine("noch da?{0}",0);
+	/*trim test
+	System::Collections::Generic::List<int> listy =gcnew List<int>();
+	int x=5;
+	int y=6;
+	int z=7;
+	listy.Add(x);
+	listy.Add(y);
+	listy.Add(z);
+	System::Diagnostics::Debug::WriteLine("list consists of:{0} {1} {2}",listy[0],listy[1],listy[2]);
+	listy.Remove(y);
+	System::Diagnostics::Debug::WriteLine("list consists of:{0} {1}",listy.Count,listy.Capacity);
+	listy.TrimExcess();
+	System::Diagnostics::Debug::WriteLine("list consists of:{0} {1}",listy.Count,listy.Capacity);
+	*/
 //	System::Diagnostics::Debug::WriteLine("comment=comy:{0}",(knot.comment==%comy));
 
 	}

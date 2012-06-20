@@ -99,3 +99,37 @@ void Graph::deleted_vertex( Knoten^ knoten_del )
 			verticles->Remove(knoten_del);
 	}
 }
+
+array<int,2>^ Graph::convert_to_adjacency()
+{
+	edges->TrimExcess();
+	verticles->TrimExcess();
+	int c_verticles=verticles->Count;
+	//Adjazenzmatrix der größe NxN; N=anzahl Knoten.
+	array<int,2>^ array_adj = gcnew array<int,2>(c_verticles,c_verticles);
+	//initialisieren:
+	for (int i=0;i < c_verticles;i++)
+	{
+		for (int j=0;j < c_verticles;j++)
+		{
+			array_adj[i,j]=0;
+		}
+	}
+	int v1=0,v2=0; //vertex-index
+	for each(Kante^ ka in edges)
+	{
+		v1 = verticles->IndexOf(ka->get_knoten_start());
+		v2 = verticles->IndexOf(ka->get_knoten_end());
+		array_adj[v1,v2]=1;			//hinrichtung immer
+		if (ka->gerichtet == 0 || ka->gerichtet==2)
+			array_adj[v2,v1]=1;		//rückrichtung nur bei ungerichteter kante
+	}
+	
+	return array_adj;
+}
+
+bool Graph::convert_from_adjacency()
+{
+	//return 0 wenn ...ähm...?
+	return 0;
+}
