@@ -9,6 +9,13 @@ Graph::Graph(void)
 	verticles=gcnew List<Knoten^>();
 }
 
+Graph::Graph(System::String^ string_label)
+{
+	label=string_label;
+	edges=gcnew List<Kante^>();
+	verticles=gcnew List<Knoten^>();
+}
+
 Graph::~Graph(void)
 {
 	if (label)
@@ -18,7 +25,8 @@ Graph::~Graph(void)
 				 *innerhalb folgender "for each" schleife; verwendet in delete_edge()
 				 *sowie delete_vertex*/
 	if (edges)								//zur Sicherheit (falls array nicht initialisiert)
-	{	if (edges->Count > 0)				//falls array leer
+	{	
+		if (edges->Count > 0)				//falls array leer
 			for each(Kante^ ka in edges )
 			{
 				delete ka;
@@ -26,7 +34,8 @@ Graph::~Graph(void)
 		edges->Clear();
 	}
 	if (verticles)							//zur Sicherheit (falls array nicht initialisiert)
-	{	if (verticles->Count > 0)				//falls array leer
+	{	
+		if (verticles->Count > 0)				//falls array leer
 			for each(Knoten^ kn in verticles )
 			{
 				delete kn;
@@ -128,8 +137,50 @@ array<int,2>^ Graph::convert_to_adjacency()
 	return array_adj;
 }
 
-bool Graph::convert_from_adjacency()
+bool Graph::convert_from_adjacency(array<int,2>^ array_adj)
 {
+	{//löschen von edges und verticles verticles um
+		if (edges)								
+		{	
+			if (edges->Count > 0)				
+				for each(Kante^ ka in edges )
+				{
+					delete ka;
+				}
+		edges->Clear();
+		delete edges;
+		}
+		if (verticles)							
+		{	
+			if (verticles->Count > 0)
+				for each(Knoten^ kn in verticles )
+				{
+					delete kn;
+				}
+		verticles->Clear();
+		}
+	}
+	if (verticles == nullptr)		//falls nicht mehr/noch nicht vorhanden
+		verticles=gcnew List<Knoten^>();
+	if (edges == nullptr)
+		edges=gcnew List<Kante^>();
+
+	int N_array_adj =array_adj->GetLength(0);	// "N" as in NxN matrix
+	for (int i=0;i<N_array_adj;i++)
+	{
+		create_vertex("",10,10);
+	}
+	for (int i=0;i < N_array_adj;i++)
+	{
+		for (int j=0;j < N_array_adj;j++)
+		{
+			if(array_adj[i,j])
+				if (array_adj[j,i])
+					create_edge(verticles[i],verticles[j],2);	//wenn beidseitig vorhanden dann 1 doppelseitige kante
+				else
+					create_edge(verticles[i],verticles[j],1);
+		}
+	}
 	//return 0 wenn ...ähm...?
 	return 0;
 }

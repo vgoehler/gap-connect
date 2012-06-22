@@ -14,7 +14,7 @@ public:
 	int gerichtet;	/*(-1: gerichtet mit Startpunkt 'knoten_end'?? wenn ja dann adjazenz-funktion prüfen)
 					 * 0: ungerichtet
 					 * 1: gerichtet mit Startpunkt 'knoten_start'
-					 *(2: gerichtet beidseitig??)
+					 *(2: gerichtet beidseitig??) [wenn nicht ändere "convert_from_adjacency"]
 					 */
 	KantenFormat shape;	//methode für redraw bei änderung?
 	Kommentar^ comment;
