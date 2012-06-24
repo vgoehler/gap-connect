@@ -19,6 +19,18 @@
     <None Include="app.ico">
       <Filter>Ressourcendateien</Filter>
     </None>
+    <None Include="cursor_square.cur">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="cursor_round.cur">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="cursor_edge.cur">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="cursor_arc.cur">
+      <Filter>Ressourcendateien</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GAP-Connect.cpp">
@@ -58,15 +70,6 @@
       <Filter>Ressourcendateien</Filter>
     </EmbeddedResource>
     <EmbeddedResource Include="about.resx">
-      <Filter>Ressourcendateien</Filter>
-    </EmbeddedResource>
-    <EmbeddedResource Include="drawingarea.resx">
-      <Filter>Ressourcendateien</Filter>
-    </EmbeddedResource>
-    <EmbeddedResource Include="toolbar.resx">
-      <Filter>Ressourcendateien</Filter>
-    </EmbeddedResource>
-    <EmbeddedResource Include="menu.resx">
       <Filter>Ressourcendateien</Filter>
     </EmbeddedResource>
   </ItemGroup>

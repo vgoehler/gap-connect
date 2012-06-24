@@ -84,6 +84,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.ico" />
+    <None Include="cursor_arc.cur" />
+    <None Include="cursor_edge.cur" />
+    <None Include="cursor_round.cur" />
+    <None Include="cursor_square.cur" />
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>

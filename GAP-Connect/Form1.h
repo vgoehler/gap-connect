@@ -36,6 +36,12 @@ namespace GAPConnect {
 				delete components;
 			}
 		}
+
+	///<summary>Handle für den About Dialog</summary>
+	private: about^ aboutDialog;
+	///<summary>Member um Veränderungen im Inhalt zu charakterisieren</summary>
+	private: bool m_unsavedChanges;
+
 	private: System::Windows::Forms::MenuStrip^  mainmenuStrip;
 	private: System::Windows::Forms::ToolStripMenuItem^  dateiToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  bearbeitenToolStripMenuItem;
@@ -50,19 +56,9 @@ namespace GAPConnect {
 	private: System::Windows::Forms::ToolStripMenuItem^  beendenToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripButton^  toolStripButtonNew;
 	private: System::Windows::Forms::ToolStripButton^  toolStripButtonOpen;
-
-
 	private: System::Windows::Forms::ToolStripStatusLabel^  toolStripLabelMouseX;
 	private: System::Windows::Forms::ToolStripStatusLabel^  toolStripLabelMouseY;
-
-	private:
-		/// <summary>
-		/// Erforderliche Designervariable.
-		/// </summary>
-		System::ComponentModel::Container ^components;
-
-	///<summary>Handle für den About Dialog</summary>
-	private: about^ aboutDialog;
+	private: System::ComponentModel::IContainer^  components;
 	private: System::Windows::Forms::ToolStripMenuItem^  ladenToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  speichernToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  speichernalsToolStripMenuItem;
@@ -71,36 +67,24 @@ namespace GAPConnect {
 	private: System::Windows::Forms::SaveFileDialog^  saveFileDialog1;
 	private: System::Windows::Forms::Button^  button1;
 	private: System::Windows::Forms::Panel^  control;
-	private: System::Windows::Forms::Panel^  panel1;
+	private: System::Windows::Forms::Panel^  drawPanel;
 	private: System::Windows::Forms::GroupBox^  zeichentools;
 	private: System::Windows::Forms::ToolStrip^  zeichnenVertex;
-
 	private: System::Windows::Forms::ToolStripButton^  toolStripButtonVertexRound;
 	private: System::Windows::Forms::ToolStripButton^  toolStripButtonVertexSquare;
 	private: System::Windows::Forms::ToolStrip^  zeichnenEdge;
 	private: System::Windows::Forms::ToolStripButton^  toolStripButtonEdge;
-	private: System::Windows::Forms::ToolStripButton^  toolStripButtonDirection;
-	private: System::Windows::Forms::ToolStripButton^  toolStripButtonEdgeValue;
-	private: System::Windows::Forms::ToolStripButton^  toolStripButtonDirectionValue;
+	private: System::Windows::Forms::ToolStripButton^  toolStripButtonArc;
+	private: System::Windows::Forms::ToolStripButton^  toolStripButtonEdgeCapacity;
+	private: System::Windows::Forms::ToolStripButton^  toolStripButtonArcCapacity;
+	private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator2;
+	private: System::Windows::Forms::ToolStripButton^  toolStripButtonGridControl;
+	private: System::Windows::Forms::ToolStripMenuItem^  gridDeAktivierenToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  gridArretierungToolStripMenuItem;
 
+	private: System::Windows::Forms::ToolStripButton^  toolStripButtonGridFixed;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	///<summary>Member um Veränderungen im Inhalt zu charakterisieren</summary>
-	private: bool m_unsavedChanges;
+	private: System::Windows::Forms::ImageList^  imageListToolbar;
 
 	///<summary>Änderungen am Graph in Property vermerken. set routine setzt auch enable im Menü</summary>
 	private: property bool changedGraph{
@@ -115,6 +99,46 @@ namespace GAPConnect {
 					 return(this->m_unsavedChanges);
 				 }
 			 }
+	///<summary> Wenn checked auf Grid anzeigen Button vom Programm aus gesetzt wird muss Grid auch geändert werden. Setzt auch Menü Einträge. </summary>
+	private: property bool isGridActivated{
+				 void set(bool value){
+					 this->toolStripButtonGridControl->Checked = value;
+					 this->gridDeAktivierenToolStripMenuItem->Checked = value;
+					 this->toolStripButtonGridControl_Click(dynamic_cast<System::Object^>(this->toolStripButtonGridControl), nullptr);
+				 }
+				 bool get(void){
+					 return(this->toolStripButtonGridControl->Checked);
+				 }
+			 }
+	///<summary> Wenn checked auf Glue to Grid vom Programm gesetzt wird, wird auch ButtonImg geändert. Setzt auch Menü Einträge. </summary>
+	private: property bool isGridFixed{
+				 void set(bool value){
+					 this->toolStripButtonGridFixed->Checked = value;
+					 this->gridArretierungToolStripMenuItem->Checked = value;
+					 this->toolStripButtonGridFixed_Click(dynamic_cast<System::Object^>(this->toolStripButtonGridFixed), nullptr);
+				 }
+				 bool get(void){
+					 return(this->toolStripButtonGridFixed->Checked);
+				 }
+			 }
+	///<summary> Gibt aus Toolbar ausgewähltes Handle zurück oder den nullptr</summary>
+	private: property System::Windows::Forms::ToolStripButton^ toolBarChosen{
+				 System::Windows::Forms::ToolStripButton^ get(void){
+					 //iteriert über alle Container
+					 for each (System::Object^ element in this->zeichentools->Controls){
+						 //iteriert über alle Buttons
+						 for each (System::Object^ toolbarButton in dynamic_cast<System::Windows::Forms::ToolStrip^>(element)->Items){
+							if (dynamic_cast<System::Windows::Forms::ToolStripButton^>(toolbarButton)->Checked){
+								//kann nur eines ausgewählt sein!
+								return(dynamic_cast<System::Windows::Forms::ToolStripButton^>(toolbarButton));
+							}
+						 }
+					 }
+					 //wenn wir hier hergekommen sind, dann gibt es keine ausgewählten
+					 return(nullptr);
+				 }
+			 }
+
 #pragma region Windows Form Designer generated code
 		/// <summary>
 		/// Erforderliche Methode für die Designerunterstützung.
@@ -122,6 +146,7 @@ namespace GAPConnect {
 		/// </summary>
 		void InitializeComponent(void)
 		{
+			this->components = (gcnew System::ComponentModel::Container());
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Form1::typeid));
 			this->mainmenuStrip = (gcnew System::Windows::Forms::MenuStrip());
 			this->dateiToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -134,12 +159,17 @@ namespace GAPConnect {
 			this->bearbeitenToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->ansichtToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->optionenToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->gridDeAktivierenToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->gridArretierungToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->hilfeToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->aboutToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->maintoolStrip = (gcnew System::Windows::Forms::ToolStrip());
 			this->toolStripButtonNew = (gcnew System::Windows::Forms::ToolStripButton());
 			this->toolStripButtonOpen = (gcnew System::Windows::Forms::ToolStripButton());
 			this->toolStripButtonSave = (gcnew System::Windows::Forms::ToolStripButton());
+			this->toolStripSeparator2 = (gcnew System::Windows::Forms::ToolStripSeparator());
+			this->toolStripButtonGridControl = (gcnew System::Windows::Forms::ToolStripButton());
+			this->toolStripButtonGridFixed = (gcnew System::Windows::Forms::ToolStripButton());
 			this->mainstatusStrip = (gcnew System::Windows::Forms::StatusStrip());
 			this->toolStripLabelMouseX = (gcnew System::Windows::Forms::ToolStripStatusLabel());
 			this->toolStripLabelMouseY = (gcnew System::Windows::Forms::ToolStripStatusLabel());
@@ -150,13 +180,14 @@ namespace GAPConnect {
 			this->zeichentools = (gcnew System::Windows::Forms::GroupBox());
 			this->zeichnenEdge = (gcnew System::Windows::Forms::ToolStrip());
 			this->toolStripButtonEdge = (gcnew System::Windows::Forms::ToolStripButton());
-			this->toolStripButtonEdgeValue = (gcnew System::Windows::Forms::ToolStripButton());
-			this->toolStripButtonDirection = (gcnew System::Windows::Forms::ToolStripButton());
-			this->toolStripButtonDirectionValue = (gcnew System::Windows::Forms::ToolStripButton());
+			this->toolStripButtonEdgeCapacity = (gcnew System::Windows::Forms::ToolStripButton());
+			this->toolStripButtonArc = (gcnew System::Windows::Forms::ToolStripButton());
+			this->toolStripButtonArcCapacity = (gcnew System::Windows::Forms::ToolStripButton());
 			this->zeichnenVertex = (gcnew System::Windows::Forms::ToolStrip());
 			this->toolStripButtonVertexRound = (gcnew System::Windows::Forms::ToolStripButton());
 			this->toolStripButtonVertexSquare = (gcnew System::Windows::Forms::ToolStripButton());
-			this->panel1 = (gcnew System::Windows::Forms::Panel());
+			this->drawPanel = (gcnew System::Windows::Forms::Panel());
+			this->imageListToolbar = (gcnew System::Windows::Forms::ImageList(this->components));
 			this->mainmenuStrip->SuspendLayout();
 			this->maintoolStrip->SuspendLayout();
 			this->mainstatusStrip->SuspendLayout();
@@ -240,9 +271,25 @@ namespace GAPConnect {
 			// 
 			// optionenToolStripMenuItem
 			// 
+			this->optionenToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {this->gridDeAktivierenToolStripMenuItem, 
+				this->gridArretierungToolStripMenuItem});
 			this->optionenToolStripMenuItem->Name = L"optionenToolStripMenuItem";
 			this->optionenToolStripMenuItem->Size = System::Drawing::Size(69, 20);
 			this->optionenToolStripMenuItem->Text = L"&Optionen";
+			// 
+			// gridDeAktivierenToolStripMenuItem
+			// 
+			this->gridDeAktivierenToolStripMenuItem->Name = L"gridDeAktivierenToolStripMenuItem";
+			this->gridDeAktivierenToolStripMenuItem->Size = System::Drawing::Size(176, 22);
+			this->gridDeAktivierenToolStripMenuItem->Text = L"Grid De-/Aktivieren";
+			this->gridDeAktivierenToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::toolStripButtonGridControl_Click);
+			// 
+			// gridArretierungToolStripMenuItem
+			// 
+			this->gridArretierungToolStripMenuItem->Name = L"gridArretierungToolStripMenuItem";
+			this->gridArretierungToolStripMenuItem->Size = System::Drawing::Size(176, 22);
+			this->gridArretierungToolStripMenuItem->Text = L"Gridarretierung";
+			this->gridArretierungToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::toolStripButtonGridFixed_Click);
 			// 
 			// hilfeToolStripMenuItem
 			// 
@@ -262,8 +309,8 @@ namespace GAPConnect {
 			// 
 			this->maintoolStrip->BackColor = System::Drawing::SystemColors::MenuBar;
 			this->maintoolStrip->GripStyle = System::Windows::Forms::ToolStripGripStyle::Hidden;
-			this->maintoolStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {this->toolStripButtonNew, 
-				this->toolStripButtonOpen, this->toolStripButtonSave});
+			this->maintoolStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(6) {this->toolStripButtonNew, 
+				this->toolStripButtonOpen, this->toolStripButtonSave, this->toolStripSeparator2, this->toolStripButtonGridControl, this->toolStripButtonGridFixed});
 			this->maintoolStrip->Location = System::Drawing::Point(0, 24);
 			this->maintoolStrip->Name = L"maintoolStrip";
 			this->maintoolStrip->RenderMode = System::Windows::Forms::ToolStripRenderMode::System;
@@ -303,6 +350,35 @@ namespace GAPConnect {
 			this->toolStripButtonSave->Text = L"Speichern";
 			this->toolStripButtonSave->ToolTipText = L"Speichert den aktiven Graph.";
 			this->toolStripButtonSave->Click += gcnew System::EventHandler(this, &Form1::speichernMenu_Click);
+			// 
+			// toolStripSeparator2
+			// 
+			this->toolStripSeparator2->Name = L"toolStripSeparator2";
+			this->toolStripSeparator2->Size = System::Drawing::Size(6, 25);
+			// 
+			// toolStripButtonGridControl
+			// 
+			this->toolStripButtonGridControl->Checked = true;
+			this->toolStripButtonGridControl->CheckState = System::Windows::Forms::CheckState::Checked;
+			this->toolStripButtonGridControl->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Image;
+			this->toolStripButtonGridControl->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"toolStripButtonGridControl.Image")));
+			this->toolStripButtonGridControl->ImageTransparentColor = System::Drawing::Color::Magenta;
+			this->toolStripButtonGridControl->Name = L"toolStripButtonGridControl";
+			this->toolStripButtonGridControl->Size = System::Drawing::Size(23, 22);
+			this->toolStripButtonGridControl->Text = L"Grid Aktivieren";
+			this->toolStripButtonGridControl->ToolTipText = L"Aktiviert oder Deaktiviert das Grid.";
+			this->toolStripButtonGridControl->Click += gcnew System::EventHandler(this, &Form1::toolStripButtonGridControl_Click);
+			// 
+			// toolStripButtonGridFixed
+			// 
+			this->toolStripButtonGridFixed->BackgroundImage = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"toolStripButtonGridFixed.BackgroundImage")));
+			this->toolStripButtonGridFixed->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Image;
+			this->toolStripButtonGridFixed->ImageTransparentColor = System::Drawing::Color::Magenta;
+			this->toolStripButtonGridFixed->Name = L"toolStripButtonGridFixed";
+			this->toolStripButtonGridFixed->Size = System::Drawing::Size(23, 22);
+			this->toolStripButtonGridFixed->Text = L"Gridaretierung";
+			this->toolStripButtonGridFixed->ToolTipText = L"Aktiviert die Gridarretierung";
+			this->toolStripButtonGridFixed->Click += gcnew System::EventHandler(this, &Form1::toolStripButtonGridFixed_Click);
 			// 
 			// mainstatusStrip
 			// 
@@ -372,7 +448,7 @@ namespace GAPConnect {
 			this->zeichnenEdge->GripStyle = System::Windows::Forms::ToolStripGripStyle::Hidden;
 			this->zeichnenEdge->ImageScalingSize = System::Drawing::Size(32, 32);
 			this->zeichnenEdge->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(4) {this->toolStripButtonEdge, 
-				this->toolStripButtonEdgeValue, this->toolStripButtonDirection, this->toolStripButtonDirectionValue});
+				this->toolStripButtonEdgeCapacity, this->toolStripButtonArc, this->toolStripButtonArcCapacity});
 			this->zeichnenEdge->LayoutStyle = System::Windows::Forms::ToolStripLayoutStyle::VerticalStackWithOverflow;
 			this->zeichnenEdge->Location = System::Drawing::Point(3, 70);
 			this->zeichnenEdge->Name = L"zeichnenEdge";
@@ -390,45 +466,49 @@ namespace GAPConnect {
 			this->toolStripButtonEdge->Size = System::Drawing::Size(190, 36);
 			this->toolStripButtonEdge->Text = L"Kante";
 			this->toolStripButtonEdge->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
-			this->toolStripButtonEdge->Click += gcnew System::EventHandler(this, &Form1::toolStripButtonsOnlyOneChecked);
+			this->toolStripButtonEdge->CheckedChanged += gcnew System::EventHandler(this, &Form1::toolStripButtonsOnlyOneChecked);
+			this->toolStripButtonEdge->Click += gcnew System::EventHandler(this, &Form1::toolStripButtonEdge_Click);
 			// 
-			// toolStripButtonEdgeValue
+			// toolStripButtonEdgeCapacity
 			// 
-			this->toolStripButtonEdgeValue->CheckOnClick = true;
-			this->toolStripButtonEdgeValue->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"toolStripButtonEdgeValue.Image")));
-			this->toolStripButtonEdgeValue->ImageAlign = System::Drawing::ContentAlignment::MiddleLeft;
-			this->toolStripButtonEdgeValue->ImageTransparentColor = System::Drawing::Color::Magenta;
-			this->toolStripButtonEdgeValue->Name = L"toolStripButtonEdgeValue";
-			this->toolStripButtonEdgeValue->Size = System::Drawing::Size(190, 36);
-			this->toolStripButtonEdgeValue->Text = L"Kante mit Wert";
-			this->toolStripButtonEdgeValue->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
-			this->toolStripButtonEdgeValue->ToolTipText = L"Zeichnet eine Kante mit Kantenbewertung";
-			this->toolStripButtonEdgeValue->Click += gcnew System::EventHandler(this, &Form1::toolStripButtonsOnlyOneChecked);
+			this->toolStripButtonEdgeCapacity->CheckOnClick = true;
+			this->toolStripButtonEdgeCapacity->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"toolStripButtonEdgeCapacity.Image")));
+			this->toolStripButtonEdgeCapacity->ImageAlign = System::Drawing::ContentAlignment::MiddleLeft;
+			this->toolStripButtonEdgeCapacity->ImageTransparentColor = System::Drawing::Color::Magenta;
+			this->toolStripButtonEdgeCapacity->Name = L"toolStripButtonEdgeCapacity";
+			this->toolStripButtonEdgeCapacity->Size = System::Drawing::Size(190, 36);
+			this->toolStripButtonEdgeCapacity->Text = L"Kante mit Wert";
+			this->toolStripButtonEdgeCapacity->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
+			this->toolStripButtonEdgeCapacity->ToolTipText = L"Zeichnet eine Kante mit Kantenbewertung";
+			this->toolStripButtonEdgeCapacity->CheckedChanged += gcnew System::EventHandler(this, &Form1::toolStripButtonsOnlyOneChecked);
+			this->toolStripButtonEdgeCapacity->Click += gcnew System::EventHandler(this, &Form1::toolStripButtonEdge_Click);
 			// 
-			// toolStripButtonDirection
+			// toolStripButtonArc
 			// 
-			this->toolStripButtonDirection->CheckOnClick = true;
-			this->toolStripButtonDirection->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"toolStripButtonDirection.Image")));
-			this->toolStripButtonDirection->ImageAlign = System::Drawing::ContentAlignment::MiddleLeft;
-			this->toolStripButtonDirection->ImageTransparentColor = System::Drawing::Color::Magenta;
-			this->toolStripButtonDirection->Name = L"toolStripButtonDirection";
-			this->toolStripButtonDirection->Size = System::Drawing::Size(190, 36);
-			this->toolStripButtonDirection->Text = L"gerichtete Kante";
-			this->toolStripButtonDirection->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
-			this->toolStripButtonDirection->ToolTipText = L"Zeichnet eine gerichtete Kante";
-			this->toolStripButtonDirection->Click += gcnew System::EventHandler(this, &Form1::toolStripButtonsOnlyOneChecked);
+			this->toolStripButtonArc->CheckOnClick = true;
+			this->toolStripButtonArc->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"toolStripButtonArc.Image")));
+			this->toolStripButtonArc->ImageAlign = System::Drawing::ContentAlignment::MiddleLeft;
+			this->toolStripButtonArc->ImageTransparentColor = System::Drawing::Color::Magenta;
+			this->toolStripButtonArc->Name = L"toolStripButtonArc";
+			this->toolStripButtonArc->Size = System::Drawing::Size(190, 36);
+			this->toolStripButtonArc->Text = L"gerichtete Kante";
+			this->toolStripButtonArc->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
+			this->toolStripButtonArc->ToolTipText = L"Zeichnet eine gerichtete Kante";
+			this->toolStripButtonArc->CheckedChanged += gcnew System::EventHandler(this, &Form1::toolStripButtonsOnlyOneChecked);
+			this->toolStripButtonArc->Click += gcnew System::EventHandler(this, &Form1::toolStripButtonEdge_Click);
 			// 
-			// toolStripButtonDirectionValue
+			// toolStripButtonArcCapacity
 			// 
-			this->toolStripButtonDirectionValue->CheckOnClick = true;
-			this->toolStripButtonDirectionValue->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"toolStripButtonDirectionValue.Image")));
-			this->toolStripButtonDirectionValue->ImageAlign = System::Drawing::ContentAlignment::MiddleLeft;
-			this->toolStripButtonDirectionValue->ImageTransparentColor = System::Drawing::Color::Magenta;
-			this->toolStripButtonDirectionValue->Name = L"toolStripButtonDirectionValue";
-			this->toolStripButtonDirectionValue->Size = System::Drawing::Size(190, 36);
-			this->toolStripButtonDirectionValue->Text = L"gerichtete Kante mit Wert";
-			this->toolStripButtonDirectionValue->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
-			this->toolStripButtonDirectionValue->Click += gcnew System::EventHandler(this, &Form1::toolStripButtonsOnlyOneChecked);
+			this->toolStripButtonArcCapacity->CheckOnClick = true;
+			this->toolStripButtonArcCapacity->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"toolStripButtonArcCapacity.Image")));
+			this->toolStripButtonArcCapacity->ImageAlign = System::Drawing::ContentAlignment::MiddleLeft;
+			this->toolStripButtonArcCapacity->ImageTransparentColor = System::Drawing::Color::Magenta;
+			this->toolStripButtonArcCapacity->Name = L"toolStripButtonArcCapacity";
+			this->toolStripButtonArcCapacity->Size = System::Drawing::Size(190, 36);
+			this->toolStripButtonArcCapacity->Text = L"gerichtete Kante mit Wert";
+			this->toolStripButtonArcCapacity->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
+			this->toolStripButtonArcCapacity->CheckedChanged += gcnew System::EventHandler(this, &Form1::toolStripButtonsOnlyOneChecked);
+			this->toolStripButtonArcCapacity->Click += gcnew System::EventHandler(this, &Form1::toolStripButtonEdge_Click);
 			// 
 			// zeichnenVertex
 			// 
@@ -454,7 +534,8 @@ namespace GAPConnect {
 			this->toolStripButtonVertexRound->Text = L"Runder Knoten";
 			this->toolStripButtonVertexRound->TextImageRelation = System::Windows::Forms::TextImageRelation::ImageAboveText;
 			this->toolStripButtonVertexRound->ToolTipText = L"Zeichnet einen runden Knoten";
-			this->toolStripButtonVertexRound->Click += gcnew System::EventHandler(this, &Form1::toolStripButtonsOnlyOneChecked);
+			this->toolStripButtonVertexRound->CheckedChanged += gcnew System::EventHandler(this, &Form1::toolStripButtonsOnlyOneChecked);
+			this->toolStripButtonVertexRound->Click += gcnew System::EventHandler(this, &Form1::toolStripButtonVertex_Click);
 			// 
 			// toolStripButtonVertexSquare
 			// 
@@ -466,19 +547,34 @@ namespace GAPConnect {
 			this->toolStripButtonVertexSquare->Text = L"Eckiger Knoten";
 			this->toolStripButtonVertexSquare->TextImageRelation = System::Windows::Forms::TextImageRelation::ImageAboveText;
 			this->toolStripButtonVertexSquare->ToolTipText = L"Zeichnet einen eckigen Knoten";
-			this->toolStripButtonVertexSquare->Click += gcnew System::EventHandler(this, &Form1::toolStripButtonsOnlyOneChecked);
+			this->toolStripButtonVertexSquare->CheckedChanged += gcnew System::EventHandler(this, &Form1::toolStripButtonsOnlyOneChecked);
+			this->toolStripButtonVertexSquare->Click += gcnew System::EventHandler(this, &Form1::toolStripButtonVertex_Click);
 			// 
-			// panel1
+			// drawPanel
 			// 
-			this->panel1->BackColor = System::Drawing::SystemColors::Window;
-			this->panel1->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
-			this->panel1->Dock = System::Windows::Forms::DockStyle::Fill;
-			this->panel1->Location = System::Drawing::Point(198, 49);
-			this->panel1->Name = L"panel1";
-			this->panel1->Size = System::Drawing::Size(794, 584);
-			this->panel1->TabIndex = 7;
-			this->panel1->MouseLeave += gcnew System::EventHandler(this, &Form1::DrawArea_MouseLeave);
-			this->panel1->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &Form1::DrawArea_MouseMove);
+			this->drawPanel->AllowDrop = true;
+			this->drawPanel->AutoScroll = true;
+			this->drawPanel->AutoScrollMinSize = System::Drawing::Size(800, 800);
+			this->drawPanel->BackColor = System::Drawing::SystemColors::Window;
+			this->drawPanel->BackgroundImage = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"drawPanel.BackgroundImage")));
+			this->drawPanel->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
+			this->drawPanel->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->drawPanel->Location = System::Drawing::Point(198, 49);
+			this->drawPanel->Name = L"drawPanel";
+			this->drawPanel->Size = System::Drawing::Size(794, 584);
+			this->drawPanel->TabIndex = 7;
+			this->drawPanel->Scroll += gcnew System::Windows::Forms::ScrollEventHandler(this, &Form1::drawPanel_Scroll);
+			this->drawPanel->MouseEnter += gcnew System::EventHandler(this, &Form1::drawPanel_MouseEnter);
+			this->drawPanel->MouseLeave += gcnew System::EventHandler(this, &Form1::drawPanel_MouseLeave);
+			this->drawPanel->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &Form1::drawPanel_MouseMove);
+			this->drawPanel->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &Form1::drawPanel_MouseUp);
+			// 
+			// imageListToolbar
+			// 
+			this->imageListToolbar->ImageStream = (cli::safe_cast<System::Windows::Forms::ImageListStreamer^  >(resources->GetObject(L"imageListToolbar.ImageStream")));
+			this->imageListToolbar->TransparentColor = System::Drawing::Color::Transparent;
+			this->imageListToolbar->Images->SetKeyName(0, L"grid_activated.png");
+			this->imageListToolbar->Images->SetKeyName(1, L"grid_deactivated.png");
 			// 
 			// Form1
 			// 
@@ -486,12 +582,13 @@ namespace GAPConnect {
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->AutoSize = true;
 			this->ClientSize = System::Drawing::Size(992, 655);
-			this->Controls->Add(this->panel1);
+			this->Controls->Add(this->drawPanel);
 			this->Controls->Add(this->control);
 			this->Controls->Add(this->button1);
 			this->Controls->Add(this->mainstatusStrip);
 			this->Controls->Add(this->maintoolStrip);
 			this->Controls->Add(this->mainmenuStrip);
+			this->Cursor = System::Windows::Forms::Cursors::Default;
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^  >(resources->GetObject(L"$this.Icon")));
 			this->MinimumSize = System::Drawing::Size(400, 110);
 			this->Name = L"Form1";
@@ -519,6 +616,8 @@ namespace GAPConnect {
 #pragma endregion
 ///<summary> Laden der Iniwerte </summary>
 public: void loadDefaultValues(void){
+			/*isGridActivated
+			isGridFixed*/
 		}
 
 ///<summary> zeigt nach Menü Klick den About Dialog an.</summary>
@@ -560,15 +659,17 @@ private: System::Void speichernMenu_Click(System::Object^ sender, System::EventA
 ///<summary> DEBUG BUTTON TODO</summary>
 private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
 			 this->changedGraph = !this->changedGraph;
+			 this->isGridActivated = !this->toolStripButtonGridControl->Checked;
+			 this->isGridFixed = !this->toolStripButtonGridFixed->Checked;
 		 }
 ///<summary> Maus Bewegung im Zeichenbereich Zeigt Koordinaten im Tooltip an TODO</summary>
-private: System::Void DrawArea_MouseMove(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+private: System::Void drawPanel_MouseMove(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
 			 System::String^ start = L"X: ";
 			 this->toolStripLabelMouseX->Text = L"X: "+Convert::ToString(e->X);
 			 this->toolStripLabelMouseY->Text = L"Y: "+Convert::ToString(e->Y);
 		 }
 ///<summary> Maus verläßt Zeichenbereich. Koordinatenwerte auf Defaults </summary>
-private: System::Void DrawArea_MouseLeave(System::Object^  sender, System::EventArgs^  e) {
+private: System::Void drawPanel_MouseLeave(System::Object^  sender, System::EventArgs^  e) {
 			 this->toolStripLabelMouseX->Text = L"X: ";
 			 this->toolStripLabelMouseY->Text = L"Y: ";
 		 }
@@ -579,7 +680,103 @@ private: System::Void DrawArea_MouseLeave(System::Object^  sender, System::Event
 		  }
 ///<summary> Überprüft beim Auswählen von Toolbuttons, dass auch nur einer ausgewählt ist.</summary>
 private: System::Void toolStripButtonsOnlyOneChecked(System::Object^  sender, System::EventArgs^  e) {
-			 this->zeichentools->Controls;
+			 if (dynamic_cast<System::Windows::Forms::ToolStripButton^ >(sender)->Checked){
+				 //2 fache lauf schleife, erst durch alle container dann durch toolbar items; Deaktivieren aller Elemente
+				 for each (System::Object^ element in this->zeichentools->Controls){
+					 for each (System::Object^ toolbarButton in dynamic_cast<System::Windows::Forms::ToolStrip^>(element)->Items){
+						if (sender!=toolbarButton){
+							dynamic_cast<System::Windows::Forms::ToolStripButton^>(toolbarButton)->Checked = false;
+						}
+					 }
+				 }
+			 }
+		 }
+///<summary> Schaltet das Grid ein bzw. aus </summary>
+private: System::Void toolStripButtonGridControl_Click(System::Object^  sender, System::EventArgs^  e) {
+			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Form1::typeid));
+			this->drawPanel->BackgroundImage = this->isGridActivated ? (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"drawPanel.BackgroundImage"))) : nullptr;
+			//markierungen setzen
+			if (e != nullptr){
+				this->isGridActivated = !this->isGridActivated;
+			}
+		 }
+///<summary> Click auf Glue to Grid Button, Bild wechseln! </summary>
+private: System::Void toolStripButtonGridFixed_Click(System::Object^  sender, System::EventArgs^  e) {
+			 int idx = this->isGridFixed ? 0 : 1;
+			 this->toolStripButtonGridFixed->BackgroundImage = cli::safe_cast<System::Drawing::Image^ >(this->imageListToolbar->Images[idx]);
+			 //markierungen setzen
+			 if (e != nullptr){
+				 this->isGridFixed = !this->isGridFixed;
+			 }
+		 }
+///<summary> Zeichnet einen Knoten </summary>
+private: System::Void toolStripButtonVertex_Click(System::Object^ sender, System::EventArgs^ e){
+			 //Art festlegen; 0 - Rund, 1 - Quadrat
+			 int shape = sender == this->toolStripButtonVertexRound ? 0 : 1;
+		 }
+///<summary> Zeichnet eine Kante </summary>
+private: System::Void toolStripButtonEdge_Click(System::Object^ sender, System::EventArgs^ e){
+			 //gerichtet?
+			 bool isArc = (sender == this->toolStripButtonArc) && (sender == this->toolStripButtonArcCapacity) ? true : false;
+			 //mit Wertung?
+			 bool hasCapacity = (sender == this->toolStripButtonArcCapacity) && (sender == this->toolStripButtonEdgeCapacity) ? true : false;
+			 //TODO
+		 }
+///<summary> Scrollen des Draw Panels muss redraw triggern</summary>
+private: System::Void drawPanel_Scroll(System::Object^  sender, System::Windows::Forms::ScrollEventArgs^  e) {
+			 this->drawPanel->Refresh();
+		 }
+///<summary> MouseEnter muss je nach ausgewähltem Button den Cursor ändern. </summary>
+private: System::Void drawPanel_MouseEnter(System::Object^  sender, System::EventArgs^  e) {
+			//hole ausgewähltes
+			System::Windows::Forms::ToolStripButton^ active = this->toolBarChosen;
+
+			//nichts aktiv
+			if(active==nullptr){
+				this->drawPanel->Cursor = System::Windows::Forms::Cursors::Default;
+			}else if(active==this->toolStripButtonVertexRound){
+				this->drawPanel->Cursor = gcnew System::Windows::Forms::Cursor(L"cursor_round.cur");
+			}else if(active==this->toolStripButtonVertexSquare){
+				this->drawPanel->Cursor = gcnew System::Windows::Forms::Cursor(L"cursor_square.cur");
+			}else if(active==this->toolStripButtonEdge || active==this->toolStripButtonEdgeCapacity){
+				this->drawPanel->Cursor = gcnew System::Windows::Forms::Cursor(L"cursor_edge.cur");
+			}else if(active== this->toolStripButtonArc || active==this->toolStripButtonArcCapacity){
+				this->drawPanel->Cursor = gcnew System::Windows::Forms::Cursor(L"cursor_arc.cur");
+			}
+		 }
+		 ///<summary> mit Beenden des Klicks (Up) zeichnen des Objekts an der Stelle des Mousecursors. </summary>
+private: System::Void drawPanel_MouseUp(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+			 //nur executen wenn auch Zeichnen Modus ausgewählt
+			 System::Windows::Forms::ToolStripButton^ chosenOption = this->toolBarChosen;
+			 if(chosenOption != nullptr){
+				 this->drawPanel->SuspendLayout();
+
+				//Button als Vertex
+				System::Windows::Forms::Button^ vertex = (gcnew System::Windows::Forms::Button());
+				vertex->Location = System::Drawing::Point(e->X, e->Y);
+				vertex->BackColor = System::Drawing::Color::Black;
+				vertex->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+				vertex->ForeColor = System::Drawing::Color::White;
+				vertex->Name = String::Concat(L"vertex",this->drawPanel->Controls->Count);
+				vertex->Size = System::Drawing::Size(25, 25);
+				vertex->Text = L"X";
+				vertex->UseVisualStyleBackColor = false;
+				vertex->CausesValidation = false;
+				vertex->Enabled = true;
+				vertex->FlatAppearance->BorderColor = System::Drawing::Color::Black;
+				vertex->FlatAppearance->BorderSize = 0;
+				vertex->FlatAppearance->MouseDownBackColor = System::Drawing::Color::Black;
+				vertex->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Black;
+				vertex->TabIndex = this->drawPanel->Controls->Count;
+				vertex->TabStop = false;
+
+				//Button Drawpanel hinzufügen
+				this->drawPanel->Controls->Add(vertex);
+				//Layout!
+				this->drawPanel->ResumeLayout(false);
+				//Auswahl deaktivieren
+				chosenOption->Checked=false;
+			 }
 		 }
 };
 }
