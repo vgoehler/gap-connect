@@ -84,6 +84,8 @@ namespace GAPConnect {
 
 	private: System::Windows::Forms::ToolStripButton^  toolStripButtonGridFixed;
 
+
+
 	private: System::Windows::Forms::ImageList^  imageListToolbar;
 
 	///<summary>Änderungen am Graph in Property vermerken. set routine setzt auch enable im Menü</summary>
@@ -589,6 +591,7 @@ namespace GAPConnect {
 			this->Controls->Add(this->maintoolStrip);
 			this->Controls->Add(this->mainmenuStrip);
 			this->Cursor = System::Windows::Forms::Cursors::Default;
+			this->DoubleBuffered = true;
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^  >(resources->GetObject(L"$this.Icon")));
 			this->MinimumSize = System::Drawing::Size(400, 110);
 			this->Name = L"Form1";
@@ -751,27 +754,19 @@ private: System::Void drawPanel_MouseUp(System::Object^  sender, System::Windows
 			 if(chosenOption != nullptr){
 				 this->drawPanel->SuspendLayout();
 
-				//Button als Vertex
-				System::Windows::Forms::Button^ vertex = (gcnew System::Windows::Forms::Button());
-				vertex->Location = System::Drawing::Point(e->X, e->Y);
-				vertex->BackColor = System::Drawing::Color::Black;
-				vertex->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-				vertex->ForeColor = System::Drawing::Color::White;
-				vertex->Name = String::Concat(L"vertex",this->drawPanel->Controls->Count);
-				vertex->Size = System::Drawing::Size(25, 25);
-				vertex->Text = L"X";
-				vertex->UseVisualStyleBackColor = false;
-				vertex->CausesValidation = false;
-				vertex->Enabled = true;
-				vertex->FlatAppearance->BorderColor = System::Drawing::Color::Black;
-				vertex->FlatAppearance->BorderSize = 0;
-				vertex->FlatAppearance->MouseDownBackColor = System::Drawing::Color::Black;
-				vertex->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Black;
-				vertex->TabIndex = this->drawPanel->Controls->Count;
-				vertex->TabStop = false;
+				if (chosenOption == this->toolStripButtonVertexRound || chosenOption == this->toolStripButtonVertexSquare)
+				{
+					//Vertex schreiben
+					vertexView^ vertex = (gcnew vertexView());
+					vertex->LocationCenter = System::Drawing::Point(e->X, e->Y);
+				
+					//VertexArt
+					vertex->kindOf = chosenOption == this->toolStripButtonVertexRound ? 0 : 1;
 
-				//Button Drawpanel hinzufügen
-				this->drawPanel->Controls->Add(vertex);
+					//Button Drawpanel hinzufügen
+					this->drawPanel->Controls->Add(vertex);
+				}
+
 				//Layout!
 				this->drawPanel->ResumeLayout(false);
 				//Auswahl deaktivieren

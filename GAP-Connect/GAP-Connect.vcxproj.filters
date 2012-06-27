@@ -31,6 +31,9 @@
     <None Include="cursor_arc.cur">
       <Filter>Ressourcendateien</Filter>
     </None>
+    <None Include="..\Pictures\vertexHard.png">
+      <Filter>Ressourcendateien</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GAP-Connect.cpp">
@@ -45,6 +48,9 @@
     <ClCompile Include="about.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="vertexView.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Form1.h">
@@ -57,6 +63,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="about.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vertexView.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>
