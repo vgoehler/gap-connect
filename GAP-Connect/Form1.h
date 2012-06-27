@@ -1,5 +1,6 @@
 #pragma once
 #include "stdafx.h"
+#include <cstdlib>
 
 namespace GAPConnect {
 	using namespace System;
@@ -21,6 +22,7 @@ namespace GAPConnect {
 
 			this->aboutDialog = gcnew about();
 			this->changedGraph = false;
+			this->startedDrawing = nullptr;
 			//TODO Werte aus Ini Laden
 			this->loadDefaultValues();
 		}
@@ -41,6 +43,8 @@ namespace GAPConnect {
 	private: about^ aboutDialog;
 	///<summary>Member um Veränderungen im Inhalt zu charakterisieren</summary>
 	private: bool m_unsavedChanges;
+	///<summary>Handle um edge Zeichnen in progress zu signalisieren, speichert den Start, ansonsten nullptr</summary>
+	private: vertexView^ startedDrawing;
 
 	private: System::Windows::Forms::MenuStrip^  mainmenuStrip;
 	private: System::Windows::Forms::ToolStripMenuItem^  dateiToolStripMenuItem;
@@ -693,6 +697,16 @@ private: System::Void toolStripButtonsOnlyOneChecked(System::Object^  sender, Sy
 					 }
 				 }
 			 }
+			 //Edge Zeichnen
+			 //deaktivieren der Auswahl des gespeicherten Knotens und des Knotens selbst
+			 if (this->startedDrawing != nullptr)
+			 {
+				 bool isMarked;
+				 do{//Nur zur Sicherheit, da markVertex switched
+					 isMarked = this->startedDrawing->markVertex();
+				 }while(isMarked);
+				 this->startedDrawing = nullptr;
+			 }
 		 }
 ///<summary> Schaltet das Grid ein bzw. aus </summary>
 private: System::Void toolStripButtonGridControl_Click(System::Object^  sender, System::EventArgs^  e) {
@@ -712,12 +726,12 @@ private: System::Void toolStripButtonGridFixed_Click(System::Object^  sender, Sy
 				 this->isGridFixed = !this->isGridFixed;
 			 }
 		 }
-///<summary> Zeichnet einen Knoten </summary>
+///<summary> Zeichnet einen Knoten TODO </summary>
 private: System::Void toolStripButtonVertex_Click(System::Object^ sender, System::EventArgs^ e){
 			 //Art festlegen; 0 - Rund, 1 - Quadrat
 			 int shape = sender == this->toolStripButtonVertexRound ? 0 : 1;
 		 }
-///<summary> Zeichnet eine Kante </summary>
+///<summary> TODO Obsolete?</summary>
 private: System::Void toolStripButtonEdge_Click(System::Object^ sender, System::EventArgs^ e){
 			 //gerichtet?
 			 bool isArc = (sender == this->toolStripButtonArc) && (sender == this->toolStripButtonArcCapacity) ? true : false;
@@ -753,25 +767,75 @@ private: System::Void drawPanel_MouseUp(System::Object^  sender, System::Windows
 			 System::Windows::Forms::ToolStripButton^ chosenOption = this->toolBarChosen;
 			 if(chosenOption != nullptr){
 				 this->drawPanel->SuspendLayout();
+				 //Mouse Koordinaten an Situation anpassen - Lock Modus beachten
+				 int mouseX = e->X;
+				 int mouseY = e->Y;
+				 if (this->isGridFixed){
+					 mouseX = mouseX%50 > 25 ? mouseX-mouseX%50 +50 : mouseX - mouseX%50;
+					 mouseY = mouseY%50 > 25 ? mouseY-mouseY%50 +50 : mouseY - mouseY%50;
+				 }
 
 				if (chosenOption == this->toolStripButtonVertexRound || chosenOption == this->toolStripButtonVertexSquare)
 				{
 					//Vertex schreiben
-					vertexView^ vertex = (gcnew vertexView());
-					vertex->LocationCenter = System::Drawing::Point(e->X, e->Y);
+					vertexView^ vertex = (gcnew vertexView(this));
+					vertex->LocationCenter = System::Drawing::Point(mouseX, mouseY);
 				
 					//VertexArt
 					vertex->kindOf = chosenOption == this->toolStripButtonVertexRound ? 0 : 1;
 
 					//Button Drawpanel hinzufügen
 					this->drawPanel->Controls->Add(vertex);
+
+					//Auswahl deaktivieren
+					chosenOption->Checked=false;
 				}
 
 				//Layout!
 				this->drawPanel->ResumeLayout(false);
-				//Auswahl deaktivieren
-				chosenOption->Checked=false;
 			 }
+		 }
+		 ///<summary> Mouse Button Up Ereigniss von Knoten ausgelöst. </summary>
+public: System::Void vertex_MouseUp(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e){
+			 System::Windows::Forms::ToolStripButton^ chosenOption = this->toolBarChosen;
+			 //wenn edge option aktiv dann textcolor ändern um auswahl zu signalisieren
+			 if (chosenOption == this->toolStripButtonEdge || chosenOption == this->toolStripButtonEdgeCapacity || chosenOption == this->toolStripButtonArc || chosenOption == this->toolStripButtonArcCapacity)
+			 {
+				 bool vertexMarked = dynamic_cast<vertexView^ >(sender)->markVertex();
+				 //wenn Knoten wieder deaktiviert, dann wurde wohl falscher startknoten ausgewählt und wieder deaktiviert
+				 if (!vertexMarked){
+					this->startedDrawing = nullptr;
+				 }
+				 if (this->startedDrawing == nullptr){//Edge zeichnen noch nicht gestartet
+					 //speichern des starts wenn noch nicht gestartet
+					 this->startedDrawing = dynamic_cast<vertexView^ >(sender);
+				 }else{
+						//wenn bereits gestartet dann ende vermerken und objekt initialisieren
+						System::Windows::Forms::Panel^ edgePanel = (gcnew System::Windows::Forms::Panel());//TODO
+						edgePanel->Location = System::Drawing::Point(
+												this->startedDrawing->Location.X < dynamic_cast<vertexView^ >(sender)->Location.X ? this->startedDrawing->Location.X : dynamic_cast<vertexView^ >(sender)->Location.X, 
+												this->startedDrawing->Location.Y < dynamic_cast<vertexView^ >(sender)->Location.Y ? this->startedDrawing->Location.Y : dynamic_cast<vertexView^ >(sender)->Location.Y);
+						edgePanel->Name = L"Test";
+						edgePanel->Size = System::Drawing::Size(	abs(this->startedDrawing->Location.X - dynamic_cast<vertexView^ >(sender)->Location.X), 
+																	abs(this->startedDrawing->Location.Y - dynamic_cast<vertexView^ >(sender)->Location.Y));
+						edgePanel->BackColor = System::Drawing::Color::Maroon;
+
+						this->drawPanel->Controls->Add(edgePanel);
+
+						//ende muss noch markierungen entfernen auf beiden Knoten
+						do{
+							vertexMarked = this->startedDrawing->markVertex();
+						}while(vertexMarked);
+						do{
+							vertexMarked = dynamic_cast<vertexView^ >(sender)->markVertex();
+						}while(vertexMarked);
+
+						//Auswahl deaktivieren
+						chosenOption->Checked=false;
+						//ende! start deact
+						this->startedDrawing = nullptr;
+				 }
+			 } 
 		 }
 };
 }
