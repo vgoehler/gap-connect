@@ -6,4 +6,5 @@
 // TODO: Hier auf zusätzliche Header, die das Programm erfordert, verweisen.
 #include "about.h"
 #include "vertexView.h"
+#include "edgeView.h"
 #include "Form1.h"

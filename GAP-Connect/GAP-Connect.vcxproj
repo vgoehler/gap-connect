@@ -94,22 +94,28 @@
   <ItemGroup>
     <ClCompile Include="about.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="edgeView.cpp" />
     <ClCompile Include="GAP-Connect.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="VertexChangeDialog.cpp" />
     <ClCompile Include="vertexView.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="about.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="edgeView.h" />
     <ClInclude Include="Form1.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="VertexChangeDialog.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="vertexView.h" />
   </ItemGroup>
   <ItemGroup>
@@ -122,6 +128,9 @@
     <EmbeddedResource Include="Form1.resX">
       <DependentUpon>Form1.h</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VertexChangeDialog.resx">
+      <DependentUpon>VertexChangeDialog.h</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

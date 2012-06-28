@@ -51,6 +51,12 @@
     <ClCompile Include="vertexView.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="VertexChangeDialog.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="edgeView.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Form1.h">
@@ -66,6 +72,12 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="vertexView.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexChangeDialog.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="edgeView.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

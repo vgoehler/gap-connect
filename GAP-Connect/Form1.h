@@ -1,6 +1,5 @@
 #pragma once
 #include "stdafx.h"
-#include <cstdlib>
 
 namespace GAPConnect {
 	using namespace System;
@@ -25,6 +24,8 @@ namespace GAPConnect {
 			this->startedDrawing = nullptr;
 			//TODO Werte aus Ini Laden
 			this->loadDefaultValues();
+			//Disablen
+			this->toolStripButtonEdgesEnable();
 		}
 
 	protected:
@@ -444,7 +445,7 @@ namespace GAPConnect {
 			this->zeichentools->Dock = System::Windows::Forms::DockStyle::Top;
 			this->zeichentools->Location = System::Drawing::Point(0, 0);
 			this->zeichentools->Name = L"zeichentools";
-			this->zeichentools->Size = System::Drawing::Size(198, 231);
+			this->zeichentools->Size = System::Drawing::Size(198, 250);
 			this->zeichentools->TabIndex = 0;
 			this->zeichentools->TabStop = false;
 			this->zeichentools->Text = L"Zeichnen";
@@ -459,7 +460,7 @@ namespace GAPConnect {
 			this->zeichnenEdge->Location = System::Drawing::Point(3, 70);
 			this->zeichnenEdge->Name = L"zeichnenEdge";
 			this->zeichnenEdge->RenderMode = System::Windows::Forms::ToolStripRenderMode::System;
-			this->zeichnenEdge->Size = System::Drawing::Size(192, 158);
+			this->zeichnenEdge->Size = System::Drawing::Size(192, 177);
 			this->zeichnenEdge->TabIndex = 1;
 			// 
 			// toolStripButtonEdge
@@ -652,7 +653,7 @@ private: System::Void ladenMenu_Click(System::Object^  sender, System::EventArgs
 				 if( (inputStream = this->openFileDialog1->OpenFile()) != nullptr ){//sanity check
 					 //TODO Modus unterscheiden
 					 //TODO lesen
-					 inputStream->Close();
+					 inputStream->Close();					 //zuletzt					 m_unsavedChanges=false;					 this->toolStripButtonEdgesEnable();
 				 }
 			 }
 		 }
@@ -682,8 +683,14 @@ private: System::Void drawPanel_MouseLeave(System::Object^  sender, System::Even
 		 }
 ///<summary> Neues Dokument </summary>
  private: System::Void neuMenu_Click(System::Object^ sender, System::EventArgs^ e){
-			  //TODO alle daten löschen, nachfragen ob gespeichert werden soll
+			  //TODO nachfragen ob gespeichert werden soll
 
+			  //Zeichenbereich löschen
+			  this->drawPanel->Controls->Clear();
+
+			  //zuLetzt!
+			  m_unsavedChanges = false;
+			  this->toolStripButtonEdgesEnable();
 		  }
 ///<summary> Überprüft beim Auswählen von Toolbuttons, dass auch nur einer ausgewählt ist.</summary>
 private: System::Void toolStripButtonsOnlyOneChecked(System::Object^  sender, System::EventArgs^  e) {
@@ -726,10 +733,22 @@ private: System::Void toolStripButtonGridFixed_Click(System::Object^  sender, Sy
 				 this->isGridFixed = !this->isGridFixed;
 			 }
 		 }
-///<summary> Zeichnet einen Knoten TODO </summary>
+///<summary> Obsolete?</summary>
 private: System::Void toolStripButtonVertex_Click(System::Object^ sender, System::EventArgs^ e){
-			 //Art festlegen; 0 - Rund, 1 - Quadrat
-			 int shape = sender == this->toolStripButtonVertexRound ? 0 : 1;
+		 }
+///<summary> Enabled bzw. Disabled ToolStripButtons die Kanten zeichnen.</summary>
+private: void toolStripButtonEdgesEnable(){
+			 if (this->drawPanel->Controls->Count > 0){
+				 for each (System::Windows::Forms::ToolStripButton^ element in this->zeichnenEdge->Items)
+				 {
+					 element->Enabled = true;
+				 }
+			 }else{
+				 for each (System::Windows::Forms::ToolStripButton^ element in this->zeichnenEdge->Items)
+				 {
+					 element->Enabled = false;
+				 }
+			 }
 		 }
 ///<summary> TODO Obsolete?</summary>
 private: System::Void toolStripButtonEdge_Click(System::Object^ sender, System::EventArgs^ e){
@@ -789,6 +808,10 @@ private: System::Void drawPanel_MouseUp(System::Object^  sender, System::Windows
 
 					//Auswahl deaktivieren
 					chosenOption->Checked=false;
+
+					//Veränderungen markieren
+					m_unsavedChanges = true;
+					this->toolStripButtonEdgesEnable();
 				}
 
 				//Layout!
@@ -811,29 +834,20 @@ public: System::Void vertex_MouseUp(System::Object^ sender, System::Windows::For
 					 this->startedDrawing = dynamic_cast<vertexView^ >(sender);
 				 }else{
 						//wenn bereits gestartet dann ende vermerken und objekt initialisieren
-						System::Windows::Forms::Panel^ edgePanel = (gcnew System::Windows::Forms::Panel());//TODO
-						edgePanel->Location = System::Drawing::Point(
-												this->startedDrawing->Location.X < dynamic_cast<vertexView^ >(sender)->Location.X ? this->startedDrawing->Location.X : dynamic_cast<vertexView^ >(sender)->Location.X, 
-												this->startedDrawing->Location.Y < dynamic_cast<vertexView^ >(sender)->Location.Y ? this->startedDrawing->Location.Y : dynamic_cast<vertexView^ >(sender)->Location.Y);
-						edgePanel->Name = L"Test";
-						edgePanel->Size = System::Drawing::Size(	abs(this->startedDrawing->Location.X - dynamic_cast<vertexView^ >(sender)->Location.X), 
-																	abs(this->startedDrawing->Location.Y - dynamic_cast<vertexView^ >(sender)->Location.Y));
-						edgePanel->BackColor = System::Drawing::Color::Maroon;
+						edgeView^ edgePanel = (gcnew edgeView(this, this->startedDrawing, dynamic_cast<vertexView^>(sender), 0));//TODO
+//Methode zum Location , Placing und Direction des Panelträgers und des Pfeiles
 
 						this->drawPanel->Controls->Add(edgePanel);
 
-						//ende muss noch markierungen entfernen auf beiden Knoten
-						do{
-							vertexMarked = this->startedDrawing->markVertex();
-						}while(vertexMarked);
+						//ende muss noch markierungen entfernen auf Knoten (Startknoten wird von checkstate change entfernt)
 						do{
 							vertexMarked = dynamic_cast<vertexView^ >(sender)->markVertex();
 						}while(vertexMarked);
 
 						//Auswahl deaktivieren
 						chosenOption->Checked=false;
-						//ende! start deact
-						this->startedDrawing = nullptr;
+						//Veränderungen markieren
+						m_unsavedChanges = true;
 				 }
 			 } 
 		 }
