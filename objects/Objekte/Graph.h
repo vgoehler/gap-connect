@@ -2,6 +2,8 @@
 #include "KnotenEckig.h"
 #include "KnotenRund.h"
 #include "Kante.h"
+using namespace System;
+[Serializable]
 ref class Graph
 {
 public:
@@ -24,9 +26,12 @@ public:
 	void deleted_edge(Kante^ kante_del);
 	void deleted_vertex(Knoten^ knoten_del);
 
-	array<int,2>^ convert_to_adjacency();	//zurückgegebenes array wieder löschen nach verwendung!
-	bool convert_from_adjacency(array<int,2>^ array_adj);	//erstellt immer gerichteten Graphen
-
+	array<int,2>^ convert_graph_to_adjacency();	//zurückgegebenes array wieder löschen nach verwendung!
+	void convert_adjacency_to_graph(array<int,2>^ array_adj);	//erstellt immer gerichteten Graphen
+	void write_adjacency_to_file(System::String^ string_fileName,array<int,2>^ array_adj);
+	array<int,2>^ read_file_to_adjacency(System::String^ string_fileName);
+	bool save_graph(System::String ^string_fileName );
+	static Graph^ load_graph(System::String ^_FileName);
 	//addcomment-system?
 
 	

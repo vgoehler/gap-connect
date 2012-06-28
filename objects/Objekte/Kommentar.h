@@ -1,4 +1,6 @@
 #pragma once
+using namespace System;
+[ Serializable ]
 ref class Kommentar
 {
 private:

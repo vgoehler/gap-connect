@@ -18,9 +18,21 @@ int main(array<System::String ^> ^args)
 	Graph^ graphi=gcnew Graph();
 	graphi->create_vertex("A","erster Knoten",10.4);
 	graphi->create_vertex("B","zweiter knoten",20,30);
+	graphi->create_vertex("C","dritter knoten",20,30);
+	graphi->create_vertex("D","vierter knoten",20,30);
 	graphi->create_edge(graphi->verticles[0],graphi->verticles[1],2,STREIFEN);
-	graphi->edges[0];
-	delete graphi->verticles[1];
+	graphi->create_edge(graphi->verticles[2],graphi->verticles[1],1,STREIFEN);
+	graphi->create_edge(graphi->verticles[3],graphi->verticles[0],1,STREIFEN);
+	graphi->create_edge(graphi->verticles[3],graphi->verticles[3],1,STREIFEN);
+	graphi->write_adjacency_to_file("xtestfile",graphi->convert_graph_to_adjacency());	
+	graphi->convert_adjacency_to_graph(graphi->read_file_to_adjacency("xtestfile"));
+	graphi->write_adjacency_to_file("xtestfile",graphi->convert_graph_to_adjacency());
+	graphi->save_graph("xgraphfile");
+	Graph^ graph2 = Graph::load_graph("xgraphfile");
+	//graphi->edges[0];
+	//delete graphi->verticles[1];
+	int breakpoint1=0;
+
 	/*trim test
 	System::Collections::Generic::List<int> listy =gcnew List<int>();
 	int x=5;

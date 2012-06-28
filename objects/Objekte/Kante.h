@@ -1,12 +1,13 @@
 #pragma once
 #include "Kommentar.h"
 enum KantenFormat{NORMAL,STREIFEN,PUNKTE,WELLE}; //und sonstige ideen - je nach implementierung...
+using namespace System;
 
 ref class Knoten;
 ref class Graph;	/*reine Deklaration von "Knoten" und "Graph" zur verwendung der Knoten-Handle unter
 					 *vermeidung von kreuzenden Einbindungen der Header (Knoten.h und Kante.h)
 					 */
-
+[Serializable]
 ref class Kante
 {
 public:

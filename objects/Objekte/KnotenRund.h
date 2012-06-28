@@ -1,5 +1,7 @@
 #pragma once
 #include "knoten.h"
+
+[Serializable]
 ref class KnotenRund :
 public Knoten
 {

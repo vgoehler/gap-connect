@@ -2,10 +2,12 @@
 #include <string>
 #include "Kommentar.h"
 #include "Kante.h"
-
+using namespace System;
+[Serializable]
 ref class Graph;
 
 using namespace System::Collections::Generic;
+[Serializable]
 ref class Knoten
 {
 public:
@@ -18,7 +20,7 @@ protected:
 	System::String^ label;
 	System::String^ tooltip;
 	Graph^ owning_graph;			/*achtung! hält "Graph" am leben, auch wenn dieser deleted wird, sofern nicht auch alle zugehörigen 
-								 *kanten freigegeben werden! */
+									 *kanten freigegeben werden! */
 
 public:
 	//Knoten(void);   //abstrakte klasse
