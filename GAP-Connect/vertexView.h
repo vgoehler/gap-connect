@@ -31,12 +31,17 @@ namespace GAPConnect {
 
 		///<summary> Markiert Knoten visuell und gibt markierungszustand zurück</summary>
 		bool markVertex(void);
+		///<summary> startet den Dialog zum Konfigurieren des Knotens.</summary>
+		void startConfigDialog(void);
 
 	private:
 			int vertexType;
 			bool isMarked;
 			//TODO Ownervariable als Dateninterface
 			void InitializeComponent(void);
+			///<summary> je nach gewünschter Art des Knotens wird eine andere Darstellungsform gewählt</summary>
 			void changeAppearance(void);
+			///<summary> Initializiert alle Felder des Dialogs mit passenden Werten aus sich selbst (zu bearbeitender Knoten).</summary>
+			void InitializeValues(System::Windows::Forms::Form^);
 	};
 }

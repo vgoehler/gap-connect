@@ -34,11 +34,45 @@ namespace GAPConnect {
 				delete components;
 			}
 		}
-	private: System::Windows::Forms::TextBox^  textBox1;
-	protected: 
-	private: System::Windows::Forms::TextBox^  textBox2;
+	public:
+		property System::String^ Knotenbeschriftung{
+			void set(System::String^ inText){
+				this->knotenText->Text = inText;
+			}
+			System::String^ get(void){
+				return (this->knotenText->Text);
+			}
+		}
+		property System::String^ Kommentar{
+			void set(System::String^ inText){
+				this->kommentar->Text = inText;
+			}
+			System::String^ get(void){
+				return (this->kommentar->Text);
+			}
+		}
+		property bool DoAdjustSize{
+			void set(bool inValue){
+				this->adjustSize->Checked = inValue;
+			}
+			bool get(void){
+				return(this->adjustSize->Checked);
+			}
+		}
+		property int Knotenart{
+			void set(int inValue){
+				this->cbType->SelectedIndex = inValue;
+			}
+			int get(void){
+				return(this->cbType->SelectedIndex);
+			}
+		}
+
+	private: System::Windows::Forms::TextBox^  knotenText;
+	private: System::Windows::Forms::TextBox^  kommentar;
 	private: System::Windows::Forms::CheckBox^  adjustSize;
-	private: System::Windows::Forms::ComboBox^  comboBox1;
+	private: System::Windows::Forms::ComboBox^  cbType;
+
 	private: System::Windows::Forms::Button^  Ok;
 	private: System::Windows::Forms::Button^  cancel;
 
@@ -60,41 +94,16 @@ namespace GAPConnect {
 			System::Windows::Forms::Label^  label1;
 			System::Windows::Forms::Label^  label2;
 			System::Windows::Forms::Label^  label3;
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
-			this->textBox2 = (gcnew System::Windows::Forms::TextBox());
+			this->knotenText = (gcnew System::Windows::Forms::TextBox());
+			this->kommentar = (gcnew System::Windows::Forms::TextBox());
 			this->adjustSize = (gcnew System::Windows::Forms::CheckBox());
-			this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
+			this->cbType = (gcnew System::Windows::Forms::ComboBox());
 			this->Ok = (gcnew System::Windows::Forms::Button());
 			this->cancel = (gcnew System::Windows::Forms::Button());
 			label1 = (gcnew System::Windows::Forms::Label());
 			label2 = (gcnew System::Windows::Forms::Label());
 			label3 = (gcnew System::Windows::Forms::Label());
 			this->SuspendLayout();
-			// 
-			// textBox1
-			// 
-			this->textBox1->Location = System::Drawing::Point(12, 32);
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(183, 20);
-			this->textBox1->TabIndex = 0;
-			// 
-			// textBox2
-			// 
-			this->textBox2->Location = System::Drawing::Point(202, 32);
-			this->textBox2->Multiline = true;
-			this->textBox2->Name = L"textBox2";
-			this->textBox2->Size = System::Drawing::Size(221, 218);
-			this->textBox2->TabIndex = 1;
-			// 
-			// adjustSize
-			// 
-			this->adjustSize->AutoSize = true;
-			this->adjustSize->Location = System::Drawing::Point(13, 58);
-			this->adjustSize->Name = L"adjustSize";
-			this->adjustSize->Size = System::Drawing::Size(181, 17);
-			this->adjustSize->TabIndex = 2;
-			this->adjustSize->Text = L"Größe an Beschriftung anpassen";
-			this->adjustSize->UseVisualStyleBackColor = true;
 			// 
 			// label1
 			// 
@@ -114,15 +123,6 @@ namespace GAPConnect {
 			label2->TabIndex = 4;
 			label2->Text = L"Kommentar";
 			// 
-			// comboBox1
-			// 
-			this->comboBox1->FormattingEnabled = true;
-			this->comboBox1->Items->AddRange(gcnew cli::array< System::Object^  >(2) {L"Rechteck", L"Kreis"});
-			this->comboBox1->Location = System::Drawing::Point(13, 108);
-			this->comboBox1->Name = L"comboBox1";
-			this->comboBox1->Size = System::Drawing::Size(182, 21);
-			this->comboBox1->TabIndex = 5;
-			// 
 			// label3
 			// 
 			label3->AutoSize = true;
@@ -132,12 +132,48 @@ namespace GAPConnect {
 			label3->TabIndex = 6;
 			label3->Text = L"Knotenart";
 			// 
+			// knotenText
+			// 
+			this->knotenText->Location = System::Drawing::Point(12, 32);
+			this->knotenText->Name = L"knotenText";
+			this->knotenText->Size = System::Drawing::Size(183, 20);
+			this->knotenText->TabIndex = 0;
+			// 
+			// kommentar
+			// 
+			this->kommentar->Location = System::Drawing::Point(202, 32);
+			this->kommentar->Multiline = true;
+			this->kommentar->Name = L"kommentar";
+			this->kommentar->Size = System::Drawing::Size(221, 218);
+			this->kommentar->TabIndex = 4;
+			// 
+			// adjustSize
+			// 
+			this->adjustSize->AutoSize = true;
+			this->adjustSize->Location = System::Drawing::Point(13, 58);
+			this->adjustSize->Name = L"adjustSize";
+			this->adjustSize->Size = System::Drawing::Size(181, 17);
+			this->adjustSize->TabIndex = 1;
+			this->adjustSize->Text = L"Größe an Beschriftung anpassen";
+			this->adjustSize->UseVisualStyleBackColor = true;
+			// 
+			// cbType
+			// 
+			this->cbType->FormattingEnabled = true;
+			this->cbType->Items->AddRange(gcnew cli::array< System::Object^  >(2) {L"Kreis", L"Rechteck"});
+			this->cbType->Location = System::Drawing::Point(13, 108);
+			this->cbType->Name = L"cbType";
+			this->cbType->Size = System::Drawing::Size(182, 21);
+			this->cbType->TabIndex = 3;
+			// 
 			// Ok
 			// 
+			this->Ok->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
+			this->Ok->DialogResult = System::Windows::Forms::DialogResult::OK;
 			this->Ok->Location = System::Drawing::Point(107, 227);
 			this->Ok->Name = L"Ok";
 			this->Ok->Size = System::Drawing::Size(88, 23);
-			this->Ok->TabIndex = 7;
+			this->Ok->TabIndex = 6;
 			this->Ok->Text = L"Übernehmen";
 			this->Ok->UseVisualStyleBackColor = true;
 			// 
@@ -147,7 +183,7 @@ namespace GAPConnect {
 			this->cancel->Location = System::Drawing::Point(12, 227);
 			this->cancel->Name = L"cancel";
 			this->cancel->Size = System::Drawing::Size(88, 23);
-			this->cancel->TabIndex = 8;
+			this->cancel->TabIndex = 5;
 			this->cancel->Text = L"Abbrechen";
 			this->cancel->UseVisualStyleBackColor = true;
 			// 
@@ -161,13 +197,15 @@ namespace GAPConnect {
 			this->Controls->Add(this->cancel);
 			this->Controls->Add(this->Ok);
 			this->Controls->Add(label3);
-			this->Controls->Add(this->comboBox1);
+			this->Controls->Add(this->cbType);
 			this->Controls->Add(label2);
 			this->Controls->Add(label1);
 			this->Controls->Add(this->adjustSize);
-			this->Controls->Add(this->textBox2);
-			this->Controls->Add(this->textBox1);
+			this->Controls->Add(this->kommentar);
+			this->Controls->Add(this->knotenText);
+			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedToolWindow;
 			this->Name = L"VertexChangeDialog";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 			this->Text = L"Knotenbearbeitung";
 			this->ResumeLayout(false);
 			this->PerformLayout();
