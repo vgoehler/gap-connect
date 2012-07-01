@@ -94,6 +94,7 @@
   <ItemGroup>
     <ClCompile Include="about.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="basicView.cpp" />
     <ClCompile Include="edgeView.cpp" />
     <ClCompile Include="GAP-Connect.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -107,6 +108,7 @@
     <ClInclude Include="about.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="basicView.h" />
     <ClInclude Include="edgeView.h" />
     <ClInclude Include="Form1.h">
       <FileType>CppForm</FileType>

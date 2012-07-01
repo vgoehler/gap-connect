@@ -3,59 +3,51 @@
 
 
 namespace GAPConnect {
-	vertexView::vertexView(System::Windows::Forms::Form^ inParent):vertexType(0), isMarked(false)
+	vertexView::vertexView(System::Windows::Forms::Form^ inParent):basicView(inParent), vertexType(0), isMarked(false)
 	{
-		this->Parent = inParent;
-		InitializeComponent();
+		this->Size = System::Drawing::Size(25,25);
+		this->MinSize = System::Drawing::Size(20,20);
+		this->MaxSize = System::Drawing::Size(100,100);
+		this->Text = L"Andrea";
+		this->textFont = gcnew System::Drawing::Font( "Arial",8 );
+		this->Kommentar = L"Dies ist ein Kommentar!";
 	}
 
-	void vertexView::InitializeComponent( void )
+	void vertexView::paintVertex(System::Windows::Forms::PaintEventArgs^ e)
 	{
-		this->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Zoom;
-		this->ForeColor = System::Drawing::Color::White;
-		this->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-		this->Size = System::Drawing::Size(25, 25);
-		this->Text = L"";
-		this->MaximumSize = System::Drawing::Size(100, 100);
-		this->MinimumSize = System::Drawing::Size(25, 25);
-		this->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
-		this->UseVisualStyleBackColor = false;
-		this->CausesValidation = false;
-		this->Enabled = true;
-		this->FlatAppearance->BorderColor = System::Drawing::Color::Firebrick;
-		this->FlatAppearance->BorderSize = 0;
-		this->TabStop = false;
-		this->ContextMenuStrip = (dynamic_cast<GAPConnect::Form1^ >(this->Parent))->MenuforVertex;
-		this->changeAppearance();
+		//graphic
+		System::Drawing::Graphics^ g = e->Graphics;
+		//stringFormat
+		System::Drawing::StringFormat^ sf = gcnew System::Drawing::StringFormat();
+		sf->Alignment = System::Drawing::StringAlignment::Center;
+		sf->LineAlignment = System::Drawing::StringAlignment::Center;
 
-		//event
-		this->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(dynamic_cast<GAPConnect::Form1^ >(this->Parent), &Form1::vertex_MouseUp);
-		this->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(dynamic_cast<GAPConnect::Form1^ >(this->Parent), &Form1::vertex_MouseDown);
-		this->MouseHover += gcnew System::EventHandler(dynamic_cast<GAPConnect::Form1^ >(this->Parent), &Form1::drawPanel_MouseHover);
-	}
-
-	void vertexView::changeAppearance( void )
-	{
 		if (this->vertexType == 0)//round
 		{
-			this->BackgroundImage = System::Drawing::Image::FromFile(L"./Images/vertexHard.png");
-			this->BackColor = System::Drawing::Color::Transparent;
-			this->Text = L"";
-			this->FlatAppearance->MouseDownBackColor = System::Drawing::Color::Transparent;
-			this->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Transparent;
-		}else{
-			this->BackgroundImage = nullptr;
-			this->BackColor = System::Drawing::Color::Black;
-			this->Text = L"";
-			this->FlatAppearance->MouseDownBackColor = System::Drawing::Color::Black;
-			this->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Black;
+			g->FillEllipse(gcnew System::Drawing::SolidBrush(System::Drawing::Color::Black), this->GetBorderRectangle);
+			sf->Trimming = System::Drawing::StringTrimming::EllipsisCharacter;
+		}else{//square
+			g->FillRectangle(gcnew System::Drawing::SolidBrush(System::Drawing::Color::Black), this->GetBorderRectangle);
+			sf->Trimming = System::Drawing::StringTrimming::Character;
 		}
+		if (this->isMarked)
+		{
+			if (this->vertexType == 0)
+			{
+				g->DrawEllipse(gcnew System::Drawing::Pen(System::Drawing::Color::Gold, 3), this->GetBorderRectangle);
+			} 
+			else
+			{
+				g->DrawRectangle(gcnew System::Drawing::Pen(System::Drawing::Color::Gold, 3), this->GetBorderRectangle);
+			}
+		}
+
+		g->DrawString( this->Text, this->textFont, System::Drawing::Brushes::AntiqueWhite, this->GetBorderRectangle, sf);
 	}
 
 	bool vertexView::markVertex( void )
 	{
 		this->isMarked = !this->isMarked;
-		this->FlatAppearance->BorderSize = this->isMarked ? 3 : 0;
 		return (this->isMarked);
 	}
 
@@ -64,10 +56,9 @@ namespace GAPConnect {
 		//vertexChangeDialog Instanz als Modaler Dialog starten
 		VertexChangeDialog^ configDialog = gcnew VertexChangeDialog();
 		this->InitializeValues(configDialog);
-		if ( configDialog->ShowDialog( this ) == System::Windows::Forms::DialogResult::OK )
+		if ( configDialog->ShowDialog( this->Parent ) == System::Windows::Forms::DialogResult::OK )
 		{
 			//TODO Daten ändern
-			this->SuspendLayout();
 			if (this->vertexType != configDialog->Knotenart)
 			{
 				this->kindOf = configDialog->Knotenart;
@@ -75,11 +66,16 @@ namespace GAPConnect {
 			this->Text = configDialog->Knotenbeschriftung;
 			//TODO Größenanpassung max. bis MaxSize min bis MinSize
 			if (configDialog->DoAdjustSize){
-				this->Size = System::Drawing::Size(this->PreferredSize.Width,this->PreferredSize.Width);
+				System::Drawing::Graphics^ g = this->Parent->CreateGraphics();
+				System::Drawing::SizeF sizeOfTextF = g->MeasureString(this->Text, this->textFont);
+				System::Drawing::Size sizeOfText = sizeOfTextF.ToSize();
+				this->Width = sizeOfText.Width;
+				this->Height = sizeOfText.Width;//soll Gleichmässig werden
 			}
-			this->ResumeLayout();
 			//TODO Kommentartext
-			this->Refresh();
+			this->Kommentar = configDialog->Kommentar;
+			//toggle redraw um Änderungen anzuzeigen
+			this->refreshParent();
 		}
 
 		delete configDialog;
@@ -89,8 +85,14 @@ namespace GAPConnect {
 	{
 		GAPConnect::VertexChangeDialog^ dialog = dynamic_cast<GAPConnect::VertexChangeDialog^ >(configDialog);
 		dialog->Knotenbeschriftung = this->Text;
-		dialog->Kommentar = L"Kommentar";//TODO
+		dialog->Kommentar = this->Kommentar;
 		dialog->Knotenart = this->vertexType;
 	}
+
+	void vertexView::refreshParent( void )
+	{
+		dynamic_cast<GAPConnect::Form1^ >(this->Parent)->Refresh();
+	}
+
 
 }//namespace end

@@ -1,15 +1,20 @@
 #include "StdAfx.h"
 #include "edgeView.h"
-#include <cstdlib>
 
 
 namespace GAPConnect {
-edgeView::edgeView(System::Windows::Forms::Form^ inParent, System::Windows::Forms::Button^ startVertex, System::Windows::Forms::Button^ endVertex, int mode):lineMode(mode)
+edgeView::edgeView(System::Windows::Forms::Form^ inParent, vertexView^ startVertex, vertexView^ endVertex, int mode):basicView(inParent), lineMode(mode)
 {
-	this->Parent = inParent;
 	this->startVertex = startVertex;
 	this->endVertex = endVertex;
-	InitializeComponent();
+	if (this->startVertex != this->endVertex)//Normaler Modus
+	{
+		this->Location = this->createLocation();
+		this->Size = this->createSize();
+	} 
+	else//Schlinge - TODO
+	{
+	}
 }
 
 System::Drawing::Size edgeView::createSize( void )
@@ -21,49 +26,16 @@ System::Drawing::Size edgeView::createSize( void )
 	return(System::Drawing::Size(width, height));
 }
 
-void edgeView::InitializeComponent( void )
-{
-//this->BackColor = System::Drawing::Color::Transparent;
-	if (this->startVertex != this->endVertex)//Normaler Modus
-	{
-		this->Location = this->createLocation();
-		this->Size = this->createSize();
-		this->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &edgeView::drawEdge_Paint);
-	} 
-	else//Schlinge - TODO
-	{
-	}
-}
-
-System::Void edgeView::drawEdge_Paint( System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e )
+System::Void edgeView::paintEdge( System::Windows::Forms::PaintEventArgs^ e )
 {
 	// Location und Size updaten, falls dies von außen getriggert wird.
 	this->Location = this->createLocation();
 	this->Size = this->createSize();
-	//Richtung berechnen
-	int lineStartX, lineStartY, lineEndX, lineEndY;
-	if (this->startVertex->Location.X < this->endVertex->Location.X)//Start links von Ende
-	{
-		lineStartX = 0;
-		lineEndX = this->Width;
-	} 
-	else//Start recht von Ende
-	{
-		lineStartX = this->Width;
-		lineEndX = 0;
-	}
-	if (this->startVertex->Location.Y < this->endVertex->Location.Y)//Start über Ende
-	{
-		lineStartY = 0;
-		lineEndY = this->Height;
-	} 
-	else//Start unter Ende
-	{
-		lineStartY = this->Height;
-		lineEndY = 0;
-	}
+	//Dockpunkte der Kanten berechnen immer Mitte
+	Point startP, endP;
+	this->calculateDockingPoint(startP, endP);
 	//Linie
-	e->Graphics->DrawLine(System::Drawing::Pens::Black, lineStartX, lineStartY, lineEndX, lineEndY);
+	e->Graphics->DrawLine(gcnew System::Drawing::Pen(System::Drawing::Color::BlueViolet, 2), startP, endP);
 	//Modus beachten
 
 }
@@ -75,4 +47,44 @@ System::Drawing::Point edgeView::createLocation( void ){
 	locY = this->startVertex->Location.Y < this->endVertex->Location.Y ? this->startVertex->Location.Y + this->startVertex->Height /2 : this->endVertex->Location.Y + this->endVertex->Height/2;
 	return (System::Drawing::Point(locX, locY));
 }
+
+void edgeView::calculateDockingPoint( Point& startP, Point& endP)
+{
+	//Dockpunkte der Kanten berechnen immer Mitte
+	//mitte oben  + width /2
+	//mitte unten + width /2 + height
+	//mitte links + height /2
+	//mitte rechts + width + height /2
+	//für mitte oben muss x des ziels kleiner sein und größer als die y differenz
+	//für mitte links muss y des ziels größer sein und größer als die x differenz
+	Int32 startPXMitte, startPYMitte, endPXMitte, endPYMitte;
+	startPXMitte = this->startVertex->Location.X + this->startVertex->Width /2;
+	endPXMitte = this->endVertex->Location.X + this->endVertex->Width /2;
+	startPYMitte = this->startVertex->Location.Y + this->startVertex->Height /2;
+	endPYMitte = this->endVertex->Location.Y + this->endVertex->Height /2;
+	//Unterscheidung ob von oben zu unten oder links nach rechts
+	if (abs(startPXMitte-endPXMitte) < abs(startPYMitte-endPYMitte)){
+		//y entfernung größer also links recht
+		if (startPYMitte > endPYMitte){
+			//rechtsnach links
+			startP = Point(this->startVertex->Location.X, this->startVertex->Location.Y + this->startVertex->Height /2);
+			endP = Point(this->endVertex->Location.X + this->endVertex->Width, this->endVertex->Location.Y + this->endVertex->Height /2);
+		}else{
+			//links nach rechts
+			startP = Point(this->endVertex->Location.X + this->endVertex->Width, this->endVertex->Location.Y + this->endVertex->Height /2);
+			endP = Point(this->startVertex->Location.X, this->startVertex->Location.Y + this->startVertex->Height /2);
+		}
+	}else{
+		//x entfernung größer also oben unten
+		if (startPXMitte > endPXMitte)
+		{
+			startP = Point(this->startVertex->Location.X + this->startVertex->Width /2, this->startVertex->Location.Y);
+			endP = Point(this->endVertex->Location.X + this->endVertex->Width /2, this->endVertex->Location.Y + this->endVertex->Height);
+		}else{
+			startP = Point(this->endVertex->Location.X + this->endVertex->Width /2, this->endVertex->Location.Y + this->endVertex->Height);
+			endP = Point(this->startVertex->Location.X + this->startVertex->Width /2, this->startVertex->Location.Y);
+		}
+	}
+}
+
 }

@@ -1,4 +1,5 @@
 #pragma once
+#include "vertexView.h"
 
 namespace GAPConnect {
 	using namespace System;
@@ -9,20 +10,25 @@ namespace GAPConnect {
 	using namespace System::Drawing;
 
 ///<summary> Klasse zur Darstellung der Knoten </summary>
-public ref class edgeView :
-public System::Windows::Forms::Control
+public ref class edgeView:
+public basicView
 {
 public:
-	edgeView(System::Windows::Forms::Form^ , System::Windows::Forms::Button^ ,System::Windows::Forms::Button^ , int);
+	///<summary> Konstruktor </summary>
+	edgeView(System::Windows::Forms::Form^ , vertexView^ ,vertexView^ , int);
+
+	///<summary> Methode zum Zeichnen der Kanten </summary>
+	System::Void paintEdge(System::Windows::Forms::PaintEventArgs^  e);
 
 private:
-	void InitializeComponent(void);
-	System::Windows::Forms::Button^ startVertex;
-	System::Windows::Forms::Button^ endVertex;
+	vertexView^ startVertex;
+	vertexView^ endVertex;
 	System::Drawing::Point createLocation( void );
 	System::Drawing::Size createSize( void );
-	System::Void drawEdge_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e);
+	///<summary> Linien Modus 0 - Normal, 1 - gerichtet </summary>
 	int lineMode;
+	///<summary> Dockpunkt berechnen </summary>
+	void calculateDockingPoint( Point&, Point&);
 };
 
 }

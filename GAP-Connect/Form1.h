@@ -1,6 +1,5 @@
 #pragma once
 #include "stdafx.h"
-#include <cstdlib>
 
 namespace GAPConnect {
 	using namespace System;
@@ -21,8 +20,8 @@ namespace GAPConnect {
 			InitializeComponent();
 
 			this->changedGraph = false;
-			//this->startedDrawing = nullptr;
-		 //   this->dragBoxFromMouseDown = System::Drawing::Rectangle::Empty;
+			this->vertexList = gcnew System::Collections::Generic::List< GAPConnect::vertexView^ >();
+			this->edgeList = gcnew System::Collections::Generic::List< GAPConnect::edgeView^ >();
 			//TODO Werte aus Ini Laden
 			this->loadDefaultValues();
 			//Disablen
@@ -38,6 +37,7 @@ namespace GAPConnect {
 			if (components)
 			{
 				delete components;
+				delete this->vertexList;
 			}
 		}
 	private:
@@ -49,6 +49,10 @@ namespace GAPConnect {
 		GAPConnect::vertexView^ handleOfVertexUnderMouseToDrag;
 	///<summary> Drag and Drop Rectangle - Größe des Bereichs ab dem die DaD Operation startet</summary>
 		System::Drawing::Rectangle dragBoxFromMouseDown;
+	///<summary> enthält die vorhandenen Vertexe</summary>
+		System::Collections::Generic::List< GAPConnect::vertexView^ >^ vertexList;
+	///<summary> enthält alle Kanten </summary>
+		System::Collections::Generic::List< GAPConnect::edgeView^ >^ edgeList;
 
 	private: System::Windows::Forms::MenuStrip^  mainmenuStrip;
 	private: System::Windows::Forms::ToolStripMenuItem^  dateiToolStripMenuItem;
@@ -471,7 +475,7 @@ namespace GAPConnect {
 			this->zeichentools->Dock = System::Windows::Forms::DockStyle::Top;
 			this->zeichentools->Location = System::Drawing::Point(0, 0);
 			this->zeichentools->Name = L"zeichentools";
-			this->zeichentools->Size = System::Drawing::Size(198, 231);
+			this->zeichentools->Size = System::Drawing::Size(198, 250);
 			this->zeichentools->TabIndex = 0;
 			this->zeichentools->TabStop = false;
 			this->zeichentools->Text = L"Zeichnen";
@@ -486,7 +490,7 @@ namespace GAPConnect {
 			this->zeichnenEdge->Location = System::Drawing::Point(3, 70);
 			this->zeichnenEdge->Name = L"zeichnenEdge";
 			this->zeichnenEdge->RenderMode = System::Windows::Forms::ToolStripRenderMode::System;
-			this->zeichnenEdge->Size = System::Drawing::Size(192, 158);
+			this->zeichnenEdge->Size = System::Drawing::Size(192, 177);
 			this->zeichnenEdge->TabIndex = 1;
 			// 
 			// toolStripButtonEdge
@@ -585,6 +589,7 @@ namespace GAPConnect {
 			this->drawPanel->BackColor = System::Drawing::SystemColors::Window;
 			this->drawPanel->BackgroundImage = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"drawPanel.BackgroundImage")));
 			this->drawPanel->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
+			this->drawPanel->ContextMenuStrip = this->vertexRightClickMenu;
 			this->drawPanel->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->drawPanel->Location = System::Drawing::Point(198, 49);
 			this->drawPanel->MinimumSize = System::Drawing::Size(500, 500);
@@ -592,6 +597,8 @@ namespace GAPConnect {
 			this->drawPanel->Size = System::Drawing::Size(810, 691);
 			this->drawPanel->TabIndex = 7;
 			this->drawPanel->Scroll += gcnew System::Windows::Forms::ScrollEventHandler(this, &Form1::drawPanel_Scroll);
+			this->drawPanel->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &Form1::drawPanel_Paint);
+			this->drawPanel->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &Form1::drawPanel_MouseDown);
 			this->drawPanel->MouseEnter += gcnew System::EventHandler(this, &Form1::drawPanel_MouseEnter);
 			this->drawPanel->MouseLeave += gcnew System::EventHandler(this, &Form1::drawPanel_MouseLeave);
 			this->drawPanel->MouseHover += gcnew System::EventHandler(this, &Form1::drawPanel_MouseHover);
@@ -790,6 +797,7 @@ private: System::Void toolStripButtonsOnlyOneChecked(System::Object^  sender, Sy
 ///<summary> Schaltet das Grid ein bzw. aus </summary>
 private: System::Void toolStripButtonGridControl_Click(System::Object^  sender, System::EventArgs^  e) {
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Form1::typeid));
+			//TODO
 			this->drawPanel->BackgroundImage = this->isGridActivated ? (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"drawPanel.BackgroundImage"))) : nullptr;
 			//markierungen setzen
 			if (e != nullptr){
@@ -807,7 +815,7 @@ private: System::Void toolStripButtonGridFixed_Click(System::Object^  sender, Sy
 		 }
 ///<summary> Enabled bzw. Disabled ToolStripButtons die Kanten zeichnen.</summary>
 private: void toolStripButtonEdgesEnable(){
-			 if (this->drawPanel->Controls->Count > 0){
+			 if (this->vertexList->Count > 0){
 				 for each (System::Windows::Forms::ToolStripButton^ element in this->zeichnenEdge->Items)
 				 {
 					 element->Enabled = true;
@@ -827,7 +835,6 @@ private: System::Void drawPanel_Scroll(System::Object^  sender, System::Windows:
 public: System::Void drawPanel_MouseHover(System::Object^  sender, System::EventArgs^  e) {
 			//hole ausgewähltes
 			System::Windows::Forms::ToolStripButton^ active = this->toolBarChosen;
-
 			//nichts aktiv
 			if(active==nullptr){
 				this->drawPanel->Cursor = System::Windows::Forms::Cursors::Default;
@@ -846,7 +853,6 @@ private: System::Void drawPanel_MouseUp(System::Object^  sender, System::Windows
 			 //nur executen wenn auch Zeichnen Modus ausgewählt
 			 System::Windows::Forms::ToolStripButton^ chosenOption = this->toolBarChosen;
 			 if(chosenOption != nullptr){
-				 this->drawPanel->SuspendLayout();
 				 //Mouse Koordinaten an Situation anpassen - Lock Modus beachten
 				 int mouseX = e->X;
 				 int mouseY = e->Y;
@@ -865,7 +871,7 @@ private: System::Void drawPanel_MouseUp(System::Object^  sender, System::Windows
 					vertex->kindOf = chosenOption == this->toolStripButtonVertexRound ? 0 : 1;
 
 					//Button Drawpanel hinzufügen
-					this->drawPanel->Controls->Add(vertex);
+					this->vertexList->Add(vertex);
 
 					//Auswahl deaktivieren
 					chosenOption->Checked=false;
@@ -876,10 +882,42 @@ private: System::Void drawPanel_MouseUp(System::Object^  sender, System::Windows
 
 					//Dialog zum Beschriften einblenden
 					vertex->startConfigDialog();
-				}
+				}else if (chosenOption == this->toolStripButtonArc || chosenOption == this->toolStripButtonArcCapacity || chosenOption == toolStripButtonEdge || chosenOption == toolStripButtonEdgeCapacity)
+				{
+					//Kanten Zeichnen Modus
+					GAPConnect::vertexView^ clickedVertex = this->getHandleOfItem(e);
+					if (clickedVertex != nullptr)//nur wenn auch auf einen Vertex geklickt wurde
+					{
+						bool vertexMarked = clickedVertex->markVertex();	
+						//wenn Knoten wieder deaktiviert, dann wurde wohl falscher startknoten ausgewählt und wieder deaktiviert
+						if (!vertexMarked){
+							this->startedDrawing = nullptr;
+						}
+						if (this->startedDrawing == nullptr){//Edge zeichnen noch nicht gestartet
+								//speichern des starts wenn noch nicht gestartet
+								this->startedDrawing = clickedVertex;
+						}else{
+								//wenn bereits gestartet dann ende vermerken und objekt initialisieren
+								edgeView^ edge = gcnew edgeView(this, this->startedDrawing, clickedVertex, (chosenOption == this->toolStripButtonArc || chosenOption == this->toolStripButtonArcCapacity)?1:0);//TODO
+								//Methode zum Location , Placing und Direction des Panelträgers und des Pfeiles
 
-				//Layout!
-				this->drawPanel->ResumeLayout(false);
+								this->edgeList->Add(edge);
+
+								//ende muss noch markierungen entfernen auf Knoten (Startknoten wird von checkstate change entfernt)
+								do{
+									vertexMarked = clickedVertex->markVertex();
+								}while(vertexMarked);
+
+								//Auswahl deaktivieren
+								chosenOption->Checked=false;
+								//Veränderungen markieren
+								m_unsavedChanges = true;
+							}
+					}
+
+				}
+				//Refresh im Zeichnenmodus
+				this->Refresh();
 			 }else{
 				 //nicht im ZeichnenModus dann ist es Drag and Drop - TODO
 				 this->dragBoxFromMouseDown = System::Drawing::Rectangle::Empty;
@@ -893,31 +931,6 @@ public: System::Void vertex_MouseUp(System::Object^ sender, System::Windows::For
 			 //wenn edge option aktiv dann textcolor ändern um auswahl zu signalisieren
 			 if (chosenOption == this->toolStripButtonEdge || chosenOption == this->toolStripButtonEdgeCapacity || chosenOption == this->toolStripButtonArc || chosenOption == this->toolStripButtonArcCapacity)
 			 {
-				 bool vertexMarked = dynamic_cast<vertexView^ >(sender)->markVertex();
-				 //wenn Knoten wieder deaktiviert, dann wurde wohl falscher startknoten ausgewählt und wieder deaktiviert
-				 if (!vertexMarked){
-					this->startedDrawing = nullptr;
-				 }
-				 if (this->startedDrawing == nullptr){//Edge zeichnen noch nicht gestartet
-					 //speichern des starts wenn noch nicht gestartet
-					 this->startedDrawing = dynamic_cast<vertexView^ >(sender);
-				 }else{
-						//wenn bereits gestartet dann ende vermerken und objekt initialisieren
-						edgeView^ edgePanel = (gcnew edgeView(this, this->startedDrawing, dynamic_cast<vertexView^>(sender), 0));//TODO
-//Methode zum Location , Placing und Direction des Panelträgers und des Pfeiles
-
-						this->drawPanel->Controls->Add(edgePanel);
-
-						//ende muss noch markierungen entfernen auf Knoten (Startknoten wird von checkstate change entfernt)
-						do{
-							vertexMarked = dynamic_cast<vertexView^ >(sender)->markVertex();
-						}while(vertexMarked);
-
-						//Auswahl deaktivieren
-						chosenOption->Checked=false;
-						//Veränderungen markieren
-						m_unsavedChanges = true;
-				 }
 			 } 
 		 }
 		///<summary> löst das Konfigurationsereigniss auf Knoten aus</summary>
@@ -928,21 +941,53 @@ private: System::Void vertexRightClickMenu_Config_Click(System::Object^  sender,
 			 dynamic_cast<GAPConnect::vertexView^ >(parent->SourceControl)->startConfigDialog();
 		 }
 //dragging
-
- public: System::Void vertex_MouseDown(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
-			 this->handleOfVertexUnderMouseToDrag = dynamic_cast<GAPConnect::vertexView^ >(sender);
-			 //Drag Rectangle generieren
-			 System::Drawing::Size dragSize = System::Windows::Forms::SystemInformation::DragSize;
-			 //D&D Rechteck hat mouse click koords in der Mitte, müssen noch auf Koordinaten von drawPanel umgerechnet werden
-			 System::Drawing::Point l = this->handleOfVertexUnderMouseToDrag->Location;
-			 System::Drawing::Point ddRectangleLocation = System::Drawing::Point(l.X + e->X - (dragSize.Width /2), l.Y + e->Y - (dragSize.Height /2));
-			 this->dragBoxFromMouseDown = Rectangle(ddRectangleLocation, dragSize);
-			 //Status
-			 this->toolStripStatusLabelModus->Text = L"Dragging";
+///<summary> Auswahl von Element, Möglicherweise Drag and Drop, vielleicht auch sonstige Elemente</summary>
+ public: System::Void drawPanel_MouseDown(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+			 this->handleOfVertexUnderMouseToDrag = this->getHandleOfItem(e);
+			 if (this->handleOfVertexUnderMouseToDrag != nullptr){
+				 //Drag Rectangle generieren
+				 System::Drawing::Size dragSize = System::Windows::Forms::SystemInformation::DragSize;
+				 //D&D Rechteck hat mouse click koords in der Mitte, müssen noch auf Koordinaten von drawPanel umgerechnet werden
+				 System::Drawing::Point l = this->handleOfVertexUnderMouseToDrag->Location;
+				 System::Drawing::Point ddRectangleLocation = System::Drawing::Point(l.X + e->X - (dragSize.Width /2), l.Y + e->Y - (dragSize.Height /2));
+				 this->dragBoxFromMouseDown = Rectangle(ddRectangleLocation, dragSize);
+				 //Status
+				 this->toolStripStatusLabelModus->Text = L"Dragging";
+			 }
 		 }
 		 ///<summary> Mouse betritt die Zeichenfläche. </summary>
 private: System::Void drawPanel_MouseEnter(System::Object^  sender, System::EventArgs^  e) {
 			 this->drawPanel_MouseHover(sender, e);
+		 }
+private: System::Void drawPanel_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
+			 //Knoten zeichnen
+			 for each (GAPConnect::vertexView^ vertex in this->vertexList){
+				 vertex->paintVertex(e);
+			 }
+			 //Kanten zeichnen
+			 for each (GAPConnect::edgeView^ edge in this->edgeList){
+				 edge->paintEdge(e);
+			 }
+		 }
+private: GAPConnect::vertexView^ getHandleOfItem(System::Windows::Forms::MouseEventArgs^ e){
+			 System::Collections::Generic::List< GAPConnect::vertexView^ > tmpList = gcnew System::Collections::Generic::List< GAPConnect::vertexView^ >();
+			 for each (GAPConnect::vertexView^ vertex in this->vertexList){
+				 if (vertex->GetBorderRectangle.Contains(e->Location))
+				 {
+					 tmpList.Add(vertex);
+				 }
+			 }
+			 if (tmpList.Count == 1)
+			 {
+				 return tmpList[0];
+			 }else if (tmpList.Count > 1)
+			 {//TODO Hier Fallbehandlung um das Richtige herauszufinden
+				 return tmpList[0];
+			 } 
+			 else
+			 {
+				 return nullptr;
+			 }
 		 }
 };
 
