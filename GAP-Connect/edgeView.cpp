@@ -23,7 +23,7 @@ System::Drawing::Size edgeView::createSize( void )
 
 void edgeView::InitializeComponent( void )
 {
-	this->BackColor = System::Drawing::Color::Transparent;
+//this->BackColor = System::Drawing::Color::Transparent;
 	if (this->startVertex != this->endVertex)//Normaler Modus
 	{
 		this->Location = this->createLocation();

@@ -30,6 +30,8 @@ namespace GAPConnect {
 
 		//event
 		this->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(dynamic_cast<GAPConnect::Form1^ >(this->Parent), &Form1::vertex_MouseUp);
+		this->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(dynamic_cast<GAPConnect::Form1^ >(this->Parent), &Form1::vertex_MouseDown);
+		this->MouseHover += gcnew System::EventHandler(dynamic_cast<GAPConnect::Form1^ >(this->Parent), &Form1::drawPanel_MouseHover);
 	}
 
 	void vertexView::changeAppearance( void )

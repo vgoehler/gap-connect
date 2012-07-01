@@ -10,7 +10,7 @@ namespace GAPConnect {
 
 ///<summary> Klasse zur Darstellung der Knoten </summary>
 public ref class edgeView :
-public System::Windows::Forms::Panel
+public System::Windows::Forms::Control
 {
 public:
 	edgeView(System::Windows::Forms::Form^ , System::Windows::Forms::Button^ ,System::Windows::Forms::Button^ , int);

@@ -1,5 +1,6 @@
 #pragma once
 #include "stdafx.h"
+#include <cstdlib>
 
 namespace GAPConnect {
 	using namespace System;
@@ -15,12 +16,13 @@ namespace GAPConnect {
 	public ref class Form1 : public System::Windows::Forms::Form
 	{
 	public:
-		Form1(void)
+		Form1(void):startedDrawing(nullptr),dragBoxFromMouseDown(System::Drawing::Rectangle::Empty)
 		{
 			InitializeComponent();
 
 			this->changedGraph = false;
-			this->startedDrawing = nullptr;
+			//this->startedDrawing = nullptr;
+		 //   this->dragBoxFromMouseDown = System::Drawing::Rectangle::Empty;
 			//TODO Werte aus Ini Laden
 			this->loadDefaultValues();
 			//Disablen
@@ -38,11 +40,15 @@ namespace GAPConnect {
 				delete components;
 			}
 		}
-
+	private:
 	///<summary>Member um Veränderungen im Inhalt zu charakterisieren</summary>
-	private: bool m_unsavedChanges;
+		bool m_unsavedChanges;
 	///<summary>Handle um edge Zeichnen in progress zu signalisieren, speichert den Start, ansonsten nullptr</summary>
-	private: vertexView^ startedDrawing;
+		vertexView^ startedDrawing;
+	///<summary> Drag and Drop Variable</summary>
+		GAPConnect::vertexView^ handleOfVertexUnderMouseToDrag;
+	///<summary> Drag and Drop Rectangle - Größe des Bereichs ab dem die DaD Operation startet</summary>
+		System::Drawing::Rectangle dragBoxFromMouseDown;
 
 	private: System::Windows::Forms::MenuStrip^  mainmenuStrip;
 	private: System::Windows::Forms::ToolStripMenuItem^  dateiToolStripMenuItem;
@@ -87,6 +93,12 @@ namespace GAPConnect {
 	private: System::Windows::Forms::ToolStripButton^  toolStripButtonGridFixed;
 	private: System::Windows::Forms::ContextMenuStrip^  vertexRightClickMenu;
 	private: System::Windows::Forms::ToolStripMenuItem^  toolStripConfig;
+	private: System::Windows::Forms::ToolStripTextBox^  toolStripKnotentext;
+	private: System::Windows::Forms::ToolStripComboBox^  toolStripCBKindofVertex;
+	private: System::Windows::Forms::ToolStripMenuItem^  toolStripVertexSizeAdjustment;
+	private: System::Windows::Forms::ToolStripStatusLabel^  toolStripStatusLabelModus;
+
+
 
 
 
@@ -160,9 +172,9 @@ namespace GAPConnect {
 		{
 			this->components = (gcnew System::ComponentModel::Container());
 			System::Windows::Forms::ToolStripSeparator^  toolStripSeparator1;
-			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Form1::typeid));
 			System::Windows::Forms::ToolStripSeparator^  toolStripSeparator2;
 			System::Windows::Forms::ToolStripSeparator^  toolStripSeparator3;
+			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Form1::typeid));
 			this->mainmenuStrip = (gcnew System::Windows::Forms::MenuStrip());
 			this->dateiToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->neuToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -186,6 +198,7 @@ namespace GAPConnect {
 			this->mainstatusStrip = (gcnew System::Windows::Forms::StatusStrip());
 			this->toolStripLabelMouseX = (gcnew System::Windows::Forms::ToolStripStatusLabel());
 			this->toolStripLabelMouseY = (gcnew System::Windows::Forms::ToolStripStatusLabel());
+			this->toolStripStatusLabelModus = (gcnew System::Windows::Forms::ToolStripStatusLabel());
 			this->openFileDialog1 = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->saveFileDialog1 = (gcnew System::Windows::Forms::SaveFileDialog());
 			this->control = (gcnew System::Windows::Forms::Panel());
@@ -200,6 +213,9 @@ namespace GAPConnect {
 			this->toolStripButtonVertexSquare = (gcnew System::Windows::Forms::ToolStripButton());
 			this->drawPanel = (gcnew System::Windows::Forms::Panel());
 			this->vertexRightClickMenu = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
+			this->toolStripKnotentext = (gcnew System::Windows::Forms::ToolStripTextBox());
+			this->toolStripCBKindofVertex = (gcnew System::Windows::Forms::ToolStripComboBox());
+			this->toolStripVertexSizeAdjustment = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->toolStripConfig = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->imageListToolbar = (gcnew System::Windows::Forms::ImageList(this->components));
 			toolStripSeparator1 = (gcnew System::Windows::Forms::ToolStripSeparator());
@@ -214,6 +230,21 @@ namespace GAPConnect {
 			this->zeichnenVertex->SuspendLayout();
 			this->vertexRightClickMenu->SuspendLayout();
 			this->SuspendLayout();
+			// 
+			// toolStripSeparator1
+			// 
+			toolStripSeparator1->Name = L"toolStripSeparator1";
+			toolStripSeparator1->Size = System::Drawing::Size(140, 6);
+			// 
+			// toolStripSeparator2
+			// 
+			toolStripSeparator2->Name = L"toolStripSeparator2";
+			toolStripSeparator2->Size = System::Drawing::Size(6, 25);
+			// 
+			// toolStripSeparator3
+			// 
+			toolStripSeparator3->Name = L"toolStripSeparator3";
+			toolStripSeparator3->Size = System::Drawing::Size(156, 6);
 			// 
 			// mainmenuStrip
 			// 
@@ -261,11 +292,6 @@ namespace GAPConnect {
 			this->speichernalsToolStripMenuItem->Size = System::Drawing::Size(143, 22);
 			this->speichernalsToolStripMenuItem->Text = L"Speichern &als";
 			this->speichernalsToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::speichernMenu_Click);
-			// 
-			// toolStripSeparator1
-			// 
-			toolStripSeparator1->Name = L"toolStripSeparator1";
-			toolStripSeparator1->Size = System::Drawing::Size(149, 6);
 			// 
 			// beendenToolStripMenuItem
 			// 
@@ -368,11 +394,6 @@ namespace GAPConnect {
 			this->toolStripButtonSave->ToolTipText = L"Speichert den aktiven Graph.";
 			this->toolStripButtonSave->Click += gcnew System::EventHandler(this, &Form1::speichernMenu_Click);
 			// 
-			// toolStripSeparator2
-			// 
-			toolStripSeparator2->Name = L"toolStripSeparator2";
-			toolStripSeparator2->Size = System::Drawing::Size(6, 25);
-			// 
 			// toolStripButtonGridControl
 			// 
 			this->toolStripButtonGridControl->Checked = true;
@@ -399,8 +420,8 @@ namespace GAPConnect {
 			// 
 			// mainstatusStrip
 			// 
-			this->mainstatusStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {this->toolStripLabelMouseX, 
-				this->toolStripLabelMouseY});
+			this->mainstatusStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {this->toolStripLabelMouseX, 
+				this->toolStripLabelMouseY, this->toolStripStatusLabelModus});
 			this->mainstatusStrip->Location = System::Drawing::Point(0, 740);
 			this->mainstatusStrip->Name = L"mainstatusStrip";
 			this->mainstatusStrip->Size = System::Drawing::Size(1008, 22);
@@ -418,6 +439,11 @@ namespace GAPConnect {
 			this->toolStripLabelMouseY->Name = L"toolStripLabelMouseY";
 			this->toolStripLabelMouseY->Size = System::Drawing::Size(20, 17);
 			this->toolStripLabelMouseY->Text = L"Y: ";
+			// 
+			// toolStripStatusLabelModus
+			// 
+			this->toolStripStatusLabelModus->Name = L"toolStripStatusLabelModus";
+			this->toolStripStatusLabelModus->Size = System::Drawing::Size(0, 17);
 			// 
 			// openFileDialog1
 			// 
@@ -566,6 +592,7 @@ namespace GAPConnect {
 			this->drawPanel->Size = System::Drawing::Size(810, 691);
 			this->drawPanel->TabIndex = 7;
 			this->drawPanel->Scroll += gcnew System::Windows::Forms::ScrollEventHandler(this, &Form1::drawPanel_Scroll);
+			this->drawPanel->MouseEnter += gcnew System::EventHandler(this, &Form1::drawPanel_MouseEnter);
 			this->drawPanel->MouseLeave += gcnew System::EventHandler(this, &Form1::drawPanel_MouseLeave);
 			this->drawPanel->MouseHover += gcnew System::EventHandler(this, &Form1::drawPanel_MouseHover);
 			this->drawPanel->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &Form1::drawPanel_MouseMove);
@@ -573,17 +600,43 @@ namespace GAPConnect {
 			// 
 			// vertexRightClickMenu
 			// 
-			this->vertexRightClickMenu->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {toolStripSeparator3, 
-				this->toolStripConfig});
+			this->vertexRightClickMenu->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(5) {this->toolStripKnotentext, 
+				this->toolStripCBKindofVertex, this->toolStripVertexSizeAdjustment, toolStripSeparator3, this->toolStripConfig});
 			this->vertexRightClickMenu->Name = L"vertexRightClickMenu";
 			this->vertexRightClickMenu->ShowImageMargin = false;
-			this->vertexRightClickMenu->Size = System::Drawing::Size(160, 32);
+			this->vertexRightClickMenu->Size = System::Drawing::Size(160, 106);
+			// 
+			// toolStripKnotentext
+			// 
+			this->toolStripKnotentext->AutoToolTip = true;
+			this->toolStripKnotentext->BackColor = System::Drawing::SystemColors::Menu;
+			this->toolStripKnotentext->Name = L"toolStripKnotentext";
+			this->toolStripKnotentext->Size = System::Drawing::Size(100, 23);
+			this->toolStripKnotentext->Text = L"Knotentext";
+			this->toolStripKnotentext->ToolTipText = L"Text des Knotens";
+			// 
+			// toolStripCBKindofVertex
+			// 
+			this->toolStripCBKindofVertex->AutoToolTip = true;
+			this->toolStripCBKindofVertex->BackColor = System::Drawing::SystemColors::Menu;
+			this->toolStripCBKindofVertex->Items->AddRange(gcnew cli::array< System::Object^  >(2) {L"Kreis", L"Rechteck"});
+			this->toolStripCBKindofVertex->Name = L"toolStripCBKindofVertex";
+			this->toolStripCBKindofVertex->Size = System::Drawing::Size(121, 23);
+			this->toolStripCBKindofVertex->ToolTipText = L"Art des Knotens";
+			// 
+			// toolStripVertexSizeAdjustment
+			// 
+			this->toolStripVertexSizeAdjustment->AutoToolTip = true;
+			this->toolStripVertexSizeAdjustment->Name = L"toolStripVertexSizeAdjustment";
+			this->toolStripVertexSizeAdjustment->Size = System::Drawing::Size(159, 22);
+			this->toolStripVertexSizeAdjustment->Text = L"Größe anpassen";
+			this->toolStripVertexSizeAdjustment->ToolTipText = L"Paßt Größe an den Inhalt an.";
 			// 
 			// toolStripConfig
 			// 
 			this->toolStripConfig->AutoToolTip = true;
 			this->toolStripConfig->Name = L"toolStripConfig";
-			this->toolStripConfig->Size = System::Drawing::Size(184, 22);
+			this->toolStripConfig->Size = System::Drawing::Size(159, 22);
 			this->toolStripConfig->Text = L"Knotenkonfiguration";
 			this->toolStripConfig->ToolTipText = L"Zeigt einen Dialog um den Knoten weiter zu konfigurieren.";
 			this->toolStripConfig->Click += gcnew System::EventHandler(this, &Form1::vertexRightClickMenu_Config_Click);
@@ -594,11 +647,6 @@ namespace GAPConnect {
 			this->imageListToolbar->TransparentColor = System::Drawing::Color::Transparent;
 			this->imageListToolbar->Images->SetKeyName(0, L"grid_activated.png");
 			this->imageListToolbar->Images->SetKeyName(1, L"grid_deactivated.png");
-			// 
-			// toolStripSeparator3
-			// 
-			toolStripSeparator3->Name = L"toolStripSeparator3";
-			toolStripSeparator3->Size = System::Drawing::Size(156, 6);
 			// 
 			// Form1
 			// 
@@ -634,6 +682,7 @@ namespace GAPConnect {
 			this->zeichnenVertex->ResumeLayout(false);
 			this->zeichnenVertex->PerformLayout();
 			this->vertexRightClickMenu->ResumeLayout(false);
+			this->vertexRightClickMenu->PerformLayout();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -672,7 +721,10 @@ private: System::Void ladenMenu_Click(System::Object^  sender, System::EventArgs
 				 if( (inputStream = this->openFileDialog1->OpenFile()) != nullptr ){//sanity check
 					 //TODO Modus unterscheiden
 					 //TODO lesen
-					 inputStream->Close();					 //zuletzt					 m_unsavedChanges=false;					 this->toolStripButtonEdgesEnable();
+					 inputStream->Close();
+					 //zuletzt
+					 m_unsavedChanges=false;
+					 this->toolStripButtonEdgesEnable();
 				 }
 			 }
 		 }
@@ -683,10 +735,18 @@ private: System::Void speichernMenu_Click(System::Object^ sender, System::EventA
 				 //this->Text = this->saveFileDialog1->FileName;
 			 }
 		 }
-///<summary> Maus Bewegung im Zeichenbereich Zeigt Koordinaten im Tooltip an TODO</summary>
+///<summary> Maus Bewegung im Zeichenbereich Zeigt Koordinaten im Tooltip an. Plus Drag and Drop Behandlung</summary>
 private: System::Void drawPanel_MouseMove(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+			 //label update immer!
 			 this->toolStripLabelMouseX->Text = String::Concat(L"X: ", e->X );
 			 this->toolStripLabelMouseY->Text = String::Concat(L"Y: ", e->Y );
+			 //linke Maustaste gedrückt
+			 if( (e->Button & System::Windows::Forms::MouseButtons::Left) == System::Windows::Forms::MouseButtons::Left){
+				 //mouse außerhalb der dragBox ereigniss auslösen
+				 if (dragBoxFromMouseDown != System::Drawing::Rectangle::Empty && !dragBoxFromMouseDown.Contains(e->X,e->Y)){
+					 this->toolStripStatusLabelModus->Text = String::Concat(L"Dragging X = ",abs(this->dragBoxFromMouseDown.X - e->X), L" Y = ", abs(this->dragBoxFromMouseDown.Y - e->Y));
+				 }
+			 }
 		 }
 ///<summary> Maus verläßt Zeichenbereich. Koordinatenwerte auf Defaults </summary>
 private: System::Void drawPanel_MouseLeave(System::Object^  sender, System::EventArgs^  e) {
@@ -764,7 +824,7 @@ private: System::Void drawPanel_Scroll(System::Object^  sender, System::Windows:
 			 this->drawPanel->Refresh();
 		 }
 ///<summary> MouseEnter muss je nach ausgewähltem Button den Cursor ändern. </summary>
-private: System::Void drawPanel_MouseHover(System::Object^  sender, System::EventArgs^  e) {
+public: System::Void drawPanel_MouseHover(System::Object^  sender, System::EventArgs^  e) {
 			//hole ausgewähltes
 			System::Windows::Forms::ToolStripButton^ active = this->toolBarChosen;
 
@@ -820,6 +880,11 @@ private: System::Void drawPanel_MouseUp(System::Object^  sender, System::Windows
 
 				//Layout!
 				this->drawPanel->ResumeLayout(false);
+			 }else{
+				 //nicht im ZeichnenModus dann ist es Drag and Drop - TODO
+				 this->dragBoxFromMouseDown = System::Drawing::Rectangle::Empty;
+				 //Status
+				 this->toolStripStatusLabelModus->Text = L"";
 			 }
 		 }
 		 ///<summary> Mouse Button Up Ereigniss von Knoten ausgelöst. </summary>
@@ -861,6 +926,23 @@ private: System::Void vertexRightClickMenu_Config_Click(System::Object^  sender,
 			 System::Windows::Forms::ContextMenuStrip^ parent = dynamic_cast<System::Windows::Forms::ContextMenuStrip^ > (dynamic_cast<System::Windows::Forms::ToolStripMenuItem^ >(sender)->GetCurrentParent());
 			 //Ursprung des Klicks holen, diesen als vertexView casten und Dialog ausführen
 			 dynamic_cast<GAPConnect::vertexView^ >(parent->SourceControl)->startConfigDialog();
+		 }
+//dragging
+
+ public: System::Void vertex_MouseDown(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+			 this->handleOfVertexUnderMouseToDrag = dynamic_cast<GAPConnect::vertexView^ >(sender);
+			 //Drag Rectangle generieren
+			 System::Drawing::Size dragSize = System::Windows::Forms::SystemInformation::DragSize;
+			 //D&D Rechteck hat mouse click koords in der Mitte, müssen noch auf Koordinaten von drawPanel umgerechnet werden
+			 System::Drawing::Point l = this->handleOfVertexUnderMouseToDrag->Location;
+			 System::Drawing::Point ddRectangleLocation = System::Drawing::Point(l.X + e->X - (dragSize.Width /2), l.Y + e->Y - (dragSize.Height /2));
+			 this->dragBoxFromMouseDown = Rectangle(ddRectangleLocation, dragSize);
+			 //Status
+			 this->toolStripStatusLabelModus->Text = L"Dragging";
+		 }
+		 ///<summary> Mouse betritt die Zeichenfläche. </summary>
+private: System::Void drawPanel_MouseEnter(System::Object^  sender, System::EventArgs^  e) {
+			 this->drawPanel_MouseHover(sender, e);
 		 }
 };
 
