@@ -8,6 +8,7 @@ basicView::basicView(System::Windows::Forms::Form^ inParent):Parent(inParent)
 		this->Size = System::Drawing::Size(25,25);
 		this->m_minsize = System::Drawing::Size(0,0);
 		this->m_maxsize = System::Drawing::Size(0,0);
+		this->m_drawTools = dynamic_cast<GAPConnect::Form1^ >(this->Parent)->getDrawTools;
 }
 
 basicView::basicView( void )

@@ -23,10 +23,14 @@ namespace GAPConnect {
 				this->refreshParent();
 			}
 		}
+		///<summary> Gibt die Mitte des Knotens zurück, bzw. zentriert den Knoten auf einer Übergebenen Position</summary>
 		property System::Drawing::Point LocationCenter{
 			void set(System::Drawing::Point inValue){
-				this->Location = System::Drawing::Point(inValue.X - this->Size.Height/2,
-														inValue.Y - this->Size.Width/2);
+				this->Location = System::Drawing::Point(inValue.X - this->Width/2,
+														inValue.Y - this->Height/2);
+			}
+			System::Drawing::Point get(void){
+				return(Point(this->Location.X + this->Width /2, this->Location.Y + this->Height /2));
 			}
 		}
 		property System::String^ Text{
@@ -59,8 +63,6 @@ namespace GAPConnect {
 			bool isMarked;
 			///<summary> Beschriftung des Elements</summary>
 			String^ m_text;
-			///<summary> Font des Textes </summary>
-			System::Drawing::Font^ textFont;
 			///<summary> Kommentartext </summary>
 			String^ m_kommentar;
 			//TODO Ownervariable als Dateninterface

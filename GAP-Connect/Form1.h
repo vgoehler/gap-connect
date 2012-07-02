@@ -22,6 +22,7 @@ namespace GAPConnect {
 			this->changedGraph = false;
 			this->vertexList = gcnew System::Collections::Generic::List< GAPConnect::vertexView^ >();
 			this->edgeList = gcnew System::Collections::Generic::List< GAPConnect::edgeView^ >();
+			this->m_drawTools = gcnew GAPConnect::drawTools();
 			//TODO Werte aus Ini Laden
 			this->loadDefaultValues();
 			//Disablen
@@ -53,6 +54,8 @@ namespace GAPConnect {
 		System::Collections::Generic::List< GAPConnect::vertexView^ >^ vertexList;
 	///<summary> enthält alle Kanten </summary>
 		System::Collections::Generic::List< GAPConnect::edgeView^ >^ edgeList;
+	///<summary> Definition von Zeichentools </summary>
+		GAPConnect::drawTools^ m_drawTools;
 
 	private: System::Windows::Forms::MenuStrip^  mainmenuStrip;
 	private: System::Windows::Forms::ToolStripMenuItem^  dateiToolStripMenuItem;
@@ -164,6 +167,12 @@ namespace GAPConnect {
 	public: property System::Windows::Forms::ContextMenuStrip^ MenuforVertex{
 				System::Windows::Forms::ContextMenuStrip^ get(void){
 					return(this->vertexRightClickMenu);
+				}
+			}
+	///<summary> Property gibt Instanz der Zeichentools Klasse über</summary>
+	public: property GAPConnect::drawTools^ getDrawTools{
+				GAPConnect::drawTools^ get(void){
+					return(this->m_drawTools);
 				}
 			}
 
@@ -960,6 +969,8 @@ private: System::Void drawPanel_MouseEnter(System::Object^  sender, System::Even
 			 this->drawPanel_MouseHover(sender, e);
 		 }
 private: System::Void drawPanel_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
+			 //Anti Aliasing
+			 e->Graphics->SmoothingMode = System::Drawing::Drawing2D::SmoothingMode::AntiAlias;
 			 //Knoten zeichnen
 			 for each (GAPConnect::vertexView^ vertex in this->vertexList){
 				 vertex->paintVertex(e);

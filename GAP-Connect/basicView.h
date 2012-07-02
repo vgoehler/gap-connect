@@ -73,6 +73,8 @@ public:
 protected:
 	///<summary> Übergeordnetes Formular </summary>
 	System::Windows::Forms::Form^ Parent;
+	///<summary> Zeichentools</summary>
+	GAPConnect::drawTools^ m_drawTools;
 private:
 	///<summary> Variable für die Location des Knotens </summary>
 	System::Drawing::Point m_location;

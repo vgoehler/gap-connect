@@ -8,9 +8,8 @@ namespace GAPConnect {
 		this->Size = System::Drawing::Size(25,25);
 		this->MinSize = System::Drawing::Size(20,20);
 		this->MaxSize = System::Drawing::Size(100,100);
-		this->Text = L"Andrea";
-		this->textFont = gcnew System::Drawing::Font( "Arial",8 );
-		this->Kommentar = L"Dies ist ein Kommentar!";
+		this->Text = L"";
+		this->Kommentar = L"";
 	}
 
 	void vertexView::paintVertex(System::Windows::Forms::PaintEventArgs^ e)
@@ -24,25 +23,25 @@ namespace GAPConnect {
 
 		if (this->vertexType == 0)//round
 		{
-			g->FillEllipse(gcnew System::Drawing::SolidBrush(System::Drawing::Color::Black), this->GetBorderRectangle);
+			g->FillEllipse(this->m_drawTools->m_vertexFill, this->GetBorderRectangle);
 			sf->Trimming = System::Drawing::StringTrimming::EllipsisCharacter;
 		}else{//square
-			g->FillRectangle(gcnew System::Drawing::SolidBrush(System::Drawing::Color::Black), this->GetBorderRectangle);
+			g->FillRectangle(this->m_drawTools->m_vertexFill, this->GetBorderRectangle);
 			sf->Trimming = System::Drawing::StringTrimming::Character;
 		}
 		if (this->isMarked)
 		{
 			if (this->vertexType == 0)
 			{
-				g->DrawEllipse(gcnew System::Drawing::Pen(System::Drawing::Color::Gold, 3), this->GetBorderRectangle);
+				g->DrawEllipse(this->m_drawTools->m_vertexMarked, this->GetBorderRectangle);
 			} 
 			else
 			{
-				g->DrawRectangle(gcnew System::Drawing::Pen(System::Drawing::Color::Gold, 3), this->GetBorderRectangle);
+				g->DrawRectangle(this->m_drawTools->m_vertexMarked, this->GetBorderRectangle);
 			}
 		}
 
-		g->DrawString( this->Text, this->textFont, System::Drawing::Brushes::AntiqueWhite, this->GetBorderRectangle, sf);
+		g->DrawString( this->Text, this->m_drawTools->m_drawFont, System::Drawing::Brushes::AntiqueWhite, this->GetBorderRectangle, sf);
 	}
 
 	bool vertexView::markVertex( void )
@@ -67,7 +66,7 @@ namespace GAPConnect {
 			//TODO Größenanpassung max. bis MaxSize min bis MinSize
 			if (configDialog->DoAdjustSize){
 				System::Drawing::Graphics^ g = this->Parent->CreateGraphics();
-				System::Drawing::SizeF sizeOfTextF = g->MeasureString(this->Text, this->textFont);
+				System::Drawing::SizeF sizeOfTextF = g->MeasureString(this->Text, this->m_drawTools->m_drawFont);
 				System::Drawing::Size sizeOfText = sizeOfTextF.ToSize();
 				this->Width = sizeOfText.Width;
 				this->Height = sizeOfText.Width;//soll Gleichmässig werden
