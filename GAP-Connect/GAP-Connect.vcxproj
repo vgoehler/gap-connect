@@ -96,6 +96,7 @@
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="basicView.cpp" />
     <ClCompile Include="drawTools.cpp" />
+    <ClCompile Include="EdgeChangeDialog.cpp" />
     <ClCompile Include="edgeView.cpp" />
     <ClCompile Include="GAP-Connect.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -111,6 +112,9 @@
     </ClInclude>
     <ClInclude Include="basicView.h" />
     <ClInclude Include="drawTools.h" />
+    <ClInclude Include="EdgeChangeDialog.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="edgeView.h" />
     <ClInclude Include="Form1.h">
       <FileType>CppForm</FileType>
@@ -128,6 +132,9 @@
   <ItemGroup>
     <EmbeddedResource Include="about.resx">
       <DependentUpon>about.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EdgeChangeDialog.resx">
+      <DependentUpon>EdgeChangeDialog.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resX">
       <DependentUpon>Form1.h</DependentUpon>

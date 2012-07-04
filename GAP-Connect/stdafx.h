@@ -8,6 +8,7 @@
 #include "drawTools.h"
 #include "about.h"
 #include "VertexChangeDialog.h"
+#include "EdgeChangeDialog.h"
 #include "basicView.h"
 #include "vertexView.h"
 #include "edgeView.h"

@@ -3,7 +3,7 @@
 
 
 namespace GAPConnect {
-basicView::basicView(System::Windows::Forms::Form^ inParent):Parent(inParent)
+basicView::basicView(System::Windows::Forms::Form^ inParent):Parent(inParent), m_marked(false), m_enable(true)
 {
 		this->Size = System::Drawing::Size(25,25);
 		this->m_minsize = System::Drawing::Size(0,0);
@@ -11,7 +11,7 @@ basicView::basicView(System::Windows::Forms::Form^ inParent):Parent(inParent)
 		this->m_drawTools = dynamic_cast<GAPConnect::Form1^ >(this->Parent)->getDrawTools;
 }
 
-basicView::basicView( void )
+basicView::basicView( void ):Parent(nullptr), m_marked(false), m_enable(true)
 {
 
 }
@@ -26,4 +26,26 @@ void basicView::recalcRectangle( void )
 	this->drawRectangle = System::Drawing::Rectangle(m_location, m_size);
 }
 
+bool basicView::Mark( void )
+{
+	this->IsMarked = !this->IsMarked;
+	return (this->IsMarked);
 }
+
+bool basicView::Enable( void )
+{
+	this->IsEnabled = !this->IsEnabled;
+	return (this->IsEnabled);
+}
+
+void basicView::refreshParent( void )
+{
+	dynamic_cast<GAPConnect::Form1^ >(this->Parent)->Refresh();
+}
+
+bool basicView::Contains( System::Drawing::Point& pkt )
+{
+	return(this->GetBorderRectangle.Contains(pkt));
+}
+
+}//namespace

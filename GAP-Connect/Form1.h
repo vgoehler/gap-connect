@@ -104,6 +104,8 @@ namespace GAPConnect {
 	private: System::Windows::Forms::ToolStripComboBox^  toolStripCBKindofVertex;
 	private: System::Windows::Forms::ToolStripMenuItem^  toolStripVertexSizeAdjustment;
 	private: System::Windows::Forms::ToolStripStatusLabel^  toolStripStatusLabelModus;
+	private: System::Windows::Forms::ToolStripButton^  toolStripButtonVertexAutoEdit;
+	private: System::Windows::Forms::ToolStripButton^  toolStripButtonEdgeAutoEdit;
 
 
 
@@ -187,6 +189,7 @@ namespace GAPConnect {
 			System::Windows::Forms::ToolStripSeparator^  toolStripSeparator1;
 			System::Windows::Forms::ToolStripSeparator^  toolStripSeparator2;
 			System::Windows::Forms::ToolStripSeparator^  toolStripSeparator3;
+			System::Windows::Forms::ToolStripSeparator^  toolStripSeparator4;
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Form1::typeid));
 			this->mainmenuStrip = (gcnew System::Windows::Forms::MenuStrip());
 			this->dateiToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -208,6 +211,8 @@ namespace GAPConnect {
 			this->toolStripButtonSave = (gcnew System::Windows::Forms::ToolStripButton());
 			this->toolStripButtonGridControl = (gcnew System::Windows::Forms::ToolStripButton());
 			this->toolStripButtonGridFixed = (gcnew System::Windows::Forms::ToolStripButton());
+			this->toolStripButtonVertexAutoEdit = (gcnew System::Windows::Forms::ToolStripButton());
+			this->toolStripButtonEdgeAutoEdit = (gcnew System::Windows::Forms::ToolStripButton());
 			this->mainstatusStrip = (gcnew System::Windows::Forms::StatusStrip());
 			this->toolStripLabelMouseX = (gcnew System::Windows::Forms::ToolStripStatusLabel());
 			this->toolStripLabelMouseY = (gcnew System::Windows::Forms::ToolStripStatusLabel());
@@ -234,6 +239,7 @@ namespace GAPConnect {
 			toolStripSeparator1 = (gcnew System::Windows::Forms::ToolStripSeparator());
 			toolStripSeparator2 = (gcnew System::Windows::Forms::ToolStripSeparator());
 			toolStripSeparator3 = (gcnew System::Windows::Forms::ToolStripSeparator());
+			toolStripSeparator4 = (gcnew System::Windows::Forms::ToolStripSeparator());
 			this->mainmenuStrip->SuspendLayout();
 			this->maintoolStrip->SuspendLayout();
 			this->mainstatusStrip->SuspendLayout();
@@ -258,6 +264,11 @@ namespace GAPConnect {
 			// 
 			toolStripSeparator3->Name = L"toolStripSeparator3";
 			toolStripSeparator3->Size = System::Drawing::Size(156, 6);
+			// 
+			// toolStripSeparator4
+			// 
+			toolStripSeparator4->Name = L"toolStripSeparator4";
+			toolStripSeparator4->Size = System::Drawing::Size(6, 25);
 			// 
 			// mainmenuStrip
 			// 
@@ -365,8 +376,9 @@ namespace GAPConnect {
 			// 
 			this->maintoolStrip->BackColor = System::Drawing::SystemColors::MenuBar;
 			this->maintoolStrip->GripStyle = System::Windows::Forms::ToolStripGripStyle::Hidden;
-			this->maintoolStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(6) {this->toolStripButtonNew, 
-				this->toolStripButtonOpen, this->toolStripButtonSave, toolStripSeparator2, this->toolStripButtonGridControl, this->toolStripButtonGridFixed});
+			this->maintoolStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(9) {this->toolStripButtonNew, 
+				this->toolStripButtonOpen, this->toolStripButtonSave, toolStripSeparator2, this->toolStripButtonGridControl, this->toolStripButtonGridFixed, 
+				toolStripSeparator4, this->toolStripButtonVertexAutoEdit, this->toolStripButtonEdgeAutoEdit});
 			this->maintoolStrip->Location = System::Drawing::Point(0, 24);
 			this->maintoolStrip->Name = L"maintoolStrip";
 			this->maintoolStrip->RenderMode = System::Windows::Forms::ToolStripRenderMode::System;
@@ -431,6 +443,30 @@ namespace GAPConnect {
 			this->toolStripButtonGridFixed->ToolTipText = L"Aktiviert die Gridarretierung";
 			this->toolStripButtonGridFixed->Click += gcnew System::EventHandler(this, &Form1::toolStripButtonGridFixed_Click);
 			// 
+			// toolStripButtonVertexAutoEdit
+			// 
+			this->toolStripButtonVertexAutoEdit->Checked = true;
+			this->toolStripButtonVertexAutoEdit->CheckOnClick = true;
+			this->toolStripButtonVertexAutoEdit->CheckState = System::Windows::Forms::CheckState::Checked;
+			this->toolStripButtonVertexAutoEdit->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Image;
+			this->toolStripButtonVertexAutoEdit->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"toolStripButtonVertexAutoEdit.Image")));
+			this->toolStripButtonVertexAutoEdit->ImageTransparentColor = System::Drawing::Color::Magenta;
+			this->toolStripButtonVertexAutoEdit->Name = L"toolStripButtonVertexAutoEdit";
+			this->toolStripButtonVertexAutoEdit->Size = System::Drawing::Size(23, 22);
+			this->toolStripButtonVertexAutoEdit->Text = L"Automatisches Editieren der Knoten";
+			this->toolStripButtonVertexAutoEdit->ToolTipText = L"Automatisches Editieren der Knoten beim Erstellen de-/aktivieren";
+			// 
+			// toolStripButtonEdgeAutoEdit
+			// 
+			this->toolStripButtonEdgeAutoEdit->CheckOnClick = true;
+			this->toolStripButtonEdgeAutoEdit->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Image;
+			this->toolStripButtonEdgeAutoEdit->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"toolStripButtonEdgeAutoEdit.Image")));
+			this->toolStripButtonEdgeAutoEdit->ImageTransparentColor = System::Drawing::Color::Magenta;
+			this->toolStripButtonEdgeAutoEdit->Name = L"toolStripButtonEdgeAutoEdit";
+			this->toolStripButtonEdgeAutoEdit->Size = System::Drawing::Size(23, 22);
+			this->toolStripButtonEdgeAutoEdit->Text = L"Automatisches Editieren der Kanten";
+			this->toolStripButtonEdgeAutoEdit->ToolTipText = L"Automatisches Editieren der Kanten beim Erstellen de-/aktivieren";
+			// 
 			// mainstatusStrip
 			// 
 			this->mainstatusStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {this->toolStripLabelMouseX, 
@@ -484,7 +520,7 @@ namespace GAPConnect {
 			this->zeichentools->Dock = System::Windows::Forms::DockStyle::Top;
 			this->zeichentools->Location = System::Drawing::Point(0, 0);
 			this->zeichentools->Name = L"zeichentools";
-			this->zeichentools->Size = System::Drawing::Size(198, 250);
+			this->zeichentools->Size = System::Drawing::Size(198, 231);
 			this->zeichentools->TabIndex = 0;
 			this->zeichentools->TabStop = false;
 			this->zeichentools->Text = L"Zeichnen";
@@ -499,7 +535,7 @@ namespace GAPConnect {
 			this->zeichnenEdge->Location = System::Drawing::Point(3, 70);
 			this->zeichnenEdge->Name = L"zeichnenEdge";
 			this->zeichnenEdge->RenderMode = System::Windows::Forms::ToolStripRenderMode::System;
-			this->zeichnenEdge->Size = System::Drawing::Size(192, 177);
+			this->zeichnenEdge->Size = System::Drawing::Size(192, 158);
 			this->zeichnenEdge->TabIndex = 1;
 			// 
 			// toolStripButtonEdge
@@ -798,7 +834,7 @@ private: System::Void toolStripButtonsOnlyOneChecked(System::Object^  sender, Sy
 			 {
 				 bool isMarked;
 				 do{//Nur zur Sicherheit, da markVertex switched
-					 isMarked = this->startedDrawing->markVertex();
+					 isMarked = this->startedDrawing->Mark();
 				 }while(isMarked);
 				 this->startedDrawing = nullptr;
 			 }
@@ -865,7 +901,7 @@ private: System::Void drawPanel_MouseUp(System::Object^  sender, System::Windows
 				 //Mouse Koordinaten an Situation anpassen - Lock Modus beachten
 				 int mouseX = e->X;
 				 int mouseY = e->Y;
-				 if (this->isGridFixed){
+				 if (this->isGridFixed){//TODO
 					 mouseX = mouseX%50 > 25 ? mouseX-mouseX%50 +50 : mouseX - mouseX%50;
 					 mouseY = mouseY%50 > 25 ? mouseY-mouseY%50 +50 : mouseY - mouseY%50;
 				 }
@@ -890,14 +926,17 @@ private: System::Void drawPanel_MouseUp(System::Object^  sender, System::Windows
 					this->toolStripButtonEdgesEnable();
 
 					//Dialog zum Beschriften einblenden
-					vertex->startConfigDialog();
+					if (this->toolStripButtonVertexAutoEdit->Checked)
+					{
+						vertex->startConfigDialog();
+					}
 				}else if (chosenOption == this->toolStripButtonArc || chosenOption == this->toolStripButtonArcCapacity || chosenOption == toolStripButtonEdge || chosenOption == toolStripButtonEdgeCapacity)
 				{
 					//Kanten Zeichnen Modus
-					GAPConnect::vertexView^ clickedVertex = this->getHandleOfItem(e);
+					GAPConnect::vertexView^ clickedVertex = this->getHandleOfVertex(e->Location);
 					if (clickedVertex != nullptr)//nur wenn auch auf einen Vertex geklickt wurde
 					{
-						bool vertexMarked = clickedVertex->markVertex();	
+						bool vertexMarked = clickedVertex->Mark();	
 						//wenn Knoten wieder deaktiviert, dann wurde wohl falscher startknoten ausgewählt und wieder deaktiviert
 						if (!vertexMarked){
 							this->startedDrawing = nullptr;
@@ -914,13 +953,19 @@ private: System::Void drawPanel_MouseUp(System::Object^  sender, System::Windows
 
 								//ende muss noch markierungen entfernen auf Knoten (Startknoten wird von checkstate change entfernt)
 								do{
-									vertexMarked = clickedVertex->markVertex();
+									vertexMarked = clickedVertex->Mark();
 								}while(vertexMarked);
 
 								//Auswahl deaktivieren
 								chosenOption->Checked=false;
 								//Veränderungen markieren
 								m_unsavedChanges = true;
+
+								//Dialog zum Beschriften einblenden
+								if (this->toolStripButtonEdgeAutoEdit->Checked)
+								{
+									edge->startConfigDialog();
+								}
 							}
 					}
 
@@ -934,25 +979,18 @@ private: System::Void drawPanel_MouseUp(System::Object^  sender, System::Windows
 				 this->toolStripStatusLabelModus->Text = L"";
 			 }
 		 }
-		 ///<summary> Mouse Button Up Ereigniss von Knoten ausgelöst. </summary>
-public: System::Void vertex_MouseUp(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e){
-			 System::Windows::Forms::ToolStripButton^ chosenOption = this->toolBarChosen;
-			 //wenn edge option aktiv dann textcolor ändern um auswahl zu signalisieren
-			 if (chosenOption == this->toolStripButtonEdge || chosenOption == this->toolStripButtonEdgeCapacity || chosenOption == this->toolStripButtonArc || chosenOption == this->toolStripButtonArcCapacity)
-			 {
-			 } 
-		 }
 		///<summary> löst das Konfigurationsereigniss auf Knoten aus</summary>
 private: System::Void vertexRightClickMenu_Config_Click(System::Object^  sender, System::EventArgs^  e) {
 			 //parent des geklickten Feldes holen und auf ContextMenu casten
 			 System::Windows::Forms::ContextMenuStrip^ parent = dynamic_cast<System::Windows::Forms::ContextMenuStrip^ > (dynamic_cast<System::Windows::Forms::ToolStripMenuItem^ >(sender)->GetCurrentParent());
 			 //Ursprung des Klicks holen, diesen als vertexView casten und Dialog ausführen
+			 //TODO
 			 dynamic_cast<GAPConnect::vertexView^ >(parent->SourceControl)->startConfigDialog();
 		 }
 //dragging
 ///<summary> Auswahl von Element, Möglicherweise Drag and Drop, vielleicht auch sonstige Elemente</summary>
  public: System::Void drawPanel_MouseDown(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
-			 this->handleOfVertexUnderMouseToDrag = this->getHandleOfItem(e);
+			 this->handleOfVertexUnderMouseToDrag = this->getHandleOfVertex(e->Location);
 			 if (this->handleOfVertexUnderMouseToDrag != nullptr){
 				 //Drag Rectangle generieren
 				 System::Drawing::Size dragSize = System::Windows::Forms::SystemInformation::DragSize;
@@ -962,6 +1000,15 @@ private: System::Void vertexRightClickMenu_Config_Click(System::Object^  sender,
 				 this->dragBoxFromMouseDown = Rectangle(ddRectangleLocation, dragSize);
 				 //Status
 				 this->toolStripStatusLabelModus->Text = L"Dragging";
+			 }else{
+				 //also kein Vertex, vielleicht also edge Auswahl
+				 GAPConnect::edgeView^ chosenEdge = this->getHandleOfEdge(e->Location);
+				 if (chosenEdge != nullptr)
+				 {
+					 //also doch Kante
+					 chosenEdge->Mark();
+					 this->Refresh();
+				 }
 			 }
 		 }
 		 ///<summary> Mouse betritt die Zeichenfläche. </summary>
@@ -980,26 +1027,66 @@ private: System::Void drawPanel_Paint(System::Object^  sender, System::Windows::
 				 edge->paintEdge(e);
 			 }
 		 }
-private: GAPConnect::vertexView^ getHandleOfItem(System::Windows::Forms::MouseEventArgs^ e){
-			 System::Collections::Generic::List< GAPConnect::vertexView^ > tmpList = gcnew System::Collections::Generic::List< GAPConnect::vertexView^ >();
-			 for each (GAPConnect::vertexView^ vertex in this->vertexList){
-				 if (vertex->GetBorderRectangle.Contains(e->Location))
+		 ///<summary> holt ein Handle auf ein gezeichnetes Objekt wo der mousezeiger draufzeigt </summary>
+private: GAPConnect::edgeView^ getHandleOfEdge(System::Drawing::Point pkt){
+			 //Liste um Sucherergebnisse festzuhalten
+			 System::Collections::Generic::List< GAPConnect::edgeView^ > tmpList = gcnew System::Collections::Generic::List< GAPConnect::edgeView^ >();
+			 //Edges durchsuchen
+			 for each (GAPConnect::edgeView^ element in this->edgeList){
+				 if (element->Contains(pkt))
 				 {
-					 tmpList.Add(vertex);
+					 tmpList.Add(element);
 				 }
 			 }
+			 //Behandlung der Ergebnisse
 			 if (tmpList.Count == 1)
-			 {
+			 {//bei nur einem Ergebniss einfach dieses zurückgeben
 				 return tmpList[0];
 			 }else if (tmpList.Count > 1)
-			 {//TODO Hier Fallbehandlung um das Richtige herauszufinden
+			 {//TODO Mehrere: Hier Fallbehandlung um das Richtige herauszufinden
 				 return tmpList[0];
 			 } 
 			 else
-			 {
+			 {//nichts!
 				 return nullptr;
 			 }
 		 }
+		///<summary> Handle auf Vertex </summary>
+private: GAPConnect::vertexView^ getHandleOfVertex (System::Drawing::Point pkt){
+			 //Liste um Sucherergebnisse festzuhalten
+			 System::Collections::Generic::List< GAPConnect::vertexView^ > tmpList = gcnew System::Collections::Generic::List< GAPConnect::vertexView^ >();
+			 //Vertexe durchsuchen
+			 for each (GAPConnect::vertexView^ element in this->vertexList){
+				 if (element->Contains(pkt))
+				 {
+					 tmpList.Add(element);
+				 }
+			 }
+			 //Behandlung der Ergebnisse
+			 if (tmpList.Count == 1)
+			 {//bei nur einem Ergebniss einfach dieses zurückgeben
+				 return tmpList[0];
+			 }else if (tmpList.Count > 1)
+			 {//TODO Mehrere: Hier Fallbehandlung um das Richtige herauszufinden
+				 return tmpList[0];
+			 } 
+			 else
+			 {//nichts!
+				 return nullptr;
+			 }
+		 }
+		 ///<summary> Löscht über ein Handle ein Objekt </summary>
+private: void deleteDrawnElement(GAPConnect::basicView^ element){
+			 GAPConnect::vertexView^ vertex;
+			 GAPConnect::edgeView^ edge;
+			 if (( vertex = dynamic_cast<GAPConnect::vertexView^ >(element))!= nullptr){
+				 this->vertexList->Remove(vertex);
+			 }else if (( edge = dynamic_cast<GAPConnect::edgeView^ >(element)) != nullptr){
+				 this->edgeList->Remove(edge);
+			 }
+			 this->Refresh();
+		 }
+
 };
 
 }

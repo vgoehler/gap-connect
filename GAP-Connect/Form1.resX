@@ -126,6 +126,9 @@
   <metadata name="toolStripSeparator3.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </metadata>
+  <metadata name="toolStripSeparator4.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>False</value>
+  </metadata>
   <metadata name="mainmenuStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>278, 17</value>
   </metadata>
@@ -196,6 +199,23 @@
         AAAAHWlUWHRDb21tZW50AAAAAABDcmVhdGVkIHdpdGggR0lNUGQuZQcAAABeSURBVDhPY2AgEoSFhf0H
         YSKVYyobmgaA/Av3MzleoNgAlJAkxwXEGQAzmVyagVyNJHsJyaI4klMjUHMc1ICfQFqTZANAGoAaQZpB
         +cGIXAPAmYliA8iyHeoFrNkZAJd9goB/bHOBAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="toolStripButtonVertexAutoEdit.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAB5SURBVDhPY2AYjOA/0FEwTLL7kDWTbAg2zSQZMvAGgAIM
+        Xxh4QuV9CYUsrljYAtS4Foi3EzIAm7wiUPASELMA8WUgViLVkC6ghlCoJhDdTYoBHEDFb9DC5y2QDxIn
+        CiQAVW1DUwnig8SJAqeBqrzQVIL4p4jSTXNFAG4RNW/p1p9xAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="toolStripButtonEdgeAutoEdit.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACXSURBVDhPY2DAA1asWPEfF8anDy5HsQEgk7AZQpTtyIqQ
+        DSFZM1DDf3I0wfQMLs2eUO/4EvISLmdvAWpcC8TbUQxAC2FcmhWBmi4BMQsQXwZiJZyJBYfzuoDioVA5
+        EN2NN7WhGcIB5L+B+h/kQhB+C8QgcaJSWgJQ2TY0Q0F8kDhRBpwGKvNCMwDEP4XVABxhgFuY0nQOAI1c
+        rcOj/DFWAAAAAElFTkSuQmCC
 </value>
   </data>
   <metadata name="mainstatusStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -324,7 +344,7 @@
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAAM
-        CAAAAk1TRnQBSQFMAgEBAgEAAWgBAQFoAQEBEAEAARABAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
+        CAAAAk1TRnQBSQFMAgEBAgEAAYABAQGAAQEBEAEAARABAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
         AwABQAMAARADAAEBAQABCAYAAQQYAAGAAgABgAMAAoABAAGAAwABgAEAAYABAAKAAgADwAEAAcAB3AHA
         AQAB8AHKAaYBAAEzBQABMwEAATMBAAEzAQACMwIAAxYBAAMcAQADIgEAAykBAANVAQADTQEAA0IBAAM5
         AQABgAF8Af8BAAJQAf8BAAGTAQAB1gEAAf8B7AHMAQABxgHWAe8BAAHWAucBAAGQAakBrQIAAf8BMwMA

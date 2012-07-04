@@ -3,8 +3,9 @@
 
 
 namespace GAPConnect {
-edgeView::edgeView(System::Windows::Forms::Form^ inParent, vertexView^ startVertex, vertexView^ endVertex, int mode):basicView(inParent), lineMode(mode), m_startVertex(nullptr), m_endVertex(nullptr)
+edgeView::edgeView(System::Windows::Forms::Form^ inParent, vertexView^ startVertex, vertexView^ endVertex, int mode):basicView(inParent), m_lineMode(mode), m_startVertex(nullptr), m_endVertex(nullptr)
 {
+	this->IsEnabled = true;//Enablen um Stift zu initialisieren
 	this->StartVertex = startVertex;
 	this->EndVertex = endVertex;
 }
@@ -20,10 +21,16 @@ System::Drawing::Size edgeView::createSize( void )
 
 System::Void edgeView::paintEdge( System::Windows::Forms::PaintEventArgs^ e )
 {
+	//Markieren
+	if (this->IsMarked)
+	{
+		//Markierungslinie untendrunter zeichnen
+		e->Graphics->DrawLine(this->m_drawTools->m_edgeMarked, this->m_startDock, this->m_endDock);
+	}
 	//Linie
-	e->Graphics->DrawLine(this->m_drawTools->m_edge, this->m_startDock, this->m_endDock);
+	e->Graphics->DrawLine(this->m_edgePen, this->m_startDock, this->m_endDock);
 	//Modus beachten
-	if (this->lineMode == 1)//Gerichtet
+	if (this->IsArc)//Gerichtet
 	{
 		this->drawArrow(e);
 	}
@@ -38,7 +45,7 @@ System::Drawing::Point edgeView::createLocation( void ){
 }
 
 void edgeView::calculateDockingPoint( void ){
-	if (! this->isLoop)//nur Gültig für Nicht LOOP Modus
+	if (! this->IsLoop)//nur Gültig für Nicht LOOP Modus
 	{
 		//Winkel zu Ziel berechnen
 		double winkel;
@@ -67,28 +74,29 @@ void edgeView::calculateDockingPoint( void ){
 	}
 	}
 
-double edgeView::getRadianStartToEnd( void )
-{
+double edgeView::getRadianStartToEnd( void ){
+	return(this->getRadianStartToEnd(this->m_startVertex->LocationCenter, this->m_endVertex->LocationCenter));
+}
+
+double edgeView::getRadianStartToEnd( Point^ startPoint, Point^ endPoint ){
 	double xDiff,yDiff,winkel;
-	xDiff = double (this->m_startVertex->LocationCenter.X - this->m_endVertex->LocationCenter.X);
-	yDiff = double (this->m_startVertex->LocationCenter.Y - this->m_endVertex->LocationCenter.Y); 
+	xDiff = double (startPoint->X - endPoint->X);
+	yDiff = double (startPoint->Y - endPoint->Y); 
 	winkel = atan2(yDiff, xDiff);
 	return(winkel);
 }
 
 void edgeView::drawArrow( System::Windows::Forms::PaintEventArgs^ e ){
 	//außerhalb des LOOP Modus
-	if (! this->isLoop)
+	if (! this->IsLoop)
 	{
-		double winkleStart, winkleEnd;
+		double angleStart;
 		//Winkel bei Start holen Richtung Ende
-		winkleStart = this->getRadianStartToEnd();
-		//gegenWinkel
-		winkleEnd = PI/2 - winkleStart;
+		angleStart = this->getRadianStartToEnd(this->m_startDock, this->m_endDock);
 
 		Point arrowPeakOne, arrowPeakTwo;
-		arrowPeakOne = this->calculatePointFromAngle(winkleEnd-.20, 15.0, this->m_endDock);
-		arrowPeakTwo = this->calculatePointFromAngle(winkleEnd+.20, 15.0, this->m_endDock);
+		arrowPeakOne = this->calculatePointFromAngle(angleStart-.20, 15.0, this->m_endDock);
+		arrowPeakTwo = this->calculatePointFromAngle(angleStart+.20, 15.0, this->m_endDock);
 
 		//Zeichnen
 		e->Graphics->DrawLine(this->m_drawTools->m_edge, this->m_endDock, arrowPeakOne);
@@ -100,9 +108,52 @@ Point edgeView::calculatePointFromAngle( double angle, double hypothenuse, Point
 {
 	double xdiff, ydiff;
 	ydiff = sin(angle) * hypothenuse;
-	xdiff = hypothenuse / cos(angle);
+	xdiff = cos(angle) * hypothenuse;
 	
 	return(Point(origin.X + int(xdiff), origin.Y + int(ydiff)));
+}
+
+void edgeView::startConfigDialog( void )
+{
+	//initialisiert Dialog
+	EdgeChangeDialog^ configDialog = gcnew EdgeChangeDialog();
+	configDialog->InitializeComponent();
+	//auf Ok test-Schleife
+	if ( configDialog->ShowDialog( this->Parent ) == System::Windows::Forms::DialogResult::OK )
+	{
+		//Werte setzen
+		this->SetValues(configDialog);
+		//Richtungstausch Modus
+		if (configDialog->RevertDirection){
+			vertexView^ realEnd = this->m_endVertex;
+			this->m_endVertex = this->m_startVertex;//hier über Variablen gehen, um redRaw zu verhindern
+			this->StartVertex = realEnd;
+		}
+		//toggle redraw um Änderungen anzuzeigen
+		this->refreshParent();
+	}
+	delete configDialog;
+
+}
+
+void edgeView::InitializeValues( System::Windows::Forms::Form^ configDialog )
+{
+	GAPConnect::EdgeChangeDialog^ dialog = dynamic_cast<GAPConnect::EdgeChangeDialog^ >(configDialog);
+	dialog->IsArc = this->IsArc;
+	dialog->EdgeEnabled = this->IsEnabled;
+	dialog->Wichtung = this->Text;
+	dialog->Kommentar = this->Kommentar;
+	dialog->IsLoop = this->IsLoop;
+}
+
+void edgeView::SetValues( System::Windows::Forms::Form^ configDialog )
+{
+	GAPConnect::EdgeChangeDialog^ dialog = dynamic_cast<GAPConnect::EdgeChangeDialog^ >(configDialog);
+	this->Text = dialog->Wichtung;
+	this->IsArc = dialog->IsArc;
+	this->Kommentar = dialog->Kommentar;
+	this->IsEnabled = dialog->EdgeEnabled;
+	this->IsLoop = dialog->IsLoop;
 }
 
 }//namespace ende

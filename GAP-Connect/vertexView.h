@@ -20,7 +20,6 @@ namespace GAPConnect {
 		property int kindOf{
 			void set(int inValue){
 				vertexType = inValue;
-				this->refreshParent();
 			}
 		}
 		///<summary> Gibt die Mitte des Knotens zurück, bzw. zentriert den Knoten auf einer Übergebenen Position</summary>
@@ -33,42 +32,36 @@ namespace GAPConnect {
 				return(Point(this->Location.X + this->Width /2, this->Location.Y + this->Height /2));
 			}
 		}
-		property System::String^ Text{
-			void set (System::String^ inValue){
-				this->m_text = inValue;
-			}
-			System::String^ get (void){
-				return(this->m_text);
-			}
-		}
-		property System::String^ Kommentar{
-			void set (System::String^ inValue){
-				this->m_kommentar = inValue;
-			}
-			System::String^ get (void){
-				return(this->m_kommentar);
-			}
-		}
-		///<summary> Markiert Knoten visuell und gibt markierungszustand zurück</summary>
-		bool markVertex(void);
 		///<summary> startet den Dialog zum Konfigurieren des Knotens.</summary>
 		void startConfigDialog(void);
 		///<summary> je nach gewünschter Art des Knotens wird eine andere Darstellungsform gewählt</summary>
 		void paintVertex(System::Windows::Forms::PaintEventArgs^ e);
+		///<summary> Aktivierungszustand des Elements kann gesetzt werden bzw. abgefragt. Überschrieben.</summary>
+		property bool IsEnabled{
+			bool get( void ){
+				return(basicView::IsEnabled);
+			}
+			void set(bool inValue){
+				basicView::IsEnabled = inValue;
+				if (inValue){
+					this->m_vertexSolidBrush = this->m_drawTools->m_vertexFill;
+				}else{
+					this->m_vertexSolidBrush = this->m_drawTools->m_vertexDeactivated;
+				}
+			}
+		}
 
 	private:
 			///<summary> Typ des Knotens 0 - Rund; 1 - Eckig </summary>
 			int vertexType;
-			///<summary> Zeigt an ob der Knoten ausgewählt ist </summary>
-			bool isMarked;
-			///<summary> Beschriftung des Elements</summary>
-			String^ m_text;
-			///<summary> Kommentartext </summary>
-			String^ m_kommentar;
 			//TODO Ownervariable als Dateninterface
 			///<summary> Initializiert alle Felder des Dialogs mit passenden Werten aus sich selbst (zu bearbeitender Knoten).</summary>
 			void InitializeValues(System::Windows::Forms::Form^);
-			///<summary> Refresh des Parent wird angefordert. </summary>
-			void refreshParent(void);
+			///<summary> Setzt die Werte des Knoten aus dem Konfigdialog heraus</summary>
+			void SetValues(System::Windows::Forms::Form^);
+			///<summary> Skaliert den Knoten auf die Größe des Textes. </summary>
+			void ScaleVertex(void);
+			///<summary> Farbe mit der der Knoten gezeichnet wird. </summary>
+			System::Drawing::SolidBrush^ m_vertexSolidBrush;
 	};
 }

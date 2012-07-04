@@ -67,6 +67,14 @@ namespace GAPConnect {
 				return(this->cbType->SelectedIndex);
 			}
 		}
+		property bool VertexEnabled{
+			void set( bool inValue ){
+				this->cBEnabled->Checked = inValue;
+			}
+			bool get(void){
+				return(this->cBEnabled->Checked);
+			}
+		}
 
 	private: System::Windows::Forms::TextBox^  knotenText;
 	private: System::Windows::Forms::TextBox^  kommentar;
@@ -75,6 +83,8 @@ namespace GAPConnect {
 
 	private: System::Windows::Forms::Button^  Ok;
 	private: System::Windows::Forms::Button^  cancel;
+	private: System::Windows::Forms::CheckBox^  cBEnabled;
+	private: System::Windows::Forms::Button^  Delete;
 
 
 
@@ -100,6 +110,8 @@ namespace GAPConnect {
 			this->cbType = (gcnew System::Windows::Forms::ComboBox());
 			this->Ok = (gcnew System::Windows::Forms::Button());
 			this->cancel = (gcnew System::Windows::Forms::Button());
+			this->cBEnabled = (gcnew System::Windows::Forms::CheckBox());
+			this->Delete = (gcnew System::Windows::Forms::Button());
 			label1 = (gcnew System::Windows::Forms::Label());
 			label2 = (gcnew System::Windows::Forms::Label());
 			label3 = (gcnew System::Windows::Forms::Label());
@@ -187,6 +199,28 @@ namespace GAPConnect {
 			this->cancel->Text = L"Abbrechen";
 			this->cancel->UseVisualStyleBackColor = true;
 			// 
+			// cBEnabled
+			// 
+			this->cBEnabled->AutoSize = true;
+			this->cBEnabled->Checked = true;
+			this->cBEnabled->CheckState = System::Windows::Forms::CheckState::Checked;
+			this->cBEnabled->Location = System::Drawing::Point(12, 136);
+			this->cBEnabled->Name = L"cBEnabled";
+			this->cBEnabled->Size = System::Drawing::Size(64, 17);
+			this->cBEnabled->TabIndex = 7;
+			this->cBEnabled->Text = L"Aktiviert";
+			this->cBEnabled->UseVisualStyleBackColor = true;
+			// 
+			// Delete
+			// 
+			this->Delete->DialogResult = System::Windows::Forms::DialogResult::Yes;
+			this->Delete->Location = System::Drawing::Point(107, 198);
+			this->Delete->Name = L"Delete";
+			this->Delete->Size = System::Drawing::Size(88, 23);
+			this->Delete->TabIndex = 8;
+			this->Delete->Text = L"Löschen";
+			this->Delete->UseVisualStyleBackColor = true;
+			// 
 			// VertexChangeDialog
 			// 
 			this->AcceptButton = this->Ok;
@@ -194,6 +228,8 @@ namespace GAPConnect {
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->CancelButton = this->cancel;
 			this->ClientSize = System::Drawing::Size(434, 265);
+			this->Controls->Add(this->Delete);
+			this->Controls->Add(this->cBEnabled);
 			this->Controls->Add(this->cancel);
 			this->Controls->Add(this->Ok);
 			this->Controls->Add(label3);
