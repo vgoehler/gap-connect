@@ -34,6 +34,10 @@ System::Void edgeView::paintEdge( System::Windows::Forms::PaintEventArgs^ e )
 	{
 		this->drawArrow(e);
 	}
+	if (this->Text != L"")
+	{
+		this->drawText(e);
+	}
 }
 
 System::Drawing::Point edgeView::createLocation( void ){
@@ -117,7 +121,7 @@ void edgeView::startConfigDialog( void )
 {
 	//initialisiert Dialog
 	EdgeChangeDialog^ configDialog = gcnew EdgeChangeDialog();
-	configDialog->InitializeComponent();
+	this->InitializeValues(configDialog);
 	//auf Ok test-Schleife
 	if ( configDialog->ShowDialog( this->Parent ) == System::Windows::Forms::DialogResult::OK )
 	{
@@ -126,7 +130,7 @@ void edgeView::startConfigDialog( void )
 		//Richtungstausch Modus
 		if (configDialog->RevertDirection){
 			vertexView^ realEnd = this->m_endVertex;
-			this->m_endVertex = this->m_startVertex;//hier über Variablen gehen, um redRaw zu verhindern
+			this->m_endVertex = this->m_startVertex;//hier über Variablen gehen, um reDraw zu verhindern
 			this->StartVertex = realEnd;
 		}
 		//toggle redraw um Änderungen anzuzeigen
@@ -154,6 +158,60 @@ void edgeView::SetValues( System::Windows::Forms::Form^ configDialog )
 	this->Kommentar = dialog->Kommentar;
 	this->IsEnabled = dialog->EdgeEnabled;
 	this->IsLoop = dialog->IsLoop;
+}
+
+void edgeView::drawText( System::Windows::Forms::PaintEventArgs^ e )
+{
+	//Mitte berechnen
+	System::Drawing::Point mitteEdge = Point(this->Location.X + this->Width / 2, this->Location.Y + this->Height / 2);
+	//Länge berechnen
+	double lengthToMitte = this->LengthFromPointToPoint(m_startDock, mitteEdge);
+	//20 px als Entfernung für den zu schreibenden Text und dann den inneren Winkel berechnen
+	double angleRotation = atan2(10.0, lengthToMitte);
+	//originaler WInkel
+	double angleOriginal = this->getRadianStartToEnd(this->m_startDock,this->m_endDock);
+	//Berechnungen des Textpunktes
+	Int32 ydiff = int(sin(angleOriginal-angleRotation-PI)*lengthToMitte);
+	Int32 xdiff = int(cos(angleOriginal-angleRotation-PI)*lengthToMitte);
+	Point textPkt = Point(this->m_startDock.X + xdiff,this->m_startDock.Y + ydiff);
+	//stringFormat
+	System::Drawing::StringFormat^ sf = gcnew System::Drawing::StringFormat();
+	sf->Alignment = System::Drawing::StringAlignment::Center;
+	sf->LineAlignment = System::Drawing::StringAlignment::Center;
+	//schreibt Text
+	e->Graphics->DrawLine(this->m_drawTools->m_edgeHilfslinie, textPkt, mitteEdge);
+	e->Graphics->DrawString( this->Text, this->m_drawTools->m_drawFont, System::Drawing::Brushes::Black, textPkt, sf);
+}
+
+bool edgeView::Contains( System::Drawing::Point pkt )
+{
+	bool inRectangle = basicView::Contains(pkt);
+	if (inRectangle)//verfeinerung der Detection nur Notwendig wenn auch in Control Rectangle geklickt wurde
+	{
+		//Länge der Linie zu dem geklickten Punkt (liegt auf jedenfall im Rechteck)
+		double lengthtoPkt= this->LengthFromPointToPoint(this->m_startDock, pkt);
+		//Projektion dieses Punktes auf die Verbindungslinie zwischen den Dockpunkten
+		double angle = this->getRadianStartToEnd(this->m_startDock,this->m_endDock);
+		Point projection = this->calculatePointFromAngle(angle-PI, lengthtoPkt, this->m_startDock);
+		//nun Entfernung von projection zu pkt betrachten; 5px alle Richtungen
+		Int32 xdiff, ydiff;
+		xdiff = abs(projection.X - pkt.X);
+		ydiff = abs(projection.Y - pkt.Y);
+		if (xdiff <= 5 && ydiff <= 5)
+		{
+			return(true);
+		}
+	}
+	return(false);
+}
+
+double edgeView::LengthFromPointToPoint(Point^ pkt1, Point^ pkt2){
+		//Differenzen
+		Int32 xdiff, ydiff;
+		xdiff = pkt1->X - pkt2->X;
+		ydiff = pkt1->Y - pkt2->Y;
+		//Länge
+		return( sqrt(double(xdiff*xdiff + ydiff*ydiff)));
 }
 
 }//namespace ende

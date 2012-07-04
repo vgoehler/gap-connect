@@ -51,8 +51,7 @@ namespace GAPConnect {
 		VertexChangeDialog^ configDialog = gcnew VertexChangeDialog();
 		//Dialog initialisieren
 		this->InitializeValues(configDialog);
-		System::Windows::Forms::DialogResult action = configDialog->ShowDialog( this->Parent );
-		if ( action == System::Windows::Forms::DialogResult::OK )
+		if ( configDialog->ShowDialog( this->Parent ) == System::Windows::Forms::DialogResult::OK )
 		{
 			//Werte setzen
 			this->SetValues(configDialog);
@@ -62,9 +61,6 @@ namespace GAPConnect {
 			}
 			//toggle redraw um Änderungen anzuzeigen
 			this->refreshParent();
-		}else if (action == System::Windows::Forms::DialogResult::Yes)//Löschen
-		{
-			this->Text = L"Löschen";
 		}
 		delete configDialog;
 	}

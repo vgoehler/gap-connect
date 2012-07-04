@@ -97,6 +97,9 @@ namespace GAPConnect {
 	private: System::Windows::Forms::ToolStripStatusLabel^  toolStripStatusLabelModus;
 	private: System::Windows::Forms::ToolStripButton^  toolStripButtonVertexAutoEdit;
 	private: System::Windows::Forms::ToolStripButton^  toolStripButtonEdgeAutoEdit;
+	private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator5;
+	private: System::Windows::Forms::ToolStripButton^  toolStripButtonDelete;
+	private: System::Windows::Forms::ToolStripMenuItem^  deleteToolStripMenuItem;
 
 
 
@@ -184,6 +187,7 @@ namespace GAPConnect {
 			this->speichernalsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->beendenToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->bearbeitenToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->deleteToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->ansichtToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->optionenToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->gridDeAktivierenToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -198,6 +202,8 @@ namespace GAPConnect {
 			this->toolStripButtonGridFixed = (gcnew System::Windows::Forms::ToolStripButton());
 			this->toolStripButtonVertexAutoEdit = (gcnew System::Windows::Forms::ToolStripButton());
 			this->toolStripButtonEdgeAutoEdit = (gcnew System::Windows::Forms::ToolStripButton());
+			this->toolStripSeparator5 = (gcnew System::Windows::Forms::ToolStripSeparator());
+			this->toolStripButtonDelete = (gcnew System::Windows::Forms::ToolStripButton());
 			this->mainstatusStrip = (gcnew System::Windows::Forms::StatusStrip());
 			this->toolStripLabelMouseX = (gcnew System::Windows::Forms::ToolStripStatusLabel());
 			this->toolStripLabelMouseY = (gcnew System::Windows::Forms::ToolStripStatusLabel());
@@ -311,9 +317,21 @@ namespace GAPConnect {
 			// 
 			// bearbeitenToolStripMenuItem
 			// 
+			this->bearbeitenToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) {this->deleteToolStripMenuItem});
 			this->bearbeitenToolStripMenuItem->Name = L"bearbeitenToolStripMenuItem";
 			this->bearbeitenToolStripMenuItem->Size = System::Drawing::Size(75, 20);
 			this->bearbeitenToolStripMenuItem->Text = L"&Bearbeiten";
+			// 
+			// deleteToolStripMenuItem
+			// 
+			this->deleteToolStripMenuItem->AutoToolTip = true;
+			this->deleteToolStripMenuItem->Enabled = false;
+			this->deleteToolStripMenuItem->Name = L"deleteToolStripMenuItem";
+			this->deleteToolStripMenuItem->ShortcutKeys = System::Windows::Forms::Keys::Delete;
+			this->deleteToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->deleteToolStripMenuItem->Text = L"&Löschen";
+			this->deleteToolStripMenuItem->ToolTipText = L"Löschen des markierten Objekts";
+			this->deleteToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::deleteMarkedElement_Click);
 			// 
 			// ansichtToolStripMenuItem
 			// 
@@ -361,9 +379,9 @@ namespace GAPConnect {
 			// 
 			this->maintoolStrip->BackColor = System::Drawing::SystemColors::MenuBar;
 			this->maintoolStrip->GripStyle = System::Windows::Forms::ToolStripGripStyle::Hidden;
-			this->maintoolStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(9) {this->toolStripButtonNew, 
+			this->maintoolStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(11) {this->toolStripButtonNew, 
 				this->toolStripButtonOpen, this->toolStripButtonSave, toolStripSeparator2, this->toolStripButtonGridControl, this->toolStripButtonGridFixed, 
-				toolStripSeparator4, this->toolStripButtonVertexAutoEdit, this->toolStripButtonEdgeAutoEdit});
+				toolStripSeparator4, this->toolStripButtonVertexAutoEdit, this->toolStripButtonEdgeAutoEdit, this->toolStripSeparator5, this->toolStripButtonDelete});
 			this->maintoolStrip->Location = System::Drawing::Point(0, 24);
 			this->maintoolStrip->Name = L"maintoolStrip";
 			this->maintoolStrip->RenderMode = System::Windows::Forms::ToolStripRenderMode::System;
@@ -451,6 +469,23 @@ namespace GAPConnect {
 			this->toolStripButtonEdgeAutoEdit->Size = System::Drawing::Size(23, 22);
 			this->toolStripButtonEdgeAutoEdit->Text = L"Automatisches Editieren der Kanten";
 			this->toolStripButtonEdgeAutoEdit->ToolTipText = L"Automatisches Editieren der Kanten beim Erstellen de-/aktivieren";
+			// 
+			// toolStripSeparator5
+			// 
+			this->toolStripSeparator5->Name = L"toolStripSeparator5";
+			this->toolStripSeparator5->Size = System::Drawing::Size(6, 25);
+			// 
+			// toolStripButtonDelete
+			// 
+			this->toolStripButtonDelete->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Image;
+			this->toolStripButtonDelete->Enabled = false;
+			this->toolStripButtonDelete->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"toolStripButtonDelete.Image")));
+			this->toolStripButtonDelete->ImageTransparentColor = System::Drawing::Color::Magenta;
+			this->toolStripButtonDelete->Name = L"toolStripButtonDelete";
+			this->toolStripButtonDelete->Size = System::Drawing::Size(23, 22);
+			this->toolStripButtonDelete->Text = L"Entferne Objekt";
+			this->toolStripButtonDelete->ToolTipText = L"Entferne markiertes Objekt (Entf)";
+			this->toolStripButtonDelete->Click += gcnew System::EventHandler(this, &Form1::deleteMarkedElement_Click);
 			// 
 			// mainstatusStrip
 			// 
@@ -812,7 +847,7 @@ private: System::Void drawPanel_MouseLeave(System::Object^  sender, System::Even
 				//Kanten je nach vorhandenen Knoten enablen
 				this->toolStripButtonEdgesEnable();
 			 }
-			 this->Refresh();
+			 this->RefreshDrawPanel();
 		  }
 ///<summary> Überprüft beim Auswählen von Toolbuttons, dass auch nur einer ausgewählt ist.</summary>
 private: System::Void toolStripButtonsOnlyOneChecked(System::Object^  sender, System::EventArgs^  e) {
@@ -831,7 +866,7 @@ private: System::Void toolStripButtonsOnlyOneChecked(System::Object^  sender, Sy
 			 this->m_graph->unmarkElement();
 			 //und der markierung sollte eine vorhanden sein
 			 this->m_graph->unmarkLastMarked();
-			 this->Refresh();
+			 this->RefreshDrawPanel();
 		 }
 ///<summary> Schaltet das Grid ein bzw. aus </summary>
 private: System::Void toolStripButtonGridControl_Click(System::Object^  sender, System::EventArgs^  e) {
@@ -868,7 +903,7 @@ private: void toolStripButtonEdgesEnable(){
 		 }
 ///<summary> Scrollen des Draw Panels muss redraw triggern</summary>
 private: System::Void drawPanel_Scroll(System::Object^  sender, System::Windows::Forms::ScrollEventArgs^  e) {
-			 this->drawPanel->Refresh();
+			 this->RefreshDrawPanel();
 		 }
 ///<summary> MouseHover muss je nach ausgewähltem Button den Cursor ändern. </summary>
 public: System::Void drawPanel_MouseHover(System::Object^  sender, System::EventArgs^  e) {
@@ -927,7 +962,7 @@ private: System::Void drawPanel_MouseUp(System::Object^  sender, System::Windows
 					}
 				}
 				//Refresh im Zeichnenmodus
-				this->Refresh();
+				this->RefreshDrawPanel();
 			 }else{
 				 //nicht im ZeichnenModus dann ist es Drag and Drop - TODO
 				 this->dragBoxFromMouseDown = System::Drawing::Rectangle::Empty;
@@ -966,7 +1001,8 @@ private: System::Void vertexRightClickMenu_Config_Click(System::Object^  sender,
 					 this->m_graph->markElement(chosenEdge);
 				 }
 			 }
-			 this->Refresh();
+			 //neu Zeichnen
+			 this->RefreshDrawPanel();
 		 }
 private: System::Void drawPanel_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
 			 //Anti Aliasing
@@ -974,6 +1010,24 @@ private: System::Void drawPanel_Paint(System::Object^  sender, System::Windows::
 			 //Graph zeichnen
 			 this->m_graph->drawGraph(e);
 		 }
+
+///<summary> Aktiviert oder Deaktiviert alle Löschen Steuerelemente</summary>
+private: void activateAllDelete( bool active ){
+			 this->toolStripButtonDelete->Enabled = active;
+			 this->deleteToolStripMenuItem->Enabled = active;
+		 }
+///<summary> Löscht das markierte Element </summary>
+private: System::Void deleteMarkedElement_Click(System::Object^  sender, System::EventArgs^  e) {
+			 this->m_graph->deleteDrawnElement(this->m_graph->getMarkedElement);
+			 this->RefreshDrawPanel();
+		 }
+///<summary> Refresh auf dem DrawPanel </summary>
+public: void RefreshDrawPanel( void ){
+			this->activateAllDelete(this->m_graph->IsSomethingMarked());
+			this->drawPanel->SuspendLayout();
+			this->drawPanel->Refresh();
+			this->drawPanel->ResumeLayout(true);
+		}
 };
 
 }

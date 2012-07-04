@@ -3,7 +3,7 @@
 
 namespace GAPConnect {
 
-graphView::graphView(System::Windows::Forms::Form^ inParent): parent(inParent), startedDrawing(nullptr), lastMarkedElement(nullptr)
+graphView::graphView(System::Windows::Forms::Form^ inParent): parent(inParent), startedDrawing(nullptr), m_lastMarkedElement(nullptr)
 {
 	this->vertexList = gcnew System::Collections::Generic::List< GAPConnect::vertexView^ >();
 	this->edgeList = gcnew System::Collections::Generic::List< GAPConnect::edgeView^ >();
@@ -86,13 +86,13 @@ void graphView::CreateVertex( Point location, bool isRound, bool withConfigDialo
 
 void graphView::markElement( GAPConnect::basicView^ element )
 {
-	bool sameAsLastElement = this->lastMarkedElement != element;
-	unmarkElement(this->lastMarkedElement);
-	this->lastMarkedElement = nullptr;
+	bool sameAsLastElement = this->m_lastMarkedElement != element;
+	unmarkElement(this->m_lastMarkedElement);
+	this->m_lastMarkedElement = nullptr;
 	if (sameAsLastElement)
 	{
 		element->Mark();
-		this->lastMarkedElement = element;
+		this->m_lastMarkedElement = element;
 	}
 }
 
@@ -163,10 +163,29 @@ void graphView::deleteDrawnElement( GAPConnect::basicView^ element )
 	GAPConnect::vertexView^ vertex;
 	GAPConnect::edgeView^ edge;
 	if (( vertex = dynamic_cast<GAPConnect::vertexView^ >(element))!= nullptr){
+		//bei Knoten müssen auch alle angeschlossenen Kanten entfernt werden
+		System::Collections::Generic::List< GAPConnect::edgeView^ > tmpEdgeList = gcnew System::Collections::Generic::List< GAPConnect::edgeView^ >();
+		//Suchen der Kanten von vertex ausgehen
+		for each (GAPConnect::edgeView^ edge in this->edgeList){
+			if (vertex == edge->StartVertex || vertex == edge->EndVertex){
+				tmpEdgeList.Add(edge);
+			}
+		}
+		//Löschen der Kanten
+		for each (GAPConnect::edgeView^ edge in tmpEdgeList){
+			this->edgeList->Remove(edge);
+		}
+		tmpEdgeList.Clear();
 		this->vertexList->Remove(vertex);
 	}else if (( edge = dynamic_cast<GAPConnect::edgeView^ >(element)) != nullptr){
 		this->edgeList->Remove(edge);
 	}
+	delete element;
+}
+
+bool graphView::IsSomethingMarked( void )
+{
+	return(this->m_lastMarkedElement != nullptr);
 }
 
 }//namespace

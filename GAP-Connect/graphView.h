@@ -16,8 +16,8 @@ public:
 	~graphView(void);
 	///<summary> demarked den Last Marked Element</summary>
 	void unmarkLastMarked( void ){
-		this->unmarkElement(this->lastMarkedElement);
-		this->lastMarkedElement = nullptr;
+		this->unmarkElement(this->m_lastMarkedElement);
+		this->m_lastMarkedElement = nullptr;
 	}
 	///<summary> Unmark and remove Edge Start Vertex </summary>
 	void unmarkElement( void );
@@ -43,6 +43,14 @@ public:
 	GAPConnect::vertexView^ getHandleOfVertex (System::Drawing::Point pkt);
 	///<summary> Löscht über ein Handle ein Objekt </summary>
 	void deleteDrawnElement(GAPConnect::basicView^ element);
+	///<summary> Gibt letztes markiertes Objekt zurück </summary>
+	property GAPConnect::basicView^ getMarkedElement{
+		GAPConnect::basicView^ get( void ){
+			return(this->m_lastMarkedElement);
+		}
+	}
+	///<summary> Gibt an ob noch ein Element ausgewählt ist </summary>
+	bool IsSomethingMarked( void );
 
 
 private:
@@ -57,7 +65,7 @@ private:
 	///<summary> Parent </summary>
 	System::Windows::Forms::Form^ parent;
 	///<summary> lastMarked Element</summary>
-	GAPConnect::basicView^ lastMarkedElement;
+	GAPConnect::basicView^ m_lastMarkedElement;
 };
 
 }//namespace

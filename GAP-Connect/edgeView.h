@@ -86,22 +86,23 @@ public:
 		}
 	}
 	///<summary> Contains Methode des Parent hier Überschrieben</summary>
-	bool Contains (System::Drawing::Point pkt){
-		bool inRectangle = basicView::Contains(pkt);
-		if (inRectangle)//verfeinerung der Detection nur Notwendig wenn auch in Control Rectangle geklickt wurde
+	bool Contains (System::Drawing::Point pkt);
+	///<summary> Zwei Ecken kreuzen einander </summary>
+	bool Crosses (GAPConnect::edgeView^ otherEdge){
+		//Kontrollrechtecke müssen sich überschneiden
+		if (this->GetBorderRectangle.IntersectsWith(otherEdge->GetBorderRectangle))
 		{
-			//Länge der Linie zu dem geklickten Punkt (liegt auf jedenfall im Rechteck)
-			double lengthtoPkt= sqrt(pow(double(this->m_startDock.X-pkt.X),2)+pow(double(this->m_startDock.Y-pkt.Y),2));
-			//Projektion dieses Punktes auf die Verbindungslinie zwischen den Dockpunkten
-			double angle = this->getRadianStartToEnd(this->m_startDock,this->m_endDock);
-			Point projection = this->calculatePointFromAngle(angle-PI, lengthtoPkt, this->m_startDock);
-			//nun Entfernung von projection zu pkt betrachten; 5px alle Richtungen
-			int xdiff = abs(projection.X - pkt.X);
-			int ydiff = abs(projection.Y - pkt.Y);
-			if (xdiff <= 5 && ydiff <= 5)
-			{
-				return(true);
+			if ((this->StartVertex == otherEdge->StartVertex && this->EndVertex == otherEdge->EndVertex || this->StartVertex == otherEdge->EndVertex && this->EndVertex == otherEdge->StartVertex)){
+				//Doppelkante, Falsch zurückgeben, da diese durch Knotenverschiebung nicht behoben wird
+				return(false);
+			}else if (this->StartVertex == otherEdge->StartVertex || this->StartVertex == otherEdge->EndVertex || this->EndVertex == otherEdge->StartVertex || this->EndVertex == otherEdge->EndVertex){
+				//wenn startpunkt oder endpunkt gleich, dann kann es keine crossings geben, lediglich inclusionen wenn ein rechteck im anderen ist
+				if (this->GetBorderRectangle.Contains(otherEdge->GetBorderRectangle) || otherEdge->GetBorderRectangle.Contains(this->GetBorderRectangle))
+				{
+					return(true);
+				}
 			}
+			//Überprüfen ob die Knoten des anderen links und rechts der Kante liegen, dann ist Überschneidung möglich
 		}
 		return(false);
 	}
@@ -133,6 +134,10 @@ private:
 	void InitializeValues(System::Windows::Forms::Form^ configDialog);
 	///<summary> Methode, die die Kante aus den Werten des Dialogs initialisiert</summary>
 	void SetValues (System::Windows::Forms::Form^ configDialog);
+	///<summary> schreibt die Kantenbewertung </summary>
+	void drawText ( System::Windows::Forms::PaintEventArgs^ e);
+	///<summary> berechnet die Entfernung zwischen 2 Punkten </summary>
+	double edgeView::LengthFromPointToPoint(Point^ pkt1, Point^ pkt2);
 };
 
 }//namespace
