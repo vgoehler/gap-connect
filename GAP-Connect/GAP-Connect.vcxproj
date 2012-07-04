@@ -99,6 +99,7 @@
     <ClCompile Include="EdgeChangeDialog.cpp" />
     <ClCompile Include="edgeView.cpp" />
     <ClCompile Include="GAP-Connect.cpp" />
+    <ClCompile Include="graphView.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -119,6 +120,7 @@
     <ClInclude Include="Form1.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="graphView.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="VertexChangeDialog.h">

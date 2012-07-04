@@ -4,7 +4,7 @@ public ref class basicView
 {
 public:
 	basicView(void);
-	basicView(System::Windows::Forms::Form^);
+	basicView(System::Windows::Forms::Form^, GAPConnect::drawTools^);
 	~basicView();
 
 	///<summary> Schreib und Liest die Position des Elements</summary>

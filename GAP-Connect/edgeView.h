@@ -17,7 +17,7 @@ public basicView
 {
 public:
 	///<summary> Konstruktor </summary>
-	edgeView(System::Windows::Forms::Form^ , vertexView^ ,vertexView^ , int);
+	edgeView(System::Windows::Forms::Form^ , GAPConnect::drawTools^, vertexView^ ,vertexView^ , int);
 
 	///<summary> Methode zum Zeichnen der Kanten </summary>
 	System::Void paintEdge(System::Windows::Forms::PaintEventArgs^  e);

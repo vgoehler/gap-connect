@@ -3,7 +3,7 @@
 
 
 namespace GAPConnect {
-	vertexView::vertexView(System::Windows::Forms::Form^ inParent):basicView(inParent), vertexType(0)
+	vertexView::vertexView(System::Windows::Forms::Form^ inParent, GAPConnect::drawTools^ inDrawTools):basicView(inParent, inDrawTools), vertexType(0)
 	{
 		this->IsEnabled = true;//Zuweisen um Zeichenfarbe zu initialisieren
 		this->Size = System::Drawing::Size(25,25);

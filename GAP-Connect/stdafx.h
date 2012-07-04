@@ -12,4 +12,5 @@
 #include "basicView.h"
 #include "vertexView.h"
 #include "edgeView.h"
+#include "graphView.h"
 #include "Form1.h"

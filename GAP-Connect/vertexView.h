@@ -14,7 +14,7 @@ namespace GAPConnect {
 	{
 	public:
 		///<summary> Konstruktor </summary>
-		vertexView(System::Windows::Forms::Form^);
+		vertexView(System::Windows::Forms::Form^, GAPConnect::drawTools^);
 
 		///<summary> Ändert die Art des Knoten.</summary>
 		property int kindOf{

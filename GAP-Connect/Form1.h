@@ -15,14 +15,11 @@ namespace GAPConnect {
 	public ref class Form1 : public System::Windows::Forms::Form
 	{
 	public:
-		Form1(void):startedDrawing(nullptr),dragBoxFromMouseDown(System::Drawing::Rectangle::Empty)
+		Form1(void):dragBoxFromMouseDown(System::Drawing::Rectangle::Empty)
 		{
 			InitializeComponent();
-
 			this->changedGraph = false;
-			this->vertexList = gcnew System::Collections::Generic::List< GAPConnect::vertexView^ >();
-			this->edgeList = gcnew System::Collections::Generic::List< GAPConnect::edgeView^ >();
-			this->m_drawTools = gcnew GAPConnect::drawTools();
+			this->m_graph = gcnew GAPConnect::graphView(this);
 			//TODO Werte aus Ini Laden
 			this->loadDefaultValues();
 			//Disablen
@@ -38,24 +35,18 @@ namespace GAPConnect {
 			if (components)
 			{
 				delete components;
-				delete this->vertexList;
+				delete this->m_graph;
 			}
 		}
 	private:
 	///<summary>Member um Veränderungen im Inhalt zu charakterisieren</summary>
 		bool m_unsavedChanges;
-	///<summary>Handle um edge Zeichnen in progress zu signalisieren, speichert den Start, ansonsten nullptr</summary>
-		vertexView^ startedDrawing;
 	///<summary> Drag and Drop Variable</summary>
 		GAPConnect::vertexView^ handleOfVertexUnderMouseToDrag;
 	///<summary> Drag and Drop Rectangle - Größe des Bereichs ab dem die DaD Operation startet</summary>
 		System::Drawing::Rectangle dragBoxFromMouseDown;
-	///<summary> enthält die vorhandenen Vertexe</summary>
-		System::Collections::Generic::List< GAPConnect::vertexView^ >^ vertexList;
-	///<summary> enthält alle Kanten </summary>
-		System::Collections::Generic::List< GAPConnect::edgeView^ >^ edgeList;
-	///<summary> Definition von Zeichentools </summary>
-		GAPConnect::drawTools^ m_drawTools;
+	///<summary> Enthält den zu Zeichnenden Graphen</summary>
+		GAPConnect::graphView^ m_graph;
 
 	private: System::Windows::Forms::MenuStrip^  mainmenuStrip;
 	private: System::Windows::Forms::ToolStripMenuItem^  dateiToolStripMenuItem;
@@ -115,12 +106,12 @@ namespace GAPConnect {
 
 	///<summary>Änderungen am Graph in Property vermerken. set routine setzt auch enable im Menü</summary>
 	private: property bool changedGraph{
-				 void set(bool value){
-					 this->m_unsavedChanges = value;
+				 void set(bool InValue){
+					 this->m_unsavedChanges = InValue;
 					 //änderungen im graph triggern zulassen des speicherns
-					 this->speichernToolStripMenuItem->Enabled = value;
-					 this->speichernalsToolStripMenuItem->Enabled = value;
-					 this->toolStripButtonSave->Enabled = value;
+					 this->speichernToolStripMenuItem->Enabled = InValue;
+					 this->speichernalsToolStripMenuItem->Enabled = InValue;
+					 this->toolStripButtonSave->Enabled = InValue;
 				 }
 				 bool get(void){
 					 return(this->m_unsavedChanges);
@@ -169,12 +160,6 @@ namespace GAPConnect {
 	public: property System::Windows::Forms::ContextMenuStrip^ MenuforVertex{
 				System::Windows::Forms::ContextMenuStrip^ get(void){
 					return(this->vertexRightClickMenu);
-				}
-			}
-	///<summary> Property gibt Instanz der Zeichentools Klasse über</summary>
-	public: property GAPConnect::drawTools^ getDrawTools{
-				GAPConnect::drawTools^ get(void){
-					return(this->m_drawTools);
 				}
 			}
 
@@ -758,13 +743,21 @@ private: System::Void beendenToolStripMenuItem_Click(System::Object^  sender, Sy
 		 }
 ///<summary> Vor dem Schließen des Formulars auf Nichtgesicherte Eingaben achten.</summary>
 private: System::Void Form1_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e) {
-			 if (m_unsavedChanges){
-				 if(MessageBox::Show(L"Es sind Änderungen vorhanden! Diese werden beim Schließen gelöscht! Wollen Sie das Schließen abbrechen?", L"Änderungen vorhanden!", MessageBoxButtons::YesNo, MessageBoxIcon::Question) == System::Windows::Forms::DialogResult::Yes){
-					//user will Schließen abbrechen
-					 e->Cancel = true;
-				 }
+			 if (!this->isGraphChangedDialog())
+			 {
+				 e->Cancel = true;
 			 }
 		 }
+ ///<summary> Änderungen am Graph dialog einblenden, gibt true zurück wenn abgebrochen werden soll. </summary>
+private: bool isGraphChangedDialog( void ){
+			 if (this->changedGraph){
+				 if(MessageBox::Show(L"Es sind Änderungen vorhanden! Diese werden durch ihre Aktion verworfen! Wollen Sie dies wirklich?", L"Änderungen vorhanden!", MessageBoxButtons::YesNo, MessageBoxIcon::Question) == System::Windows::Forms::DialogResult::Yes){
+					 return(true);
+				 }
+			 }
+			 return(false);
+		 }
+
 ///<summary> Laden einer Datei </summary>
 private: System::Void ladenMenu_Click(System::Object^  sender, System::EventArgs^  e) {
 			 System::IO::Stream^ inputStream;
@@ -804,17 +797,22 @@ private: System::Void drawPanel_MouseMove(System::Object^  sender, System::Windo
 private: System::Void drawPanel_MouseLeave(System::Object^  sender, System::EventArgs^  e) {
 			 this->toolStripLabelMouseX->Text = L"X: ";
 			 this->toolStripLabelMouseY->Text = L"Y: ";
+			 //TODO drag Operation abbrechen
 		 }
 ///<summary> Neues Dokument </summary>
  private: System::Void neuMenu_Click(System::Object^ sender, System::EventArgs^ e){
 			  //TODO nachfragen ob gespeichert werden soll
+			 if (this->isGraphChangedDialog())
+			 {
+				//Graph löschen
+				delete this->m_graph;
+				//neu initialisieren
+				this->m_graph = gcnew GAPConnect::graphView(this);
 
-			  //Zeichenbereich löschen
-			  this->drawPanel->Controls->Clear();
-
-			  //zuLetzt!
-			  m_unsavedChanges = false;
-			  this->toolStripButtonEdgesEnable();
+				//Kanten je nach vorhandenen Knoten enablen
+				this->toolStripButtonEdgesEnable();
+			 }
+			 this->Refresh();
 		  }
 ///<summary> Überprüft beim Auswählen von Toolbuttons, dass auch nur einer ausgewählt ist.</summary>
 private: System::Void toolStripButtonsOnlyOneChecked(System::Object^  sender, System::EventArgs^  e) {
@@ -830,14 +828,10 @@ private: System::Void toolStripButtonsOnlyOneChecked(System::Object^  sender, Sy
 			 }
 			 //Edge Zeichnen
 			 //deaktivieren der Auswahl des gespeicherten Knotens und des Knotens selbst
-			 if (this->startedDrawing != nullptr)
-			 {
-				 bool isMarked;
-				 do{//Nur zur Sicherheit, da markVertex switched
-					 isMarked = this->startedDrawing->Mark();
-				 }while(isMarked);
-				 this->startedDrawing = nullptr;
-			 }
+			 this->m_graph->unmarkElement();
+			 //und der markierung sollte eine vorhanden sein
+			 this->m_graph->unmarkLastMarked();
+			 this->Refresh();
 		 }
 ///<summary> Schaltet das Grid ein bzw. aus </summary>
 private: System::Void toolStripButtonGridControl_Click(System::Object^  sender, System::EventArgs^  e) {
@@ -860,7 +854,7 @@ private: System::Void toolStripButtonGridFixed_Click(System::Object^  sender, Sy
 		 }
 ///<summary> Enabled bzw. Disabled ToolStripButtons die Kanten zeichnen.</summary>
 private: void toolStripButtonEdgesEnable(){
-			 if (this->vertexList->Count > 0){
+			 if (this->m_graph->CountVertex > 0){
 				 for each (System::Windows::Forms::ToolStripButton^ element in this->zeichnenEdge->Items)
 				 {
 					 element->Enabled = true;
@@ -876,7 +870,7 @@ private: void toolStripButtonEdgesEnable(){
 private: System::Void drawPanel_Scroll(System::Object^  sender, System::Windows::Forms::ScrollEventArgs^  e) {
 			 this->drawPanel->Refresh();
 		 }
-///<summary> MouseEnter muss je nach ausgewähltem Button den Cursor ändern. </summary>
+///<summary> MouseHover muss je nach ausgewähltem Button den Cursor ändern. </summary>
 public: System::Void drawPanel_MouseHover(System::Object^  sender, System::EventArgs^  e) {
 			//hole ausgewähltes
 			System::Windows::Forms::ToolStripButton^ active = this->toolBarChosen;
@@ -893,12 +887,16 @@ public: System::Void drawPanel_MouseHover(System::Object^  sender, System::Event
 				this->drawPanel->Cursor = gcnew System::Windows::Forms::Cursor(L"cursor_arc.cur");
 			}
 		 }
+		 ///<summary> Mouse betritt die Zeichenfläche. </summary>
+private: System::Void drawPanel_MouseEnter(System::Object^  sender, System::EventArgs^  e) {
+			 this->drawPanel_MouseHover(sender, e);
+		 }
 		 ///<summary> mit Beenden des Klicks (Up) zeichnen des Objekts an der Stelle des Mousecursors. </summary>
 private: System::Void drawPanel_MouseUp(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
 			 //nur executen wenn auch Zeichnen Modus ausgewählt
 			 System::Windows::Forms::ToolStripButton^ chosenOption = this->toolBarChosen;
 			 if(chosenOption != nullptr){
-				 //Mouse Koordinaten an Situation anpassen - Lock Modus beachten
+				 //Mouse Koordinaten an Situation anpassen - Lock Modus beachten - TODO Grid !!!
 				 int mouseX = e->X;
 				 int mouseY = e->Y;
 				 if (this->isGridFixed){//TODO
@@ -909,66 +907,24 @@ private: System::Void drawPanel_MouseUp(System::Object^  sender, System::Windows
 				if (chosenOption == this->toolStripButtonVertexRound || chosenOption == this->toolStripButtonVertexSquare)
 				{
 					//Vertex schreiben
-					vertexView^ vertex = (gcnew vertexView(this));
-					vertex->LocationCenter = System::Drawing::Point(mouseX, mouseY);
-				
-					//VertexArt
-					vertex->kindOf = chosenOption == this->toolStripButtonVertexRound ? 0 : 1;
-
-					//Button Drawpanel hinzufügen
-					this->vertexList->Add(vertex);
-
+					this->m_graph->CreateVertex(System::Drawing::Point(mouseX, mouseY), chosenOption == this->toolStripButtonVertexRound, this->toolStripButtonVertexAutoEdit->Checked);
 					//Auswahl deaktivieren
 					chosenOption->Checked=false;
-
 					//Veränderungen markieren
 					m_unsavedChanges = true;
 					this->toolStripButtonEdgesEnable();
 
-					//Dialog zum Beschriften einblenden
-					if (this->toolStripButtonVertexAutoEdit->Checked)
-					{
-						vertex->startConfigDialog();
-					}
 				}else if (chosenOption == this->toolStripButtonArc || chosenOption == this->toolStripButtonArcCapacity || chosenOption == toolStripButtonEdge || chosenOption == toolStripButtonEdgeCapacity)
 				{
-					//Kanten Zeichnen Modus
-					GAPConnect::vertexView^ clickedVertex = this->getHandleOfVertex(e->Location);
-					if (clickedVertex != nullptr)//nur wenn auch auf einen Vertex geklickt wurde
+					//Kanten Zeichnen Modus - nicht die durch Grid veränderten Mouse Koords nehmen!
+					bool created = this->m_graph->CreateEdge(e->Location, (chosenOption == this->toolStripButtonArc || chosenOption == this->toolStripButtonArcCapacity), this->toolStripButtonEdgeAutoEdit->Checked);
+					if (created)
 					{
-						bool vertexMarked = clickedVertex->Mark();	
-						//wenn Knoten wieder deaktiviert, dann wurde wohl falscher startknoten ausgewählt und wieder deaktiviert
-						if (!vertexMarked){
-							this->startedDrawing = nullptr;
-						}
-						if (this->startedDrawing == nullptr){//Edge zeichnen noch nicht gestartet
-								//speichern des starts wenn noch nicht gestartet
-								this->startedDrawing = clickedVertex;
-						}else{
-								//wenn bereits gestartet dann ende vermerken und objekt initialisieren
-								edgeView^ edge = gcnew edgeView(this, this->startedDrawing, clickedVertex, (chosenOption == this->toolStripButtonArc || chosenOption == this->toolStripButtonArcCapacity)?1:0);//TODO
-								//Methode zum Location , Placing und Direction des Panelträgers und des Pfeiles
-
-								this->edgeList->Add(edge);
-
-								//ende muss noch markierungen entfernen auf Knoten (Startknoten wird von checkstate change entfernt)
-								do{
-									vertexMarked = clickedVertex->Mark();
-								}while(vertexMarked);
-
-								//Auswahl deaktivieren
-								chosenOption->Checked=false;
-								//Veränderungen markieren
-								m_unsavedChanges = true;
-
-								//Dialog zum Beschriften einblenden
-								if (this->toolStripButtonEdgeAutoEdit->Checked)
-								{
-									edge->startConfigDialog();
-								}
-							}
+						//Auswahl deaktivieren
+						chosenOption->Checked=false;
+						//Veränderungen markieren
+						m_unsavedChanges = true;
 					}
-
 				}
 				//Refresh im Zeichnenmodus
 				this->Refresh();
@@ -979,7 +935,7 @@ private: System::Void drawPanel_MouseUp(System::Object^  sender, System::Windows
 				 this->toolStripStatusLabelModus->Text = L"";
 			 }
 		 }
-		///<summary> löst das Konfigurationsereigniss auf Knoten aus</summary>
+		///<summary> löst das Konfigurationsereigniss auf Knoten aus</summary>TODO
 private: System::Void vertexRightClickMenu_Config_Click(System::Object^  sender, System::EventArgs^  e) {
 			 //parent des geklickten Feldes holen und auf ContextMenu casten
 			 System::Windows::Forms::ContextMenuStrip^ parent = dynamic_cast<System::Windows::Forms::ContextMenuStrip^ > (dynamic_cast<System::Windows::Forms::ToolStripMenuItem^ >(sender)->GetCurrentParent());
@@ -987,11 +943,12 @@ private: System::Void vertexRightClickMenu_Config_Click(System::Object^  sender,
 			 //TODO
 			 dynamic_cast<GAPConnect::vertexView^ >(parent->SourceControl)->startConfigDialog();
 		 }
-//dragging
 ///<summary> Auswahl von Element, Möglicherweise Drag and Drop, vielleicht auch sonstige Elemente</summary>
  public: System::Void drawPanel_MouseDown(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
-			 this->handleOfVertexUnderMouseToDrag = this->getHandleOfVertex(e->Location);
+			 this->handleOfVertexUnderMouseToDrag = this->m_graph->getHandleOfVertex(e->Location);
 			 if (this->handleOfVertexUnderMouseToDrag != nullptr){
+				 //Markieren
+				 this->m_graph->markElement(this->handleOfVertexUnderMouseToDrag);
 				 //Drag Rectangle generieren
 				 System::Drawing::Size dragSize = System::Windows::Forms::SystemInformation::DragSize;
 				 //D&D Rechteck hat mouse click koords in der Mitte, müssen noch auf Koordinaten von drawPanel umgerechnet werden
@@ -1002,91 +959,21 @@ private: System::Void vertexRightClickMenu_Config_Click(System::Object^  sender,
 				 this->toolStripStatusLabelModus->Text = L"Dragging";
 			 }else{
 				 //also kein Vertex, vielleicht also edge Auswahl
-				 GAPConnect::edgeView^ chosenEdge = this->getHandleOfEdge(e->Location);
+				 GAPConnect::edgeView^ chosenEdge = this->m_graph->getHandleOfEdge(e->Location);
 				 if (chosenEdge != nullptr)
 				 {
 					 //also doch Kante
-					 chosenEdge->Mark();
-					 this->Refresh();
+					 this->m_graph->markElement(chosenEdge);
 				 }
 			 }
-		 }
-		 ///<summary> Mouse betritt die Zeichenfläche. </summary>
-private: System::Void drawPanel_MouseEnter(System::Object^  sender, System::EventArgs^  e) {
-			 this->drawPanel_MouseHover(sender, e);
+			 this->Refresh();
 		 }
 private: System::Void drawPanel_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
 			 //Anti Aliasing
 			 e->Graphics->SmoothingMode = System::Drawing::Drawing2D::SmoothingMode::AntiAlias;
-			 //Knoten zeichnen
-			 for each (GAPConnect::vertexView^ vertex in this->vertexList){
-				 vertex->paintVertex(e);
-			 }
-			 //Kanten zeichnen
-			 for each (GAPConnect::edgeView^ edge in this->edgeList){
-				 edge->paintEdge(e);
-			 }
+			 //Graph zeichnen
+			 this->m_graph->drawGraph(e);
 		 }
-		 ///<summary> holt ein Handle auf ein gezeichnetes Objekt wo der mousezeiger draufzeigt </summary>
-private: GAPConnect::edgeView^ getHandleOfEdge(System::Drawing::Point pkt){
-			 //Liste um Sucherergebnisse festzuhalten
-			 System::Collections::Generic::List< GAPConnect::edgeView^ > tmpList = gcnew System::Collections::Generic::List< GAPConnect::edgeView^ >();
-			 //Edges durchsuchen
-			 for each (GAPConnect::edgeView^ element in this->edgeList){
-				 if (element->Contains(pkt))
-				 {
-					 tmpList.Add(element);
-				 }
-			 }
-			 //Behandlung der Ergebnisse
-			 if (tmpList.Count == 1)
-			 {//bei nur einem Ergebniss einfach dieses zurückgeben
-				 return tmpList[0];
-			 }else if (tmpList.Count > 1)
-			 {//TODO Mehrere: Hier Fallbehandlung um das Richtige herauszufinden
-				 return tmpList[0];
-			 } 
-			 else
-			 {//nichts!
-				 return nullptr;
-			 }
-		 }
-		///<summary> Handle auf Vertex </summary>
-private: GAPConnect::vertexView^ getHandleOfVertex (System::Drawing::Point pkt){
-			 //Liste um Sucherergebnisse festzuhalten
-			 System::Collections::Generic::List< GAPConnect::vertexView^ > tmpList = gcnew System::Collections::Generic::List< GAPConnect::vertexView^ >();
-			 //Vertexe durchsuchen
-			 for each (GAPConnect::vertexView^ element in this->vertexList){
-				 if (element->Contains(pkt))
-				 {
-					 tmpList.Add(element);
-				 }
-			 }
-			 //Behandlung der Ergebnisse
-			 if (tmpList.Count == 1)
-			 {//bei nur einem Ergebniss einfach dieses zurückgeben
-				 return tmpList[0];
-			 }else if (tmpList.Count > 1)
-			 {//TODO Mehrere: Hier Fallbehandlung um das Richtige herauszufinden
-				 return tmpList[0];
-			 } 
-			 else
-			 {//nichts!
-				 return nullptr;
-			 }
-		 }
-		 ///<summary> Löscht über ein Handle ein Objekt </summary>
-private: void deleteDrawnElement(GAPConnect::basicView^ element){
-			 GAPConnect::vertexView^ vertex;
-			 GAPConnect::edgeView^ edge;
-			 if (( vertex = dynamic_cast<GAPConnect::vertexView^ >(element))!= nullptr){
-				 this->vertexList->Remove(vertex);
-			 }else if (( edge = dynamic_cast<GAPConnect::edgeView^ >(element)) != nullptr){
-				 this->edgeList->Remove(edge);
-			 }
-			 this->Refresh();
-		 }
-
 };
 
 }

@@ -3,7 +3,7 @@
 
 
 namespace GAPConnect {
-edgeView::edgeView(System::Windows::Forms::Form^ inParent, vertexView^ startVertex, vertexView^ endVertex, int mode):basicView(inParent), m_lineMode(mode), m_startVertex(nullptr), m_endVertex(nullptr)
+edgeView::edgeView(System::Windows::Forms::Form^ inParent, GAPConnect::drawTools^ inDrawTools, vertexView^ startVertex, vertexView^ endVertex, int mode):basicView(inParent, inDrawTools), m_lineMode(mode), m_startVertex(nullptr), m_endVertex(nullptr)
 {
 	this->IsEnabled = true;//Enablen um Stift zu initialisieren
 	this->StartVertex = startVertex;
