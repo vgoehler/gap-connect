@@ -952,7 +952,7 @@ private: System::Void drawPanel_MouseUp(System::Object^  sender, System::Windows
 				}else if (chosenOption == this->toolStripButtonArc || chosenOption == this->toolStripButtonArcCapacity || chosenOption == toolStripButtonEdge || chosenOption == toolStripButtonEdgeCapacity)
 				{
 					//Kanten Zeichnen Modus - nicht die durch Grid veränderten Mouse Koords nehmen!
-					bool created = this->m_graph->CreateEdge(e->Location, (chosenOption == this->toolStripButtonArc || chosenOption == this->toolStripButtonArcCapacity), this->toolStripButtonEdgeAutoEdit->Checked);
+					bool created = this->m_graph->CreateEdge(e->Location, (chosenOption == this->toolStripButtonArc || chosenOption == this->toolStripButtonArcCapacity), this->toolStripButtonEdgeAutoEdit->Checked, (chosenOption == this->toolStripButtonEdgeCapacity || chosenOption == this->toolStripButtonArcCapacity));
 					if (created)
 					{
 						//Auswahl deaktivieren
@@ -999,6 +999,8 @@ private: System::Void vertexRightClickMenu_Config_Click(System::Object^  sender,
 				 {
 					 //also doch Kante
 					 this->m_graph->markElement(chosenEdge);
+					 //sucht ob Unterliegende sind und testet ob diese crossed TODO DEBUG
+					 this->m_graph->moreEdges(chosenEdge);
 				 }
 			 }
 			 //neu Zeichnen

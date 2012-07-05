@@ -34,7 +34,7 @@ System::Void edgeView::paintEdge( System::Windows::Forms::PaintEventArgs^ e )
 	{
 		this->drawArrow(e);
 	}
-	if (this->Text != L"")
+	if (!String::IsNullOrWhiteSpace(this->Text))
 	{
 		this->drawText(e);
 	}

@@ -20,8 +20,8 @@ public:
 	///<summary> Schreibt und Liest die Größe des Elements</summary>
 	property System::Drawing::Size Size{
 		void set (System::Drawing::Size inValue){
-			this->m_size = inValue;
-			this->recalcRectangle();
+			this->Height = inValue.Height;
+			this->Width = inValue.Width;
 		}
 		System::Drawing::Size get (void){
 			return(this->m_size);
@@ -35,7 +35,8 @@ public:
 			}else if (inValue < this->m_minsize.Height){
 				inValue = this->m_minsize.Height;
 			}
-			this->Size = System::Drawing::Size(this->m_size.Width, inValue);
+			this->m_size = System::Drawing::Size(this->m_size.Width, inValue);
+			this->recalcRectangle();
 		}
 		Int32 get (void){
 			return(this->m_size.Height);
@@ -49,7 +50,8 @@ public:
 			}else if (inValue < this->m_minsize.Width){
 				inValue = this->m_minsize.Width;
 			}
-			this->Size = System::Drawing::Size(inValue, this->m_size.Height);
+			this->m_size = System::Drawing::Size(inValue, this->m_size.Height);
+			this->recalcRectangle();
 		}
 		Int32 get (void){
 			return(this->m_size.Width);

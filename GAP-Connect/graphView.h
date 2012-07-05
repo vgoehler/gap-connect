@@ -32,7 +32,7 @@ public:
 	///<summary> erzeugt einen knoten </summary>
 	void CreateVertex(Point location, bool isRound, bool withConfigDialog);
 	///<summary> Erschafft eine Kante </summary>
-	bool CreateEdge(Point location, bool isArc, bool withConfigDialog);
+	bool CreateEdge(Point location, bool isArc, bool withConfigDialog, bool forceConfigDialog);
 	///<summary> Markiert einen Vertex oder eine Kante und stellt sicher das auch nur ein Objekt ausgewählt ist</summary>
 	void markElement( GAPConnect::basicView^ element);
 	///<summary> Zeichnet alle Elemente des Graph </summary>
@@ -51,6 +51,12 @@ public:
 	}
 	///<summary> Gibt an ob noch ein Element ausgewählt ist </summary>
 	bool IsSomethingMarked( void );
+	///<summary> testfunktion </summary>
+	void moreEdges( edgeView^ inEdge ){
+		for each(edgeView^ edge in this->edgeList){
+			edge->Crosses(inEdge);
+		}
+	}
 
 
 private:

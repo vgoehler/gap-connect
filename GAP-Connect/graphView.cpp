@@ -34,7 +34,7 @@ void graphView::unmarkElement( void ){
 	this->startedDrawing = nullptr;
 }
 
-bool graphView::CreateEdge( Point location, bool isArc, bool withConfigDialog )
+bool graphView::CreateEdge( Point location, bool isArc, bool withConfigDialog, bool forceConfigDialog )
 {
 	GAPConnect::vertexView^ clickedVertex = this->getHandleOfVertex(location);
 	if (clickedVertex != nullptr)//nur wenn auch auf einen Vertex geklickt wurde
@@ -56,7 +56,7 @@ bool graphView::CreateEdge( Point location, bool isArc, bool withConfigDialog )
 			this->markElement(clickedVertex);
 
 			//Dialog zum Beschriften einblenden
-			if (withConfigDialog)
+			if (withConfigDialog || forceConfigDialog)
 			{
 				edge->startConfigDialog();
 			}

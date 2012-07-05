@@ -85,10 +85,25 @@ public:
 			this->m_lineMode = (inValue ? 1 : 0);
 		}
 	}
+	property PointF RichtungsVektor{
+		PointF get( void ){
+			return(PointF(float(this->m_endDock.X - this->m_startDock.X), float(this->m_endDock.Y - this->m_startDock.Y)));
+		}
+	}
+	property PointF Ortsvektor{
+		PointF get(void){
+			return(PointF(float(this->m_startDock.X), float(this->m_startDock.Y)));
+		}
+	}
+
 	///<summary> Contains Methode des Parent hier Überschrieben</summary>
 	bool Contains (System::Drawing::Point pkt);
 	///<summary> Zwei Ecken kreuzen einander </summary>
 	bool Crosses (GAPConnect::edgeView^ otherEdge){
+		//testen ob das selbe
+		if (this == otherEdge){
+			return(false);
+		}
 		//Kontrollrechtecke müssen sich überschneiden
 		if (this->GetBorderRectangle.IntersectsWith(otherEdge->GetBorderRectangle))
 		{
@@ -101,11 +116,32 @@ public:
 				{
 					return(true);
 				}
+				return(false);
 			}
-			//Überprüfen ob die Knoten des anderen links und rechts der Kante liegen, dann ist Überschneidung möglich
+			//Geradengleichung aufstellen
+			PointF rv1 = this->RichtungsVektor;
+			PointF rv2 = otherEdge->RichtungsVektor;
+			//wenn Richtungsvektor linear abhängig zu einander dann Parallel
+
+			//Orthogonale Richtungsvektoren beachten
+
+			PointF ov1 = this->Ortsvektor;
+			PointF ov2 = otherEdge->Ortsvektor;
+			//Umgestelltes Gleichungssystem ov1 + faktor1 * rv1 = ov2 + faktor2 * rv2
+			float faktor2 = (rv1.Y / rv1.X) * (ov1.X - ov2.X + (rv1.X / rv1.Y) * (ov2.Y - ov1.Y))/((rv1.Y / rv1.X) * rv2.X - rv2.Y);
+
+			float faktor1 = (ov2.Y - ov1.Y + faktor2*rv2.Y)/rv1.Y;
+
+			//Schnittpunkt
+			Point schnittpunkt = Point(int(ov1.X+faktor1*rv1.X), int(ov1.Y+faktor1*rv1.Y));
+			if (this->GetBorderRectangle.Contains(schnittpunkt))
+			{
+				return(true);
+			}
 		}
 		return(false);
 	}
+
 
 private:
 	vertexView^ m_startVertex;
