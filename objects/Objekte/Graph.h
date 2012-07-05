@@ -3,6 +3,7 @@
 #include "KnotenRund.h"
 #include "Kante.h"
 using namespace System;
+ref class Dijkstra;
 [Serializable]
 ref class Graph
 {
@@ -31,7 +32,8 @@ public:
 	void write_adjacency_to_file(System::String^ string_fileName,array<int,2>^ array_adj);
 	array<int,2>^ read_file_to_adjacency(System::String^ string_fileName);
 	bool save_graph(System::String ^string_fileName );
-	static Graph^ load_graph(System::String ^_FileName);
+	static Graph^ load_graph(System::String ^string_fileName);
+	static Dijkstra^ init_dijkstra(Knoten ^knoten_start);
 	//addcomment-system?
 
 	

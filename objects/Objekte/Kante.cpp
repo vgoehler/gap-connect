@@ -50,3 +50,4 @@ Knoten^ Kante::find_other_vertex( Knoten^ vertex_origin )
 		return knoten_start;
 	}
 }
+

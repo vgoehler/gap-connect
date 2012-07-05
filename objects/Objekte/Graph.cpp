@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "Graph.h"
-
+#include "Dijkstra.h"
 
 Graph::Graph(void)
 {
@@ -255,7 +255,6 @@ array<int,2>^ Graph::read_file_to_adjacency( System::String^ string_fileName )
 
 bool Graph::save_graph(System::String ^string_fileName )
 {	
-	//big thanks to "http://www.digitalcoding.com/Code-Snippets/CPP-CLI/C-CLI-Code-Snippet-Save-object-to-file.html"
 	try
 	{
 		// create new memory stream
@@ -299,7 +298,6 @@ bool Graph::save_graph(System::String ^string_fileName )
 
 Graph^ Graph::load_graph(System::String ^string_fileName)
 {
-	//big thanks to "http://www.digitalcoding.com/Code-Snippets/CPP-CLI/C-CLI-Code-Snippet-Load-object-from-binary-file.html"
 	try
 	{
 		// Open file for reading
@@ -341,5 +339,10 @@ Graph^ Graph::load_graph(System::String ^string_fileName)
 
 	// Error occured, return null
 	return nullptr;
+}
+
+Dijkstra^ Graph::init_dijkstra(Knoten ^knoten_start)
+{
+	return gcnew Dijkstra(knoten_start);
 }
 

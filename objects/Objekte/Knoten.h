@@ -14,13 +14,12 @@ public:
 	int coord_x;
 	int coord_y;
 	Kommentar^ comment;
-
-protected:
 	System::Collections::Generic::List<Kante^> ^edges;
 	System::String^ label;
 	System::String^ tooltip;
+protected:
 	Graph^ owning_graph;			/*achtung! hält "Graph" am leben, auch wenn dieser deleted wird, sofern nicht auch alle zugehörigen 
-									 *kanten freigegeben werden! */
+									 *Knoten freigegeben werden! */
 
 public:
 	//Knoten(void);   //abstrakte klasse
