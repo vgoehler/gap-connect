@@ -5,6 +5,8 @@
 
 // TODO: Hier auf zusätzliche Header, die das Programm erfordert, verweisen.
 #include <cstdlib>
+#include <cmath>
+#define PI 3.14159265
 #include "drawTools.h"
 #include "about.h"
 #include "VertexChangeDialog.h"

@@ -17,9 +17,12 @@ namespace GAPConnect {
 		vertexView(System::Windows::Forms::Form^, GAPConnect::drawTools^);
 
 		///<summary> Ändert die Art des Knoten.</summary>
-		property int kindOf{
+		property int TypeofVertex{
 			void set(int inValue){
-				vertexType = inValue;
+				this->m_vertexType = inValue;
+			}
+			int get (void){
+				return(this->m_vertexType);
 			}
 		}
 		///<summary> Gibt die Mitte des Knotens zurück, bzw. zentriert den Knoten auf einer Übergebenen Position</summary>
@@ -33,7 +36,7 @@ namespace GAPConnect {
 			}
 		}
 		///<summary> startet den Dialog zum Konfigurieren des Knotens.</summary>
-		void startConfigDialog(void);
+		virtual void startConfigDialog(bool refreshAfterDialog) override;
 		///<summary> je nach gewünschter Art des Knotens wird eine andere Darstellungsform gewählt</summary>
 		void paintVertex(System::Windows::Forms::PaintEventArgs^ e);
 		///<summary> Aktivierungszustand des Elements kann gesetzt werden bzw. abgefragt. Überschrieben.</summary>
@@ -50,15 +53,17 @@ namespace GAPConnect {
 				}
 			}
 		}
+		///<summary> gibt Dockpunkt an sich selbst zurück spezifisch zum Übergebenen Winkel </summary>
+		System::Drawing::Point  getDockPoint(double angle);
 
 	private:
 			///<summary> Typ des Knotens 0 - Rund; 1 - Eckig </summary>
-			int vertexType;
+			int m_vertexType;
 			//TODO Ownervariable als Dateninterface
 			///<summary> Initializiert alle Felder des Dialogs mit passenden Werten aus sich selbst (zu bearbeitender Knoten).</summary>
-			void InitializeValues(System::Windows::Forms::Form^);
+			void InitializeDialogValues(System::Windows::Forms::Form^);
 			///<summary> Setzt die Werte des Knoten aus dem Konfigdialog heraus</summary>
-			void SetValues(System::Windows::Forms::Form^);
+			void SetDialogValues(System::Windows::Forms::Form^);
 			///<summary> Skaliert den Knoten auf die Größe des Textes. </summary>
 			void ScaleVertex(void);
 			///<summary> Farbe mit der der Knoten gezeichnet wird. </summary>

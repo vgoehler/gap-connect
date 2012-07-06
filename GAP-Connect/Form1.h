@@ -89,17 +89,25 @@ namespace GAPConnect {
 	private: System::Windows::Forms::ToolStripMenuItem^  gridArretierungToolStripMenuItem;
 
 	private: System::Windows::Forms::ToolStripButton^  toolStripButtonGridFixed;
-	private: System::Windows::Forms::ContextMenuStrip^  vertexRightClickMenu;
-	private: System::Windows::Forms::ToolStripMenuItem^  toolStripConfig;
-	private: System::Windows::Forms::ToolStripTextBox^  toolStripKnotentext;
-	private: System::Windows::Forms::ToolStripComboBox^  toolStripCBKindofVertex;
-	private: System::Windows::Forms::ToolStripMenuItem^  toolStripVertexSizeAdjustment;
+
+
+
+
+
 	private: System::Windows::Forms::ToolStripStatusLabel^  toolStripStatusLabelModus;
 	private: System::Windows::Forms::ToolStripButton^  toolStripButtonVertexAutoEdit;
 	private: System::Windows::Forms::ToolStripButton^  toolStripButtonEdgeAutoEdit;
 	private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator5;
 	private: System::Windows::Forms::ToolStripButton^  toolStripButtonDelete;
 	private: System::Windows::Forms::ToolStripMenuItem^  deleteToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator6;
+	private: System::Windows::Forms::ToolStripButton^  toolStripButtonCompleteGraph;
+	private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator7;
+	private: System::Windows::Forms::ToolStripMenuItem^  kompletterGraphToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  objekteditierenToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripButton^  toolStripButtonEdit;
+	private: System::Windows::Forms::ToolStripMenuItem^  sicherheitsabfrageBeimLöschenToolStripMenuItem;
+
 
 
 
@@ -159,12 +167,6 @@ namespace GAPConnect {
 					 return(nullptr);
 				 }
 			 }
-	///<summary> gibt das Rechtsklick Menü für die Knoten zurück</summary>
-	public: property System::Windows::Forms::ContextMenuStrip^ MenuforVertex{
-				System::Windows::Forms::ContextMenuStrip^ get(void){
-					return(this->vertexRightClickMenu);
-				}
-			}
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -176,7 +178,6 @@ namespace GAPConnect {
 			this->components = (gcnew System::ComponentModel::Container());
 			System::Windows::Forms::ToolStripSeparator^  toolStripSeparator1;
 			System::Windows::Forms::ToolStripSeparator^  toolStripSeparator2;
-			System::Windows::Forms::ToolStripSeparator^  toolStripSeparator3;
 			System::Windows::Forms::ToolStripSeparator^  toolStripSeparator4;
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Form1::typeid));
 			this->mainmenuStrip = (gcnew System::Windows::Forms::MenuStrip());
@@ -188,10 +189,14 @@ namespace GAPConnect {
 			this->beendenToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->bearbeitenToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->deleteToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->toolStripSeparator7 = (gcnew System::Windows::Forms::ToolStripSeparator());
+			this->kompletterGraphToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->objekteditierenToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->ansichtToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->optionenToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->gridDeAktivierenToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->gridArretierungToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->sicherheitsabfrageBeimLöschenToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->hilfeToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->aboutToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->maintoolStrip = (gcnew System::Windows::Forms::ToolStrip());
@@ -204,6 +209,9 @@ namespace GAPConnect {
 			this->toolStripButtonEdgeAutoEdit = (gcnew System::Windows::Forms::ToolStripButton());
 			this->toolStripSeparator5 = (gcnew System::Windows::Forms::ToolStripSeparator());
 			this->toolStripButtonDelete = (gcnew System::Windows::Forms::ToolStripButton());
+			this->toolStripSeparator6 = (gcnew System::Windows::Forms::ToolStripSeparator());
+			this->toolStripButtonCompleteGraph = (gcnew System::Windows::Forms::ToolStripButton());
+			this->toolStripButtonEdit = (gcnew System::Windows::Forms::ToolStripButton());
 			this->mainstatusStrip = (gcnew System::Windows::Forms::StatusStrip());
 			this->toolStripLabelMouseX = (gcnew System::Windows::Forms::ToolStripStatusLabel());
 			this->toolStripLabelMouseY = (gcnew System::Windows::Forms::ToolStripStatusLabel());
@@ -221,15 +229,9 @@ namespace GAPConnect {
 			this->toolStripButtonVertexRound = (gcnew System::Windows::Forms::ToolStripButton());
 			this->toolStripButtonVertexSquare = (gcnew System::Windows::Forms::ToolStripButton());
 			this->drawPanel = (gcnew System::Windows::Forms::Panel());
-			this->vertexRightClickMenu = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
-			this->toolStripKnotentext = (gcnew System::Windows::Forms::ToolStripTextBox());
-			this->toolStripCBKindofVertex = (gcnew System::Windows::Forms::ToolStripComboBox());
-			this->toolStripVertexSizeAdjustment = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->toolStripConfig = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->imageListToolbar = (gcnew System::Windows::Forms::ImageList(this->components));
 			toolStripSeparator1 = (gcnew System::Windows::Forms::ToolStripSeparator());
 			toolStripSeparator2 = (gcnew System::Windows::Forms::ToolStripSeparator());
-			toolStripSeparator3 = (gcnew System::Windows::Forms::ToolStripSeparator());
 			toolStripSeparator4 = (gcnew System::Windows::Forms::ToolStripSeparator());
 			this->mainmenuStrip->SuspendLayout();
 			this->maintoolStrip->SuspendLayout();
@@ -238,7 +240,6 @@ namespace GAPConnect {
 			this->zeichentools->SuspendLayout();
 			this->zeichnenEdge->SuspendLayout();
 			this->zeichnenVertex->SuspendLayout();
-			this->vertexRightClickMenu->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// toolStripSeparator1
@@ -250,11 +251,6 @@ namespace GAPConnect {
 			// 
 			toolStripSeparator2->Name = L"toolStripSeparator2";
 			toolStripSeparator2->Size = System::Drawing::Size(6, 25);
-			// 
-			// toolStripSeparator3
-			// 
-			toolStripSeparator3->Name = L"toolStripSeparator3";
-			toolStripSeparator3->Size = System::Drawing::Size(156, 6);
 			// 
 			// toolStripSeparator4
 			// 
@@ -317,7 +313,8 @@ namespace GAPConnect {
 			// 
 			// bearbeitenToolStripMenuItem
 			// 
-			this->bearbeitenToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) {this->deleteToolStripMenuItem});
+			this->bearbeitenToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(4) {this->deleteToolStripMenuItem, 
+				this->toolStripSeparator7, this->kompletterGraphToolStripMenuItem, this->objekteditierenToolStripMenuItem});
 			this->bearbeitenToolStripMenuItem->Name = L"bearbeitenToolStripMenuItem";
 			this->bearbeitenToolStripMenuItem->Size = System::Drawing::Size(75, 20);
 			this->bearbeitenToolStripMenuItem->Text = L"&Bearbeiten";
@@ -328,10 +325,35 @@ namespace GAPConnect {
 			this->deleteToolStripMenuItem->Enabled = false;
 			this->deleteToolStripMenuItem->Name = L"deleteToolStripMenuItem";
 			this->deleteToolStripMenuItem->ShortcutKeys = System::Windows::Forms::Keys::Delete;
-			this->deleteToolStripMenuItem->Size = System::Drawing::Size(146, 22);
+			this->deleteToolStripMenuItem->Size = System::Drawing::Size(215, 22);
 			this->deleteToolStripMenuItem->Text = L"&Löschen";
 			this->deleteToolStripMenuItem->ToolTipText = L"Löschen des markierten Objekts";
 			this->deleteToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::deleteMarkedElement_Click);
+			// 
+			// toolStripSeparator7
+			// 
+			this->toolStripSeparator7->Name = L"toolStripSeparator7";
+			this->toolStripSeparator7->Size = System::Drawing::Size(212, 6);
+			// 
+			// kompletterGraphToolStripMenuItem
+			// 
+			this->kompletterGraphToolStripMenuItem->Enabled = false;
+			this->kompletterGraphToolStripMenuItem->Name = L"kompletterGraphToolStripMenuItem";
+			this->kompletterGraphToolStripMenuItem->Size = System::Drawing::Size(215, 22);
+			this->kompletterGraphToolStripMenuItem->Text = L"&Kompletter Graph erstellen";
+			this->kompletterGraphToolStripMenuItem->ToolTipText = L"Zeichnet einen kompletten Graphen unter Entfernung vorhandener Kanten";
+			this->kompletterGraphToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::CompleteGraph_Click);
+			// 
+			// objekteditierenToolStripMenuItem
+			// 
+			this->objekteditierenToolStripMenuItem->Enabled = false;
+			this->objekteditierenToolStripMenuItem->Name = L"objekteditierenToolStripMenuItem";
+			this->objekteditierenToolStripMenuItem->ShortcutKeys = System::Windows::Forms::Keys::F2;
+			this->objekteditierenToolStripMenuItem->Size = System::Drawing::Size(215, 22);
+			this->objekteditierenToolStripMenuItem->Text = L"Objekt &editieren";
+			this->objekteditierenToolStripMenuItem->ToolTipText = L"Öffnet einen Dialog der Daten des Knoten oder der Kante einblenden und die dann V" 
+				L"eränderbar sind";
+			this->objekteditierenToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::EditMarkedObject_Click);
 			// 
 			// ansichtToolStripMenuItem
 			// 
@@ -341,8 +363,8 @@ namespace GAPConnect {
 			// 
 			// optionenToolStripMenuItem
 			// 
-			this->optionenToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {this->gridDeAktivierenToolStripMenuItem, 
-				this->gridArretierungToolStripMenuItem});
+			this->optionenToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {this->gridDeAktivierenToolStripMenuItem, 
+				this->gridArretierungToolStripMenuItem, this->sicherheitsabfrageBeimLöschenToolStripMenuItem});
 			this->optionenToolStripMenuItem->Name = L"optionenToolStripMenuItem";
 			this->optionenToolStripMenuItem->Size = System::Drawing::Size(69, 20);
 			this->optionenToolStripMenuItem->Text = L"&Optionen";
@@ -350,16 +372,26 @@ namespace GAPConnect {
 			// gridDeAktivierenToolStripMenuItem
 			// 
 			this->gridDeAktivierenToolStripMenuItem->Name = L"gridDeAktivierenToolStripMenuItem";
-			this->gridDeAktivierenToolStripMenuItem->Size = System::Drawing::Size(176, 22);
+			this->gridDeAktivierenToolStripMenuItem->Size = System::Drawing::Size(248, 22);
 			this->gridDeAktivierenToolStripMenuItem->Text = L"Grid De-/Aktivieren";
 			this->gridDeAktivierenToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::toolStripButtonGridControl_Click);
 			// 
 			// gridArretierungToolStripMenuItem
 			// 
 			this->gridArretierungToolStripMenuItem->Name = L"gridArretierungToolStripMenuItem";
-			this->gridArretierungToolStripMenuItem->Size = System::Drawing::Size(176, 22);
+			this->gridArretierungToolStripMenuItem->Size = System::Drawing::Size(248, 22);
 			this->gridArretierungToolStripMenuItem->Text = L"Gridarretierung";
 			this->gridArretierungToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::toolStripButtonGridFixed_Click);
+			// 
+			// sicherheitsabfrageBeimLöschenToolStripMenuItem
+			// 
+			this->sicherheitsabfrageBeimLöschenToolStripMenuItem->Checked = true;
+			this->sicherheitsabfrageBeimLöschenToolStripMenuItem->CheckOnClick = true;
+			this->sicherheitsabfrageBeimLöschenToolStripMenuItem->CheckState = System::Windows::Forms::CheckState::Checked;
+			this->sicherheitsabfrageBeimLöschenToolStripMenuItem->Name = L"sicherheitsabfrageBeimLöschenToolStripMenuItem";
+			this->sicherheitsabfrageBeimLöschenToolStripMenuItem->Size = System::Drawing::Size(248, 22);
+			this->sicherheitsabfrageBeimLöschenToolStripMenuItem->Text = L"Sicherheitsabfrage beim Löschen";
+			this->sicherheitsabfrageBeimLöschenToolStripMenuItem->ToolTipText = L"Soll die Sicherheitsabfrage beim Löschen von Objekten angezeigt werden\?";
 			// 
 			// hilfeToolStripMenuItem
 			// 
@@ -379,9 +411,10 @@ namespace GAPConnect {
 			// 
 			this->maintoolStrip->BackColor = System::Drawing::SystemColors::MenuBar;
 			this->maintoolStrip->GripStyle = System::Windows::Forms::ToolStripGripStyle::Hidden;
-			this->maintoolStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(11) {this->toolStripButtonNew, 
+			this->maintoolStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(14) {this->toolStripButtonNew, 
 				this->toolStripButtonOpen, this->toolStripButtonSave, toolStripSeparator2, this->toolStripButtonGridControl, this->toolStripButtonGridFixed, 
-				toolStripSeparator4, this->toolStripButtonVertexAutoEdit, this->toolStripButtonEdgeAutoEdit, this->toolStripSeparator5, this->toolStripButtonDelete});
+				toolStripSeparator4, this->toolStripButtonVertexAutoEdit, this->toolStripButtonEdgeAutoEdit, this->toolStripSeparator5, this->toolStripButtonDelete, 
+				this->toolStripSeparator6, this->toolStripButtonCompleteGraph, this->toolStripButtonEdit});
 			this->maintoolStrip->Location = System::Drawing::Point(0, 24);
 			this->maintoolStrip->Name = L"maintoolStrip";
 			this->maintoolStrip->RenderMode = System::Windows::Forms::ToolStripRenderMode::System;
@@ -486,6 +519,36 @@ namespace GAPConnect {
 			this->toolStripButtonDelete->Text = L"Entferne Objekt";
 			this->toolStripButtonDelete->ToolTipText = L"Entferne markiertes Objekt (Entf)";
 			this->toolStripButtonDelete->Click += gcnew System::EventHandler(this, &Form1::deleteMarkedElement_Click);
+			// 
+			// toolStripSeparator6
+			// 
+			this->toolStripSeparator6->Name = L"toolStripSeparator6";
+			this->toolStripSeparator6->Size = System::Drawing::Size(6, 25);
+			// 
+			// toolStripButtonCompleteGraph
+			// 
+			this->toolStripButtonCompleteGraph->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Image;
+			this->toolStripButtonCompleteGraph->Enabled = false;
+			this->toolStripButtonCompleteGraph->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"toolStripButtonCompleteGraph.Image")));
+			this->toolStripButtonCompleteGraph->ImageTransparentColor = System::Drawing::Color::Magenta;
+			this->toolStripButtonCompleteGraph->Name = L"toolStripButtonCompleteGraph";
+			this->toolStripButtonCompleteGraph->Size = System::Drawing::Size(23, 22);
+			this->toolStripButtonCompleteGraph->Text = L"Kompletter Graph";
+			this->toolStripButtonCompleteGraph->ToolTipText = L"Zeichnet einen kompletten Graphen unter Entfernung vorhandener Kanten";
+			this->toolStripButtonCompleteGraph->Click += gcnew System::EventHandler(this, &Form1::CompleteGraph_Click);
+			// 
+			// toolStripButtonEdit
+			// 
+			this->toolStripButtonEdit->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Image;
+			this->toolStripButtonEdit->Enabled = false;
+			this->toolStripButtonEdit->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"toolStripButtonEdit.Image")));
+			this->toolStripButtonEdit->ImageTransparentColor = System::Drawing::Color::Magenta;
+			this->toolStripButtonEdit->Name = L"toolStripButtonEdit";
+			this->toolStripButtonEdit->Size = System::Drawing::Size(23, 22);
+			this->toolStripButtonEdit->Text = L"markiertes Objekt editieren";
+			this->toolStripButtonEdit->ToolTipText = L"Öffnet einen Dialog der Daten des Knoten oder der Kante einblenden und die dann V" 
+				L"eränderbar sind";
+			this->toolStripButtonEdit->Click += gcnew System::EventHandler(this, &Form1::EditMarkedObject_Click);
 			// 
 			// mainstatusStrip
 			// 
@@ -654,7 +717,6 @@ namespace GAPConnect {
 			this->drawPanel->BackColor = System::Drawing::SystemColors::Window;
 			this->drawPanel->BackgroundImage = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"drawPanel.BackgroundImage")));
 			this->drawPanel->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
-			this->drawPanel->ContextMenuStrip = this->vertexRightClickMenu;
 			this->drawPanel->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->drawPanel->Location = System::Drawing::Point(198, 49);
 			this->drawPanel->MinimumSize = System::Drawing::Size(500, 500);
@@ -667,49 +729,6 @@ namespace GAPConnect {
 			this->drawPanel->MouseLeave += gcnew System::EventHandler(this, &Form1::drawPanel_MouseLeave);
 			this->drawPanel->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &Form1::drawPanel_MouseMove);
 			this->drawPanel->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &Form1::drawPanel_MouseUp);
-			// 
-			// vertexRightClickMenu
-			// 
-			this->vertexRightClickMenu->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(5) {this->toolStripKnotentext, 
-				this->toolStripCBKindofVertex, this->toolStripVertexSizeAdjustment, toolStripSeparator3, this->toolStripConfig});
-			this->vertexRightClickMenu->Name = L"vertexRightClickMenu";
-			this->vertexRightClickMenu->ShowImageMargin = false;
-			this->vertexRightClickMenu->Size = System::Drawing::Size(160, 106);
-			// 
-			// toolStripKnotentext
-			// 
-			this->toolStripKnotentext->AutoToolTip = true;
-			this->toolStripKnotentext->BackColor = System::Drawing::SystemColors::Menu;
-			this->toolStripKnotentext->Name = L"toolStripKnotentext";
-			this->toolStripKnotentext->Size = System::Drawing::Size(100, 23);
-			this->toolStripKnotentext->Text = L"Knotentext";
-			this->toolStripKnotentext->ToolTipText = L"Text des Knotens";
-			// 
-			// toolStripCBKindofVertex
-			// 
-			this->toolStripCBKindofVertex->AutoToolTip = true;
-			this->toolStripCBKindofVertex->BackColor = System::Drawing::SystemColors::Menu;
-			this->toolStripCBKindofVertex->Items->AddRange(gcnew cli::array< System::Object^  >(2) {L"Kreis", L"Rechteck"});
-			this->toolStripCBKindofVertex->Name = L"toolStripCBKindofVertex";
-			this->toolStripCBKindofVertex->Size = System::Drawing::Size(121, 23);
-			this->toolStripCBKindofVertex->ToolTipText = L"Art des Knotens";
-			// 
-			// toolStripVertexSizeAdjustment
-			// 
-			this->toolStripVertexSizeAdjustment->AutoToolTip = true;
-			this->toolStripVertexSizeAdjustment->Name = L"toolStripVertexSizeAdjustment";
-			this->toolStripVertexSizeAdjustment->Size = System::Drawing::Size(159, 22);
-			this->toolStripVertexSizeAdjustment->Text = L"Größe anpassen";
-			this->toolStripVertexSizeAdjustment->ToolTipText = L"Paßt Größe an den Inhalt an.";
-			// 
-			// toolStripConfig
-			// 
-			this->toolStripConfig->AutoToolTip = true;
-			this->toolStripConfig->Name = L"toolStripConfig";
-			this->toolStripConfig->Size = System::Drawing::Size(159, 22);
-			this->toolStripConfig->Text = L"Knotenkonfiguration";
-			this->toolStripConfig->ToolTipText = L"Zeigt einen Dialog um den Knoten weiter zu konfigurieren.";
-			this->toolStripConfig->Click += gcnew System::EventHandler(this, &Form1::vertexRightClickMenu_Config_Click);
 			// 
 			// imageListToolbar
 			// 
@@ -751,8 +770,6 @@ namespace GAPConnect {
 			this->zeichnenEdge->PerformLayout();
 			this->zeichnenVertex->ResumeLayout(false);
 			this->zeichnenVertex->PerformLayout();
-			this->vertexRightClickMenu->ResumeLayout(false);
-			this->vertexRightClickMenu->PerformLayout();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -845,6 +862,7 @@ private: System::Void drawPanel_MouseLeave(System::Object^  sender, System::Even
 				//Kanten je nach vorhandenen Knoten enablen
 				this->toolStripButtonEdgesEnable();
 			 }
+			 this->m_unsavedChanges = false;
 			 this->RefreshDrawPanel();
 		  }
 ///<summary> Überprüft beim Auswählen von Toolbuttons, dass auch nur einer ausgewählt ist.</summary>
@@ -900,6 +918,14 @@ private: void toolStripButtonEdgesEnable(){
 				 {
 					 element->Enabled = false;
 				 }
+			 }
+			 //Kompletter Graph macht nur Sinn mit mindestens 2 Knoten
+			 if (this->m_graph->CountVertex > 2){
+				 this->kompletterGraphToolStripMenuItem->Enabled = true;
+				 this->toolStripButtonCompleteGraph->Enabled = true;
+			 }else{
+				 this->kompletterGraphToolStripMenuItem->Enabled = false;
+				 this->toolStripButtonCompleteGraph->Enabled = false;
 			 }
 		 }
 ///<summary> weist je nach ausgewähltem ZeichenModus dem drawPanel cursor einen neuen Cursor zu</summary>
@@ -967,14 +993,6 @@ private: System::Void drawPanel_MouseUp(System::Object^  sender, System::Windows
 				 this->toolStripStatusLabelModus->Text = L"";
 			 }
 		 }
-///<summary> löst das Konfigurationsereigniss auf Knoten aus</summary>TODO
-private: System::Void vertexRightClickMenu_Config_Click(System::Object^  sender, System::EventArgs^  e) {
-			 //parent des geklickten Feldes holen und auf ContextMenu casten
-			 System::Windows::Forms::ContextMenuStrip^ parent = dynamic_cast<System::Windows::Forms::ContextMenuStrip^ > (dynamic_cast<System::Windows::Forms::ToolStripMenuItem^ >(sender)->GetCurrentParent());
-			 //Ursprung des Klicks holen, diesen als vertexView casten und Dialog ausführen
-			 //TODO
-			 dynamic_cast<GAPConnect::vertexView^ >(parent->SourceControl)->startConfigDialog();
-		 }
 ///<summary> Auswahl von Element, Möglicherweise Drag and Drop, vielleicht auch sonstige Elemente</summary>
  public: System::Void drawPanel_MouseDown(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
 			 GAPConnect::vertexView^ vertex = this->m_graph->getHandleOfVertex(e->Location);
@@ -999,7 +1017,7 @@ private: System::Void vertexRightClickMenu_Config_Click(System::Object^  sender,
 					 this->m_graph->markElement(edge);
 				 }else{
 					 //kein Knoten und keine Kante
-					 if (this->m_graph->IsSomethingMarked())
+					 if (this->m_graph->IsSomethingMarked() && ! this->m_graph->IsDrawingLine)//nicht wenn Kanten Zeichnen modus
 					 {
 						 this->m_graph->unmarkElement(this->m_graph->getMarkedElement);
 					 }
@@ -1015,24 +1033,55 @@ private: System::Void drawPanel_Paint(System::Object^  sender, System::Windows::
 			 this->m_graph->drawGraph(e);
 		 }
 
-///<summary> Aktiviert oder Deaktiviert alle Löschen Steuerelemente</summary>
-private: void activateAllDelete( bool active ){
+///<summary> Aktiviert oder Deaktiviert alle Löschen und Edit Steuerelemente </summary>
+private: void activateItemsOnMark( bool active ){
+			 //lösch Items
 			 this->toolStripButtonDelete->Enabled = active;
 			 this->deleteToolStripMenuItem->Enabled = active;
+			 //Edit Items
+			 this->toolStripButtonEdit->Enabled = active;
+			 this->objekteditierenToolStripMenuItem->Enabled = active;
 		 }
 ///<summary> Löscht das markierte Element </summary>
 private: System::Void deleteMarkedElement_Click(System::Object^  sender, System::EventArgs^  e) {
-			 this->m_graph->deleteDrawnElement(this->m_graph->getMarkedElement);
-			 this->RefreshDrawPanel();
+			 bool security = false;
+			 if (this->sicherheitsabfrageBeimLöschenToolStripMenuItem->Checked){//Sicherheitsabfrage
+				 security = (MessageBox::Show(L"Markiertes Element soll gelöscht werden. Wollen Sie dies wirklich?", L"Löschen von Element", MessageBoxButtons::YesNo, MessageBoxIcon::Question) == System::Windows::Forms::DialogResult::Yes);
+			 }
+			 if (security)
+			 {
+				 this->m_graph->deleteDrawnElement(this->m_graph->getMarkedElement);
+				 this->RefreshDrawPanel();
+			 }
 		 }
 ///<summary> Refresh auf dem DrawPanel </summary>
 public: void RefreshDrawPanel( void ){
-			this->activateAllDelete(this->m_graph->IsSomethingMarked());
+			this->activateItemsOnMark(this->m_graph->IsSomethingMarked() && ! this->m_graph->IsDrawingLine);//Items nur aktivieren wenn Objekt markiert, aber nicht wenn dies nur zum linien ziehen genutzt wird
 			this->drawPanel->SuspendLayout();
 			this->drawPanel->Refresh();
 			this->drawPanel->ResumeLayout(true);
 		}
-};
 
-}
+///<summary>Zeichnen eines Vollständigen Graphen</summary>
+private: System::Void CompleteGraph_Click(System::Object^  sender, System::EventArgs^  e) {
+			 if (this->m_graph->CountEdges != 0){//wenn Kanten dann Warnungsdialog
+				 if(MessageBox::Show(L"Es wird ein kompletter Graph erstellt. Dazu werden alle vorhanden Kanten entfernt. Wollen Sie dies wirklich?", L"Kompletter Graph", MessageBoxButtons::YesNo, MessageBoxIcon::Question) == System::Windows::Forms::DialogResult::Yes){
+					 this->m_graph->CreateCompleteGraph();
+					 this->RefreshDrawPanel();
+				 }
+			 }
+		 }
+///<summary> Startet den Edit Dialog des Markierten Objectes </summary>
+private: System::Void EditMarkedObject_Click(System::Object^  sender, System::EventArgs^  e) {
+			 if (this->m_graph->getMarkedElement != nullptr){//Absicherung, normalerweise sollten alle Elemente disabled sein die dies ausführen können
+				 this->m_graph->getMarkedElement->startConfigDialog(false);
+				 //wenn markedElement ein Knoten ist müssen alle Dockpunkte von Edges upgedated werden
+				 if (dynamic_cast<GAPConnect::vertexView^ >(this->m_graph->getMarkedElement) != nullptr){
+					 this->m_graph->ReCalcDockingPoints(dynamic_cast<GAPConnect::vertexView^>(this->m_graph->getMarkedElement));
+				 }
+				 this->RefreshDrawPanel();
+			 }
+		 }
+};//Form1 class
+}//namespace
 

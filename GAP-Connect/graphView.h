@@ -53,11 +53,26 @@ public:
 	bool IsSomethingMarked( void );
 	///<summary> Gibt Wahrheitswert zurück wenn sich Übergabekante mit irgendeiner anderen Kante schneidet. </summary>
 	bool IsEdgeCrossing( edgeView^ inEdge );
-
+	///<summary> Löscht alle Kanten und Zeichnet dann alle Möglichen! Kompletter Graph!</summary>
+	void CreateCompleteGraph( void );
+	///<summary> Zeigt an ob wir uns im Linienzeichnen befinden </summary>
+	property bool IsDrawingLine{
+		bool get (void){
+			return((this->m_startedDrawing == nullptr) ? false : true );
+		}
+	}
+	///<summary> Gibt Anzahl der Kanten zurück </summary>
+	property Int32 CountEdges{
+		Int32 get ( void ){
+			return(this->edgeList->Count);
+		}
+	}
+	///<summary> Berechnet die Dockpunkte einer Kante zu einem Knoten neu </summary>
+	void ReCalcDockingPoints(GAPConnect::vertexView^ vertex);
 
 private:
 	///<summary>Handle um edge Zeichnen in progress zu signalisieren, speichert den Start, ansonsten nullptr</summary>
-	vertexView^ startedDrawing;
+	vertexView^ m_startedDrawing;
 	///<summary> enthält die vorhandenen Vertexe</summary>
 	System::Collections::Generic::List< GAPConnect::vertexView^ >^ vertexList;
 	///<summary> enthält alle Kanten </summary>
@@ -65,7 +80,7 @@ private:
 	///<summary> Definition von Zeichentools </summary>
 	GAPConnect::drawTools^ m_drawTools;
 	///<summary> Parent </summary>
-	System::Windows::Forms::Form^ parent;
+	System::Windows::Forms::Form^ m_parent;
 	///<summary> lastMarked Element</summary>
 	GAPConnect::basicView^ m_lastMarkedElement;
 };

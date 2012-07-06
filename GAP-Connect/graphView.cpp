@@ -3,14 +3,14 @@
 
 namespace GAPConnect {
 
-graphView::graphView(System::Windows::Forms::Form^ inParent): parent(inParent), startedDrawing(nullptr), m_lastMarkedElement(nullptr)
+graphView::graphView(System::Windows::Forms::Form^ inParent): m_parent(inParent), m_startedDrawing(nullptr), m_lastMarkedElement(nullptr)
 {
 	this->vertexList = gcnew System::Collections::Generic::List< GAPConnect::vertexView^ >();
 	this->edgeList = gcnew System::Collections::Generic::List< GAPConnect::edgeView^ >();
 	this->m_drawTools = gcnew GAPConnect::drawTools();
 }
 
-graphView::graphView( void ): parent(nullptr), startedDrawing(nullptr)
+graphView::graphView( void ): m_parent(nullptr), m_startedDrawing(nullptr)
 {
 }
 
@@ -30,8 +30,8 @@ void graphView::unmarkElement( GAPConnect::basicView^ element){
 	}
 }
 void graphView::unmarkElement( void ){
-	this->unmarkElement(this->startedDrawing);
-	this->startedDrawing = nullptr;
+	this->unmarkElement(this->m_startedDrawing);
+	this->m_startedDrawing = nullptr;
 }
 
 bool graphView::CreateEdge( Point location, bool isArc, bool withConfigDialog, bool forceConfigDialog )
@@ -41,14 +41,14 @@ bool graphView::CreateEdge( Point location, bool isArc, bool withConfigDialog, b
 	{
 		//wenn Knoten wieder deaktiviert, dann wurde wohl falscher startknoten ausgewählt und wieder deaktiviert
 		if (!clickedVertex->IsMarked){
-			this->startedDrawing = nullptr;
+			this->m_startedDrawing = nullptr;
 		}
-		if (this->startedDrawing == nullptr){//Edge zeichnen noch nicht gestartet
+		if (this->m_startedDrawing == nullptr){//Edge zeichnen noch nicht gestartet
 			//speichern des starts wenn noch nicht gestartet
-			this->startedDrawing = clickedVertex;
+			this->m_startedDrawing = clickedVertex;
 		}else{
 			//wenn bereits gestartet dann ende vermerken und objekt initialisieren
-			edgeView^ edge = gcnew edgeView(this->parent, this->m_drawTools, this->startedDrawing, clickedVertex, isArc?1:0);
+			edgeView^ edge = gcnew edgeView(this->m_parent, this->m_drawTools, this->m_startedDrawing, clickedVertex, isArc?1:0);
 
 			this->edgeList->Add(edge);
 
@@ -58,7 +58,7 @@ bool graphView::CreateEdge( Point location, bool isArc, bool withConfigDialog, b
 			//Dialog zum Beschriften einblenden
 			if (withConfigDialog || forceConfigDialog)
 			{
-				edge->startConfigDialog();
+				edge->startConfigDialog(false);
 			}
 			return(true);
 		}
@@ -69,18 +69,18 @@ bool graphView::CreateEdge( Point location, bool isArc, bool withConfigDialog, b
 void graphView::CreateVertex( Point location, bool isRound, bool withConfigDialog )
 {
 	//Vertex schreiben
-	vertexView^ vertex = (gcnew vertexView(this->parent, this->m_drawTools));
+	vertexView^ vertex = (gcnew vertexView(this->m_parent, this->m_drawTools));
 	vertex->LocationCenter = location;
 
 	//VertexArt
-	vertex->kindOf = isRound ? 0 : 1;
+	vertex->TypeofVertex = isRound ? 0 : 1;
 
 	//Button Drawpanel hinzufügen
 	this->vertexList->Add(vertex);
 
 	//Dialog zum Beschriften einblenden
 	if (withConfigDialog){
-		vertex->startConfigDialog();
+		vertex->startConfigDialog(false);
 	}
 }
 
@@ -104,7 +104,7 @@ void graphView::drawGraph( System::Windows::Forms::PaintEventArgs^ e )
 	}
 	//Kanten zeichnen
 	for each (GAPConnect::edgeView^ edge in this->edgeList){
-		edge->paintEdge(e);
+		edge->drawEdge(e);
 	}
 }
 
@@ -196,6 +196,30 @@ bool graphView::IsEdgeCrossing( edgeView^ inEdge )
 		}
 	}
 	return(false);
+}
+
+void graphView::CreateCompleteGraph( void )
+{
+	//bestehende Kanten löschen
+	delete this->edgeList;
+	this->edgeList = gcnew System::Collections::Generic::List< GAPConnect::edgeView^ >();
+	for each (GAPConnect::vertexView^ vertex in this->vertexList){
+		for each (GAPConnect::vertexView^ neighbor in this->vertexList){
+			if (vertex != neighbor){//wenn wir nicht wir selber sind: Kante
+				GAPConnect::edgeView^ edge = gcnew GAPConnect::edgeView(this->m_parent, this->m_drawTools, vertex, neighbor, 0);
+				this->edgeList->Add(edge);
+			}
+		}
+	}
+}
+
+void graphView::ReCalcDockingPoints( GAPConnect::vertexView^ vertex )
+{
+	for each (GAPConnect::edgeView^ edge in this->edgeList){
+		if (edge->StartVertex == vertex || edge->EndVertex == vertex){
+			edge->calculateDockingPoint();
+		}
+	}
 }
 
 }//namespace

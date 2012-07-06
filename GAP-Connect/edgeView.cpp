@@ -19,7 +19,7 @@ System::Drawing::Size edgeView::createSize( void )
 	return(System::Drawing::Size(width, height));
 }
 
-System::Void edgeView::paintEdge( System::Windows::Forms::PaintEventArgs^ e )
+System::Void edgeView::drawEdge( System::Windows::Forms::PaintEventArgs^ e )
 {
 	//Markieren
 	if (this->IsMarked)
@@ -52,37 +52,14 @@ void edgeView::calculateDockingPoint( void ){
 	if (! this->IsLoop)//nur Gültig für Nicht LOOP Modus
 	{
 		//Winkel zu Ziel berechnen
-		double winkel;
-		winkel = this->getRadianStartToEnd();
-		if (winkel >= -1*PI/4 && winkel < PI/4){
-			//Linker Dockpunkt beim Start
-			this->m_startDock = Point(this->m_startVertex->Location.X, this->m_startVertex->Location.Y + this->m_startVertex->Height/2);
-			//Rechter Dockpunkt bei Ende
-			this->m_endDock = Point(this->m_endVertex->Location.X + this->m_endVertex->Width, this->m_endVertex->Location.Y + this->m_endVertex->Height/2);
-		}else if (winkel >= PI/4 && winkel < 3*PI/4){
-			//Oberer Dockpunkt bei Start
-			this->m_startDock = Point(this->m_startVertex->Location.X + this->m_startVertex->Width/2, this->m_startVertex->Location.Y);
-			//Unterer Dockpunkt bei Ende
-			this->m_endDock = Point(this->m_endVertex->Location.X + this->m_endVertex->Width/2, this->m_endVertex->Location.Y + this->m_endVertex->Height);
-		}else if (winkel >= -3*PI/4 && winkel < -1*PI/4 ){
-			//Unterer Dockpunkt bei Start
-			this->m_startDock = Point(this->m_startVertex->Location.X + this->m_startVertex->Width/2, this->m_startVertex->Location.Y + this->m_startVertex->Height);
-			//Oberer Dockpunkt bei Ende
-			this->m_endDock = Point(this->m_endVertex->Location.X + this->m_endVertex->Width/2, this->m_endVertex->Location.Y);
-		}else{
-			//Rechter Dockpunkt bei Start
-			this->m_startDock = Point(this->m_startVertex->Location.X + this->m_startVertex->Width, this->m_startVertex->Location.Y + this->m_startVertex->Height/2);
-			//Linker Dockpunkt bei Ende
-			this->m_endDock = Point(this->m_endVertex->Location.X, this->m_endVertex->Location.Y + this->m_endVertex->Height/2);
-		}
+		double angle = this->getAnglePointToPoint(this->StartVertex->LocationCenter, this->EndVertex->LocationCenter);
+		this->m_startDock = this->StartVertex->getDockPoint( angle );
+		angle = this->getAnglePointToPoint(this->EndVertex->LocationCenter, this->StartVertex->LocationCenter);
+		this->m_endDock = this->EndVertex->getDockPoint( angle );
 	}
 	}
 
-double edgeView::getRadianStartToEnd( void ){
-	return(this->getRadianStartToEnd(this->m_startVertex->LocationCenter, this->m_endVertex->LocationCenter));
-}
-
-double edgeView::getRadianStartToEnd( Point^ startPoint, Point^ endPoint ){
+double edgeView::getAnglePointToPoint( Point^ startPoint, Point^ endPoint ){
 	double xDiff,yDiff,winkel;
 	xDiff = double (startPoint->X - endPoint->X);
 	yDiff = double (startPoint->Y - endPoint->Y); 
@@ -96,7 +73,7 @@ void edgeView::drawArrow( System::Windows::Forms::PaintEventArgs^ e ){
 	{
 		double angleStart;
 		//Winkel bei Start holen Richtung Ende
-		angleStart = this->getRadianStartToEnd(this->m_startDock, this->m_endDock);
+		angleStart = this->getAnglePointToPoint(this->m_startDock, this->m_endDock);
 
 		Point arrowPeakOne, arrowPeakTwo;
 		arrowPeakOne = this->calculatePointFromAngle(angleStart-.20, 15.0, this->m_endDock);
@@ -117,7 +94,7 @@ Point edgeView::calculatePointFromAngle( double angle, double hypothenuse, Point
 	return(Point(origin.X + int(xdiff), origin.Y + int(ydiff)));
 }
 
-void edgeView::startConfigDialog( void )
+void edgeView::startConfigDialog( bool refreshAfterDialog)
 {
 	//initialisiert Dialog
 	EdgeChangeDialog^ configDialog = gcnew EdgeChangeDialog();
@@ -134,7 +111,10 @@ void edgeView::startConfigDialog( void )
 			this->StartVertex = realEnd;
 		}
 		//toggle redraw um Änderungen anzuzeigen
-		this->refreshParent();
+		if (refreshAfterDialog)
+		{
+			this->refreshParent();
+		}
 	}
 	delete configDialog;
 
@@ -171,7 +151,7 @@ void edgeView::drawText( System::Windows::Forms::PaintEventArgs^ e )
 	//20 px als Entfernung für den zu schreibenden Text und dann den inneren Winkel berechnen
 	double angleRotation = atan2(10.0, lengthToMitte);
 	//originaler WInkel
-	double angleOriginal = this->getRadianStartToEnd(this->m_startDock,this->m_endDock);
+	double angleOriginal = this->getAnglePointToPoint(this->m_startDock,this->m_endDock);
 	//Berechnungen des Textpunktes
 	Int32 ydiff = int(sin(angleOriginal-angleRotation-PI)*lengthToMitte);
 	Int32 xdiff = int(cos(angleOriginal-angleRotation-PI)*lengthToMitte);
@@ -195,7 +175,7 @@ bool edgeView::Contains( System::Drawing::Point pkt )
 		//Länge der Linie zu dem geklickten Punkt (liegt auf jedenfall im Rechteck)
 		double lengthtoPkt= this->LengthFromPointToPoint(this->m_startDock, pkt);
 		//Projektion dieses Punktes auf die Verbindungslinie zwischen den Dockpunkten
-		double angle = this->getRadianStartToEnd(this->m_startDock,this->m_endDock);
+		double angle = this->getAnglePointToPoint(this->m_startDock,this->m_endDock);
 		Point projection = this->calculatePointFromAngle(angle-PI, lengthtoPkt, this->m_startDock);
 		//nun Entfernung von projection zu pkt betrachten; 5px alle Richtungen
 		Int32 xdiff, ydiff;

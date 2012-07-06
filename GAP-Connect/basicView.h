@@ -1,6 +1,6 @@
 #pragma once
 namespace GAPConnect {
-public ref class basicView
+public ref class basicView abstract
 {
 public:
 	basicView(void);
@@ -121,6 +121,8 @@ public:
 		}
 	///<summary> Gibt Wahr/Falsch zurück wenn Punkt im Kontrollrechteck liegt </summary>
 	bool Contains (System::Drawing::Point& pkt);
+	///<summary> Config Dialog muss Überschrieben werden</summary>
+	virtual void startConfigDialog( bool refreshAfterDialog ) abstract;
 
 protected:
 	///<summary> Übergeordnetes Formular </summary>

@@ -1,7 +1,5 @@
 #pragma once
 #include "vertexView.h"
-#include <cmath>
-#define PI 3.14159265
 
 namespace GAPConnect {
 	using namespace System;
@@ -20,7 +18,7 @@ public:
 	edgeView(System::Windows::Forms::Form^ , GAPConnect::drawTools^, vertexView^ ,vertexView^ , int);
 
 	///<summary> Methode zum Zeichnen der Kanten </summary>
-	System::Void paintEdge(System::Windows::Forms::PaintEventArgs^  e);
+	System::Void drawEdge(System::Windows::Forms::PaintEventArgs^  e);
 	///<summary> Ist eine Schlinge </summary>
 	property bool IsLoop{
 		bool get(void){
@@ -75,7 +73,7 @@ public:
 		}
 	}
 	///<summary> Methode zum Aufrufen des Konfigurationsdialogs</summary>
-	void startConfigDialog( void );
+	virtual void startConfigDialog( bool refreshAfterDialog ) override;
 	///<summary> Property gibt an ob mode auf Bogen zeichnen gesetzt ist, bzw. läßt sich setzen, oder wenn als false gesetzt normaler Modus </summary>
 	property bool IsArc{
 		bool get ( void ){
@@ -100,7 +98,8 @@ public:
 	bool Contains (System::Drawing::Point pkt);
 	///<summary> Zwei Ecken kreuzen einander </summary>
 	bool Crosses (GAPConnect::edgeView^ otherEdge);
-
+	///<summary> Dockpunkt berechnen </summary>
+	void calculateDockingPoint( void );
 
 private:
 	vertexView^ m_startVertex;
@@ -109,16 +108,12 @@ private:
 	System::Drawing::Size createSize( void );
 	///<summary> Linien Modus 0 - Normal, 1 - gerichtet </summary>
 	int m_lineMode;
-	///<summary> Dockpunkt berechnen </summary>
-	void calculateDockingPoint( void );
 	///<summary> Dockpunkt Start </summary>
 	Point m_startDock;
 	///<summary> Dockpunkt End </summary>
 	Point m_endDock;
-	///<summary> Winkel von Start zu End jeweils Knoten Mitte</summary>
-	double getRadianStartToEnd(void);
 	///<summary> berechnet Winkel zwischen 2 beliebigen Punkten </summary>
-	double getRadianStartToEnd(Point^, Point^);
+	double getAnglePointToPoint(Point^, Point^);
 	///<summary> Errechnet KoordinatenPaar aus Winkel und Länge </summary>
 	Point calculatePointFromAngle(double angle, double hypothenuse, Point origin);
 	///<summary> Kalkuliert Punkte für Pfeil und Zeichnet diesen</summary>
