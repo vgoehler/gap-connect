@@ -8,7 +8,7 @@ public:
 	System::Drawing::Pen^ m_edgeMarked;
 	System::Drawing::Pen^ m_edgeDeactivated;
 	System::Drawing::Pen^ m_vertexMarked;
-	System::Drawing::Pen^ m_edgeHilfslinie;
+	System::Drawing::Pen^ m_edgeAidLine;
 	System::Drawing::Font^ m_drawFont;
 	System::Drawing::SolidBrush^ m_vertexFill;
 	System::Drawing::SolidBrush^ m_vertexDeactivated;

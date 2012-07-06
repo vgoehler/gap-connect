@@ -83,7 +83,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Pictures\vertexHard.png" />
     <None Include="app.ico" />
     <None Include="cursor_arc.cur" />
     <None Include="cursor_edge.cur" />

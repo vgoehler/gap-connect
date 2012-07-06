@@ -99,57 +99,7 @@ public:
 	///<summary> Contains Methode des Parent hier Überschrieben</summary>
 	bool Contains (System::Drawing::Point pkt);
 	///<summary> Zwei Ecken kreuzen einander </summary>
-	bool Crosses (GAPConnect::edgeView^ otherEdge){
-		//testen ob das selbe
-		if (this == otherEdge){
-			return(false);
-		}
-		//Kontrollrechtecke müssen sich überschneiden
-		if (this->GetBorderRectangle.IntersectsWith(otherEdge->GetBorderRectangle))
-		{
-			if ((this->StartVertex == otherEdge->StartVertex && this->EndVertex == otherEdge->EndVertex || this->StartVertex == otherEdge->EndVertex && this->EndVertex == otherEdge->StartVertex)){
-				//Doppelkante, Falsch zurückgeben, da diese durch Knotenverschiebung nicht behoben wird
-				return(false);
-			}else if (this->StartVertex == otherEdge->StartVertex || this->StartVertex == otherEdge->EndVertex || this->EndVertex == otherEdge->StartVertex || this->EndVertex == otherEdge->EndVertex){
-				//wenn startpunkt oder endpunkt gleich, dann kann es keine crossings geben, lediglich inclusionen wenn ein rechteck im anderen ist
-				if (this->GetBorderRectangle.Contains(otherEdge->GetBorderRectangle) || otherEdge->GetBorderRectangle.Contains(this->GetBorderRectangle))
-				{
-					return(true);
-				}
-				return(false);
-			}
-			//Geradengleichung aufstellen
-			PointF rv1 = this->RichtungsVektor;
-			PointF rv2 = otherEdge->RichtungsVektor;
-			//wenn Richtungsvektor linear abhängig zu einander dann Parallel
-
-
-			PointF ov1 = this->Ortsvektor;
-			PointF ov2 = otherEdge->Ortsvektor;
-			float faktor1, faktor2;
-			Point schnittpunkt;
-			//Richtungsvektoren die eine Komponente gleich 0 haben beachten
-			if (rv1.X == 0 || rv1.Y == 0){
-				if (rv1.X == 0){
-					faktor2 = (ov1.X - ov2.X)/rv2.X;
-				}else if (rv1.Y == 0){
-					faktor2 = (ov1.Y - ov2.Y)/rv2.Y;
-				}
-				schnittpunkt = Point(int(ceil(ov2.X + faktor2*rv2.X)), int(ceil(ov2.Y + faktor2*rv2.Y)));
-			}else{
-				//Umgestelltes Gleichungssystem ov1 + faktor1 * rv1 = ov2 + faktor2 * rv2
-				faktor2 = (rv1.Y / rv1.X) * (ov1.X - ov2.X + (rv1.X / rv1.Y) * (ov2.Y - ov1.Y))/((rv1.Y / rv1.X) * rv2.X - rv2.Y);
-				faktor1 = (ov2.Y - ov1.Y + faktor2*rv2.Y)/rv1.Y;
-				//Schnittpunkt
-				schnittpunkt = Point(int(ceil(ov1.X+faktor1*rv1.X)), int(ceil(ov1.Y+faktor1*rv1.Y)));
-			}
-			if (this->GetBorderRectangle.Contains(schnittpunkt))
-			{
-				return(true);
-			}
-		}
-		return(false);
-	}
+	bool Crosses (GAPConnect::edgeView^ otherEdge);
 
 
 private:
@@ -176,13 +126,15 @@ private:
 	///<summary> Zeichentool zum Zeichnen der Linie </summary>
 	System::Drawing::Pen^ m_edgePen;
 	///<summary> Methode zum Initialisieren der DialogWerte</summary>
-	void InitializeValues(System::Windows::Forms::Form^ configDialog);
+	void InitializeDialogValues(System::Windows::Forms::Form^ configDialog);
 	///<summary> Methode, die die Kante aus den Werten des Dialogs initialisiert</summary>
-	void SetValues (System::Windows::Forms::Form^ configDialog);
+	void SetDialogValues (System::Windows::Forms::Form^ configDialog);
 	///<summary> schreibt die Kantenbewertung </summary>
 	void drawText ( System::Windows::Forms::PaintEventArgs^ e);
 	///<summary> berechnet die Entfernung zwischen 2 Punkten </summary>
 	double edgeView::LengthFromPointToPoint(Point^ pkt1, Point^ pkt2);
+	///<summary> sollen Hilfslinien von der Kante zum Text angezeigt werden </summary>
+	bool m_aidLine;
 };
 
 }//namespace

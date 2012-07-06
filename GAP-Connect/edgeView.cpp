@@ -3,7 +3,7 @@
 
 
 namespace GAPConnect {
-edgeView::edgeView(System::Windows::Forms::Form^ inParent, GAPConnect::drawTools^ inDrawTools, vertexView^ startVertex, vertexView^ endVertex, int mode):basicView(inParent, inDrawTools), m_lineMode(mode), m_startVertex(nullptr), m_endVertex(nullptr)
+edgeView::edgeView(System::Windows::Forms::Form^ inParent, GAPConnect::drawTools^ inDrawTools, vertexView^ startVertex, vertexView^ endVertex, int mode):basicView(inParent, inDrawTools), m_lineMode(mode), m_startVertex(nullptr), m_endVertex(nullptr), m_aidLine(false)
 {
 	this->IsEnabled = true;//Enablen um Stift zu initialisieren
 	this->StartVertex = startVertex;
@@ -103,8 +103,8 @@ void edgeView::drawArrow( System::Windows::Forms::PaintEventArgs^ e ){
 		arrowPeakTwo = this->calculatePointFromAngle(angleStart+.20, 15.0, this->m_endDock);
 
 		//Zeichnen
-		e->Graphics->DrawLine(this->m_drawTools->m_edge, this->m_endDock, arrowPeakOne);
-		e->Graphics->DrawLine(this->m_drawTools->m_edge, this->m_endDock, arrowPeakTwo);
+		e->Graphics->DrawLine(this->m_edgePen, this->m_endDock, arrowPeakOne);
+		e->Graphics->DrawLine(this->m_edgePen, this->m_endDock, arrowPeakTwo);
 	}
 }
 
@@ -121,12 +121,12 @@ void edgeView::startConfigDialog( void )
 {
 	//initialisiert Dialog
 	EdgeChangeDialog^ configDialog = gcnew EdgeChangeDialog();
-	this->InitializeValues(configDialog);
+	this->InitializeDialogValues(configDialog);
 	//auf Ok test-Schleife
 	if ( configDialog->ShowDialog( this->Parent ) == System::Windows::Forms::DialogResult::OK )
 	{
 		//Werte setzen
-		this->SetValues(configDialog);
+		this->SetDialogValues(configDialog);
 		//Richtungstausch Modus
 		if (configDialog->RevertDirection){
 			vertexView^ realEnd = this->m_endVertex;
@@ -140,7 +140,7 @@ void edgeView::startConfigDialog( void )
 
 }
 
-void edgeView::InitializeValues( System::Windows::Forms::Form^ configDialog )
+void edgeView::InitializeDialogValues( System::Windows::Forms::Form^ configDialog )
 {
 	GAPConnect::EdgeChangeDialog^ dialog = dynamic_cast<GAPConnect::EdgeChangeDialog^ >(configDialog);
 	dialog->IsArc = this->IsArc;
@@ -148,9 +148,10 @@ void edgeView::InitializeValues( System::Windows::Forms::Form^ configDialog )
 	dialog->Wichtung = this->Text;
 	dialog->Kommentar = this->Kommentar;
 	dialog->IsLoop = this->IsLoop;
+	dialog->withAidLine = this->m_aidLine;
 }
 
-void edgeView::SetValues( System::Windows::Forms::Form^ configDialog )
+void edgeView::SetDialogValues( System::Windows::Forms::Form^ configDialog )
 {
 	GAPConnect::EdgeChangeDialog^ dialog = dynamic_cast<GAPConnect::EdgeChangeDialog^ >(configDialog);
 	this->Text = dialog->Wichtung;
@@ -158,6 +159,7 @@ void edgeView::SetValues( System::Windows::Forms::Form^ configDialog )
 	this->Kommentar = dialog->Kommentar;
 	this->IsEnabled = dialog->EdgeEnabled;
 	this->IsLoop = dialog->IsLoop;
+	this->m_aidLine = dialog->withAidLine;
 }
 
 void edgeView::drawText( System::Windows::Forms::PaintEventArgs^ e )
@@ -179,7 +181,9 @@ void edgeView::drawText( System::Windows::Forms::PaintEventArgs^ e )
 	sf->Alignment = System::Drawing::StringAlignment::Center;
 	sf->LineAlignment = System::Drawing::StringAlignment::Center;
 	//schreibt Text
-	e->Graphics->DrawLine(this->m_drawTools->m_edgeHilfslinie, textPkt, mitteEdge);
+	if (this->m_aidLine){
+		e->Graphics->DrawLine(this->m_drawTools->m_edgeAidLine, textPkt, mitteEdge);
+	}
 	e->Graphics->DrawString( this->Text, this->m_drawTools->m_drawFont, System::Drawing::Brushes::Black, textPkt, sf);
 }
 
@@ -212,6 +216,45 @@ double edgeView::LengthFromPointToPoint(Point^ pkt1, Point^ pkt2){
 		ydiff = pkt1->Y - pkt2->Y;
 		//Länge
 		return( sqrt(double(xdiff*xdiff + ydiff*ydiff)));
+}
+
+bool edgeView::Crosses( GAPConnect::edgeView^ otherEdge )
+{
+	//testen ob das selbe
+	if (this == otherEdge){
+		return(false);
+	}
+	//Kontrollrechtecke müssen sich überschneiden
+	if (this->GetBorderRectangle.IntersectsWith(otherEdge->GetBorderRectangle))
+	{
+		if ((this->StartVertex == otherEdge->StartVertex && this->EndVertex == otherEdge->EndVertex || this->StartVertex == otherEdge->EndVertex && this->EndVertex == otherEdge->StartVertex)){
+			//Doppelkante, Falsch zurückgeben, da diese durch Knotenverschiebung nicht behoben wird
+			return(false);
+		}else if (this->StartVertex == otherEdge->StartVertex || this->StartVertex == otherEdge->EndVertex || this->EndVertex == otherEdge->StartVertex || this->EndVertex == otherEdge->EndVertex){
+			//wenn startpunkt oder endpunkt gleich, dann kann es keine crossings geben, lediglich inclusionen wenn ein rechteck im anderen ist
+			if (this->GetBorderRectangle.Contains(otherEdge->GetBorderRectangle) || otherEdge->GetBorderRectangle.Contains(this->GetBorderRectangle))
+			{
+				return(true);
+			}
+			return(false);
+		}
+		//Geradengleichung aufstellen
+		PointF rv1 = this->RichtungsVektor;
+		PointF rv2 = otherEdge->RichtungsVektor;
+		//wenn Richtungsvektor linear abhängig zu einander dann Parallel; keine Fallunterscheidung, einfach rechnen lassen, findet in dem fall keinen schnittpunkt
+		PointF ov1 = this->Ortsvektor;
+		PointF ov2 = otherEdge->Ortsvektor;
+		//Umgestelltes Gleichungssystem ov1 + faktor1 * rv1 = ov2 + faktor2 * rv2
+		float faktor2 = (rv1.Y * (ov1.X-ov2.X) + rv1.X * (ov2.Y - ov1.Y)) / (rv1.Y * rv2.X - rv1.X * rv2.Y);
+		float faktor1 = (ov2.Y - ov1.Y + faktor2*rv2.Y)/rv1.Y;
+		//Schnittpunkt
+		Point schnittpunkt = Point(int(ceil(ov1.X+faktor1*rv1.X)), int(ceil(ov1.Y+faktor1*rv1.Y)));
+		if (this->GetBorderRectangle.Contains(schnittpunkt))
+		{
+			return(true);
+		}
+	}
+	return(false);
 }
 
 }//namespace ende

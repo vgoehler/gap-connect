@@ -51,6 +51,7 @@ namespace GAPConnect {
 
 	private: System::Windows::Forms::CheckBox^  cBEnabled;
 	private: System::Windows::Forms::CheckBox^  cBLoop;
+	private: System::Windows::Forms::CheckBox^  cBaidLine;
 
 
 
@@ -114,6 +115,14 @@ namespace GAPConnect {
 			}
 
 		}
+		property bool withAidLine{
+			bool get (void){
+				return(this->cBaidLine->Checked);
+			}
+			void set (bool inValue){
+				this->cBaidLine->Checked = inValue;
+			}
+		}
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -132,6 +141,7 @@ namespace GAPConnect {
 			this->cBChangeDirection = (gcnew System::Windows::Forms::CheckBox());
 			this->cBEnabled = (gcnew System::Windows::Forms::CheckBox());
 			this->cBLoop = (gcnew System::Windows::Forms::CheckBox());
+			this->cBaidLine = (gcnew System::Windows::Forms::CheckBox());
 			label1 = (gcnew System::Windows::Forms::Label());
 			label2 = (gcnew System::Windows::Forms::Label());
 			this->SuspendLayout();
@@ -172,7 +182,7 @@ namespace GAPConnect {
 			// cBArc
 			// 
 			this->cBArc->AutoSize = true;
-			this->cBArc->Location = System::Drawing::Point(13, 51);
+			this->cBArc->Location = System::Drawing::Point(12, 84);
 			this->cBArc->Name = L"cBArc";
 			this->cBArc->Size = System::Drawing::Size(69, 17);
 			this->cBArc->TabIndex = 3;
@@ -204,7 +214,7 @@ namespace GAPConnect {
 			// 
 			this->cBChangeDirection->AutoSize = true;
 			this->cBChangeDirection->Enabled = false;
-			this->cBChangeDirection->Location = System::Drawing::Point(27, 74);
+			this->cBChangeDirection->Location = System::Drawing::Point(32, 109);
 			this->cBChangeDirection->Name = L"cBChangeDirection";
 			this->cBChangeDirection->Size = System::Drawing::Size(117, 17);
 			this->cBChangeDirection->TabIndex = 6;
@@ -216,7 +226,7 @@ namespace GAPConnect {
 			this->cBEnabled->AutoSize = true;
 			this->cBEnabled->Checked = true;
 			this->cBEnabled->CheckState = System::Windows::Forms::CheckState::Checked;
-			this->cBEnabled->Location = System::Drawing::Point(13, 98);
+			this->cBEnabled->Location = System::Drawing::Point(12, 142);
 			this->cBEnabled->Name = L"cBEnabled";
 			this->cBEnabled->Size = System::Drawing::Size(64, 17);
 			this->cBEnabled->TabIndex = 8;
@@ -226,13 +236,23 @@ namespace GAPConnect {
 			// cBLoop
 			// 
 			this->cBLoop->AutoSize = true;
-			this->cBLoop->Location = System::Drawing::Point(11, 122);
+			this->cBLoop->Location = System::Drawing::Point(12, 175);
 			this->cBLoop->Name = L"cBLoop";
 			this->cBLoop->Size = System::Drawing::Size(143, 17);
 			this->cBLoop->TabIndex = 9;
 			this->cBLoop->Text = L"zu Schlinge konvertieren";
 			this->cBLoop->UseVisualStyleBackColor = true;
 			this->cBLoop->CheckedChanged += gcnew System::EventHandler(this, &EdgeChangeDialog::cBLoop_CheckedChanged);
+			// 
+			// cBaidLine
+			// 
+			this->cBaidLine->AutoSize = true;
+			this->cBaidLine->Location = System::Drawing::Point(12, 51);
+			this->cBaidLine->Name = L"cBaidLine";
+			this->cBaidLine->Size = System::Drawing::Size(64, 17);
+			this->cBaidLine->TabIndex = 10;
+			this->cBaidLine->Text = L"Hilfslinie";
+			this->cBaidLine->UseVisualStyleBackColor = true;
 			// 
 			// EdgeChangeDialog
 			// 
@@ -241,6 +261,7 @@ namespace GAPConnect {
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->CancelButton = this->Cancel;
 			this->ClientSize = System::Drawing::Size(362, 262);
+			this->Controls->Add(this->cBaidLine);
 			this->Controls->Add(this->cBLoop);
 			this->Controls->Add(this->cBEnabled);
 			this->Controls->Add(label2);

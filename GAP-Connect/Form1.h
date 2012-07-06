@@ -328,7 +328,7 @@ namespace GAPConnect {
 			this->deleteToolStripMenuItem->Enabled = false;
 			this->deleteToolStripMenuItem->Name = L"deleteToolStripMenuItem";
 			this->deleteToolStripMenuItem->ShortcutKeys = System::Windows::Forms::Keys::Delete;
-			this->deleteToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->deleteToolStripMenuItem->Size = System::Drawing::Size(146, 22);
 			this->deleteToolStripMenuItem->Text = L"&Löschen";
 			this->deleteToolStripMenuItem->ToolTipText = L"Löschen des markierten Objekts";
 			this->deleteToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::deleteMarkedElement_Click);
@@ -664,9 +664,7 @@ namespace GAPConnect {
 			this->drawPanel->Scroll += gcnew System::Windows::Forms::ScrollEventHandler(this, &Form1::drawPanel_Scroll);
 			this->drawPanel->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &Form1::drawPanel_Paint);
 			this->drawPanel->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &Form1::drawPanel_MouseDown);
-			this->drawPanel->MouseEnter += gcnew System::EventHandler(this, &Form1::drawPanel_MouseEnter);
 			this->drawPanel->MouseLeave += gcnew System::EventHandler(this, &Form1::drawPanel_MouseLeave);
-			this->drawPanel->MouseHover += gcnew System::EventHandler(this, &Form1::drawPanel_MouseHover);
 			this->drawPanel->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &Form1::drawPanel_MouseMove);
 			this->drawPanel->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &Form1::drawPanel_MouseUp);
 			// 
@@ -861,11 +859,14 @@ private: System::Void toolStripButtonsOnlyOneChecked(System::Object^  sender, Sy
 					 }
 				 }
 			 }
-			 //Edge Zeichnen
+			 //Edge Zeichnen aufräumen; kann sein das noch ausgewählter Knoten vorhanden ist
 			 //deaktivieren der Auswahl des gespeicherten Knotens und des Knotens selbst
 			 this->m_graph->unmarkElement();
 			 //und der markierung sollte eine vorhanden sein
 			 this->m_graph->unmarkLastMarked();
+			 //ZeichenCursor setzen
+			 this->drawPanelCursorChange();
+			 //neu zeichnen
 			 this->RefreshDrawPanel();
 		 }
 ///<summary> Schaltet das Grid ein bzw. aus </summary>
@@ -901,12 +902,8 @@ private: void toolStripButtonEdgesEnable(){
 				 }
 			 }
 		 }
-///<summary> Scrollen des Draw Panels muss redraw triggern</summary>
-private: System::Void drawPanel_Scroll(System::Object^  sender, System::Windows::Forms::ScrollEventArgs^  e) {
-			 this->RefreshDrawPanel();
-		 }
-///<summary> MouseHover muss je nach ausgewähltem Button den Cursor ändern. </summary>
-public: System::Void drawPanel_MouseHover(System::Object^  sender, System::EventArgs^  e) {
+///<summary> weist je nach ausgewähltem ZeichenModus dem drawPanel cursor einen neuen Cursor zu</summary>
+private: void drawPanelCursorChange( void ){
 			//hole ausgewähltes
 			System::Windows::Forms::ToolStripButton^ active = this->toolBarChosen;
 			//nichts aktiv
@@ -922,11 +919,11 @@ public: System::Void drawPanel_MouseHover(System::Object^  sender, System::Event
 				this->drawPanel->Cursor = gcnew System::Windows::Forms::Cursor(L"cursor_arc.cur");
 			}
 		 }
-		 ///<summary> Mouse betritt die Zeichenfläche. </summary>
-private: System::Void drawPanel_MouseEnter(System::Object^  sender, System::EventArgs^  e) {
-			 this->drawPanel_MouseHover(sender, e);
+///<summary> Scrollen des Draw Panels muss redraw triggern</summary>
+private: System::Void drawPanel_Scroll(System::Object^  sender, System::Windows::Forms::ScrollEventArgs^  e) {
+			 this->RefreshDrawPanel();
 		 }
-		 ///<summary> mit Beenden des Klicks (Up) zeichnen des Objekts an der Stelle des Mousecursors. </summary>
+ ///<summary> mit Beenden des Klicks (Up) zeichnen des Objekts an der Stelle des Mousecursors. </summary>
 private: System::Void drawPanel_MouseUp(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
 			 //nur executen wenn auch Zeichnen Modus ausgewählt
 			 System::Windows::Forms::ToolStripButton^ chosenOption = this->toolBarChosen;
@@ -970,7 +967,7 @@ private: System::Void drawPanel_MouseUp(System::Object^  sender, System::Windows
 				 this->toolStripStatusLabelModus->Text = L"";
 			 }
 		 }
-		///<summary> löst das Konfigurationsereigniss auf Knoten aus</summary>TODO
+///<summary> löst das Konfigurationsereigniss auf Knoten aus</summary>TODO
 private: System::Void vertexRightClickMenu_Config_Click(System::Object^  sender, System::EventArgs^  e) {
 			 //parent des geklickten Feldes holen und auf ContextMenu casten
 			 System::Windows::Forms::ContextMenuStrip^ parent = dynamic_cast<System::Windows::Forms::ContextMenuStrip^ > (dynamic_cast<System::Windows::Forms::ToolStripMenuItem^ >(sender)->GetCurrentParent());
@@ -980,27 +977,32 @@ private: System::Void vertexRightClickMenu_Config_Click(System::Object^  sender,
 		 }
 ///<summary> Auswahl von Element, Möglicherweise Drag and Drop, vielleicht auch sonstige Elemente</summary>
  public: System::Void drawPanel_MouseDown(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
-			 this->handleOfVertexUnderMouseToDrag = this->m_graph->getHandleOfVertex(e->Location);
-			 if (this->handleOfVertexUnderMouseToDrag != nullptr){
+			 GAPConnect::vertexView^ vertex = this->m_graph->getHandleOfVertex(e->Location);
+			 if (vertex != nullptr){
 				 //Markieren
-				 this->m_graph->markElement(this->handleOfVertexUnderMouseToDrag);
+				 this->m_graph->markElement(vertex);
 				 //Drag Rectangle generieren
 				 System::Drawing::Size dragSize = System::Windows::Forms::SystemInformation::DragSize;
-				 //D&D Rechteck hat mouse click koords in der Mitte, müssen noch auf Koordinaten von drawPanel umgerechnet werden
-				 System::Drawing::Point l = this->handleOfVertexUnderMouseToDrag->Location;
-				 System::Drawing::Point ddRectangleLocation = System::Drawing::Point(l.X + e->X - (dragSize.Width /2), l.Y + e->Y - (dragSize.Height /2));
+				 //Drag Vertex merken im Falle es ist ein Drag
+				 this->handleOfVertexUnderMouseToDrag = vertex;
+				 //D&D Rechteck hat mouse click koords in der Mitte
+				 System::Drawing::Point ddRectangleLocation = System::Drawing::Point(e->X - (dragSize.Width /2), e->Y - (dragSize.Height /2));
 				 this->dragBoxFromMouseDown = Rectangle(ddRectangleLocation, dragSize);
-				 //Status
+				 //D&D Status
 				 this->toolStripStatusLabelModus->Text = L"Dragging";
 			 }else{
 				 //also kein Vertex, vielleicht also edge Auswahl
-				 GAPConnect::edgeView^ chosenEdge = this->m_graph->getHandleOfEdge(e->Location);
-				 if (chosenEdge != nullptr)
+				 GAPConnect::edgeView^ edge = this->m_graph->getHandleOfEdge(e->Location);
+				 if (edge != nullptr)
 				 {
 					 //also doch Kante
-					 this->m_graph->markElement(chosenEdge);
-					 //sucht ob Unterliegende sind und testet ob diese crossed TODO DEBUG
-					 this->m_graph->moreEdges(chosenEdge);
+					 this->m_graph->markElement(edge);
+				 }else{
+					 //kein Knoten und keine Kante
+					 if (this->m_graph->IsSomethingMarked())
+					 {
+						 this->m_graph->unmarkElement(this->m_graph->getMarkedElement);
+					 }
 				 }
 			 }
 			 //neu Zeichnen

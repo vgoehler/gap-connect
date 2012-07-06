@@ -19,7 +19,7 @@ public:
 		this->unmarkElement(this->m_lastMarkedElement);
 		this->m_lastMarkedElement = nullptr;
 	}
-	///<summary> Unmark and remove Edge Start Vertex </summary>
+	///<summary> Unmark and remove Edge Start Vertex, only in Draw Line usefull.</summary>
 	void unmarkElement( void );
 	///<summary> Unmark beliebigen übergebenen Vertex </summary>
 	void unmarkElement( GAPConnect::basicView^ element);
@@ -51,12 +51,8 @@ public:
 	}
 	///<summary> Gibt an ob noch ein Element ausgewählt ist </summary>
 	bool IsSomethingMarked( void );
-	///<summary> testfunktion </summary>
-	void moreEdges( edgeView^ inEdge ){
-		for each(edgeView^ edge in this->edgeList){
-			edge->Crosses(inEdge);
-		}
-	}
+	///<summary> Gibt Wahrheitswert zurück wenn sich Übergabekante mit irgendeiner anderen Kante schneidet. </summary>
+	bool IsEdgeCrossing( edgeView^ inEdge );
 
 
 private:
