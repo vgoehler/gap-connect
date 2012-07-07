@@ -95,6 +95,13 @@
     <ClCompile Include="about.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="basicView.cpp" />
+    <ClCompile Include="Datenstruktur\Dijkstra.cpp" />
+    <ClCompile Include="Datenstruktur\Graph.cpp" />
+    <ClCompile Include="Datenstruktur\Kante.cpp" />
+    <ClCompile Include="Datenstruktur\Knoten.cpp" />
+    <ClCompile Include="Datenstruktur\KnotenEckig.cpp" />
+    <ClCompile Include="Datenstruktur\KnotenRund.cpp" />
+    <ClCompile Include="Datenstruktur\Kommentar.cpp" />
     <ClCompile Include="drawTools.cpp" />
     <ClCompile Include="EdgeChangeDialog.cpp" />
     <ClCompile Include="edgeView.cpp" />
@@ -112,6 +119,13 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="basicView.h" />
+    <ClInclude Include="Datenstruktur\Dijkstra.h" />
+    <ClInclude Include="Datenstruktur\Graph.h" />
+    <ClInclude Include="Datenstruktur\Kante.h" />
+    <ClInclude Include="Datenstruktur\Knoten.h" />
+    <ClInclude Include="Datenstruktur\KnotenEckig.h" />
+    <ClInclude Include="Datenstruktur\KnotenRund.h" />
+    <ClInclude Include="Datenstruktur\Kommentar.h" />
     <ClInclude Include="drawTools.h" />
     <ClInclude Include="EdgeChangeDialog.h">
       <FileType>CppForm</FileType>

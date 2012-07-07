@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Headerdateien\DatenStruktur">
+      <UniqueIdentifier>{47f895dc-70ea-495f-a0e3-698cbdf0339a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\DatenStruktur">
+      <UniqueIdentifier>{977a7c73-4d69-49bd-8b99-074ce19c6619}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -66,6 +72,27 @@
     <ClCompile Include="graphView.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Datenstruktur\Dijkstra.cpp">
+      <Filter>Quelldateien\DatenStruktur</Filter>
+    </ClCompile>
+    <ClCompile Include="Datenstruktur\Graph.cpp">
+      <Filter>Quelldateien\DatenStruktur</Filter>
+    </ClCompile>
+    <ClCompile Include="Datenstruktur\Kante.cpp">
+      <Filter>Quelldateien\DatenStruktur</Filter>
+    </ClCompile>
+    <ClCompile Include="Datenstruktur\Knoten.cpp">
+      <Filter>Quelldateien\DatenStruktur</Filter>
+    </ClCompile>
+    <ClCompile Include="Datenstruktur\KnotenEckig.cpp">
+      <Filter>Quelldateien\DatenStruktur</Filter>
+    </ClCompile>
+    <ClCompile Include="Datenstruktur\KnotenRund.cpp">
+      <Filter>Quelldateien\DatenStruktur</Filter>
+    </ClCompile>
+    <ClCompile Include="Datenstruktur\Kommentar.cpp">
+      <Filter>Quelldateien\DatenStruktur</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Form1.h">
@@ -100,6 +127,27 @@
     </ClInclude>
     <ClInclude Include="graphView.h">
       <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Datenstruktur\Dijkstra.h">
+      <Filter>Headerdateien\DatenStruktur</Filter>
+    </ClInclude>
+    <ClInclude Include="Datenstruktur\Graph.h">
+      <Filter>Headerdateien\DatenStruktur</Filter>
+    </ClInclude>
+    <ClInclude Include="Datenstruktur\Kante.h">
+      <Filter>Headerdateien\DatenStruktur</Filter>
+    </ClInclude>
+    <ClInclude Include="Datenstruktur\Knoten.h">
+      <Filter>Headerdateien\DatenStruktur</Filter>
+    </ClInclude>
+    <ClInclude Include="Datenstruktur\KnotenEckig.h">
+      <Filter>Headerdateien\DatenStruktur</Filter>
+    </ClInclude>
+    <ClInclude Include="Datenstruktur\KnotenRund.h">
+      <Filter>Headerdateien\DatenStruktur</Filter>
+    </ClInclude>
+    <ClInclude Include="Datenstruktur\Kommentar.h">
+      <Filter>Headerdateien\DatenStruktur</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,8 @@
 #include "StdAfx.h"
-#include "graphView.h"
+#include "graphView.h"				 
+#include "Datenstruktur/Graph.h"
+#include "Datenstruktur/Dijkstra.h"
+
 
 namespace GAPConnect {
 
