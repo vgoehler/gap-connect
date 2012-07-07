@@ -44,7 +44,7 @@ bool basicView::Enable( void )
 
 void basicView::refreshParent( void )
 {
-	dynamic_cast<GAPConnect::Form1^ >(this->Parent)->RefreshDrawPanel();
+	dynamic_cast<GAPConnect::Form1^ >(this->Parent)->RefreshDrawBox();
 }
 
 bool basicView::Contains( System::Drawing::Point& pkt )

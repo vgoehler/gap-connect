@@ -108,54 +108,51 @@ void graphView::drawGraph( System::Windows::Forms::PaintEventArgs^ e )
 	}
 }
 
-GAPConnect::edgeView^ graphView::getHandleOfEdge( System::Drawing::Point pkt )
+GAPConnect::basicView^ graphView::getHandleOfElement( System::Drawing::Point pkt, bool Edges, bool Vertex)
 {
-	//Liste um Sucherergebnisse festzuhalten
-	System::Collections::Generic::List< GAPConnect::edgeView^ > tmpList = gcnew System::Collections::Generic::List< GAPConnect::edgeView^ >();
-	//Edges durchsuchen
-	for each (GAPConnect::edgeView^ element in this->edgeList){
-		if (element->Contains(pkt))
-		{
-			tmpList.Add(element);
+	//Liste für Ergebnisse
+	System::Collections::Generic::List< GAPConnect::basicView^ > tmpList = gcnew System::Collections::Generic::List< GAPConnect::basicView^ >();
+	if (Vertex)
+	{
+		for each (GAPConnect::vertexView^ element in this->vertexList){
+			if (element->Contains(pkt)){
+				tmpList.Add(dynamic_cast<GAPConnect::basicView^>(element));
+			}
 		}
 	}
-	//Behandlung der Ergebnisse
-	if (tmpList.Count == 1)
-	{//bei nur einem Ergebniss einfach dieses zurückgeben
-		return tmpList[0];
-	}else if (tmpList.Count > 1)
-	{//TODO Mehrere: Hier Fallbehandlung um das Richtige herauszufinden
-		return tmpList[0];
-	} 
-	else
-	{//nichts!
-		return nullptr;
+	if (Edges)
+	{
+		for each (GAPConnect::edgeView^ element in this->edgeList){
+			if (element->Contains(pkt)){
+				tmpList.Add(dynamic_cast<GAPConnect::basicView^>(element));
+			}
+		}
 	}
+	//Ergebnissbehandlung
+	if (tmpList.Count == 1){
+		return (tmpList[0]);//bei nur einem Ergebniss einfach 
+	}else if (tmpList.Count > 1){
+		//TODO! hier brauchen wir eigentlich irgendeine Fallunterscheidung, wir geben aber mal den ersten zurück
+		return (tmpList[0]);
+	}
+	//in allen anderen Fällen
+	return (nullptr);
+}
+
+GAPConnect::basicView^ graphView::getHandleOfElement( System::Drawing::Point pkt )
+{
+	return(this->getHandleOfElement(pkt, true, true));
+}
+
+
+GAPConnect::edgeView^ graphView::getHandleOfEdge( System::Drawing::Point pkt )
+{
+	return (dynamic_cast<GAPConnect::edgeView^ >(this->getHandleOfElement(pkt, true, false)));
 }
 
 GAPConnect::vertexView^ graphView::getHandleOfVertex( System::Drawing::Point pkt )
 {
-	//Liste um Sucherergebnisse festzuhalten
-	System::Collections::Generic::List< GAPConnect::vertexView^ > tmpList = gcnew System::Collections::Generic::List< GAPConnect::vertexView^ >();
-	//Vertexe durchsuchen
-	for each (GAPConnect::vertexView^ element in this->vertexList){
-		if (element->Contains(pkt))
-		{
-			tmpList.Add(element);
-		}
-	}
-	//Behandlung der Ergebnisse
-	if (tmpList.Count == 1)
-	{//bei nur einem Ergebniss einfach dieses zurückgeben
-		return tmpList[0];
-	}else if (tmpList.Count > 1)
-	{//TODO Mehrere: Hier Fallbehandlung um das Richtige herauszufinden
-		return tmpList[0];
-	} 
-	else
-	{//nichts!
-		return nullptr;
-	}
+	return (dynamic_cast<GAPConnect::vertexView^ >(this->getHandleOfElement(pkt, false, true)));
 }
 
 void graphView::deleteDrawnElement( GAPConnect::basicView^ element )

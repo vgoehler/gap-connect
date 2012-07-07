@@ -37,7 +37,11 @@ public:
 	void markElement( GAPConnect::basicView^ element);
 	///<summary> Zeichnet alle Elemente des Graph </summary>
 	void drawGraph( System::Windows::Forms::PaintEventArgs^  e );
-	///<summary> holt ein Handle auf ein gezeichnetes Objekt wo der mousezeiger draufzeigt </summary>
+	///<summary> Überladen, holt ein Handle auf erstes Element unter pkt </summary>
+	GAPConnect::basicView^ getHandleOfElement(System::Drawing::Point pkt);
+	///<summary> Holt ein Handle auf ein generisches Element, je nach Wahrheitswerten aus Kanten und/oder Knoten </summary>
+	GAPConnect::basicView^ getHandleOfElement(System::Drawing::Point pkt, bool Edges, bool Vertex);
+	///<summary> Handle auf Kante </summary>
 	GAPConnect::edgeView^ getHandleOfEdge(System::Drawing::Point pkt);
 	///<summary> Handle auf Vertex </summary>
 	GAPConnect::vertexView^ getHandleOfVertex (System::Drawing::Point pkt);

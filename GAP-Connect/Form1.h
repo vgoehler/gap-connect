@@ -100,13 +100,21 @@ namespace GAPConnect {
 	private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator5;
 	private: System::Windows::Forms::ToolStripButton^  toolStripButtonDelete;
 	private: System::Windows::Forms::ToolStripMenuItem^  deleteToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator6;
+
 	private: System::Windows::Forms::ToolStripButton^  toolStripButtonCompleteGraph;
-	private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator7;
+
 	private: System::Windows::Forms::ToolStripMenuItem^  kompletterGraphToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  objekteditierenToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripButton^  toolStripButtonEdit;
 	private: System::Windows::Forms::ToolStripMenuItem^  sicherheitsabfrageBeimLöschenToolStripMenuItem;
+	private: System::Windows::Forms::PictureBox^  drawBox;
+	private: System::Windows::Forms::GroupBox^  gBStatus;
+	private: System::Windows::Forms::TextBox^  tBKommentar;
+
+	private: System::Windows::Forms::Label^  labelTyp;
+	private: System::Windows::Forms::TextBox^  tbTyp;
+
+
 
 
 
@@ -179,6 +187,10 @@ namespace GAPConnect {
 			System::Windows::Forms::ToolStripSeparator^  toolStripSeparator1;
 			System::Windows::Forms::ToolStripSeparator^  toolStripSeparator2;
 			System::Windows::Forms::ToolStripSeparator^  toolStripSeparator4;
+			System::Windows::Forms::ToolStripSeparator^  toolStripSeparator7;
+			System::Windows::Forms::ToolStripSeparator^  toolStripSeparator6;
+			System::Windows::Forms::Label^  Kommentar;
+			System::Windows::Forms::Label^  Typ;
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Form1::typeid));
 			this->mainmenuStrip = (gcnew System::Windows::Forms::MenuStrip());
 			this->dateiToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -189,7 +201,6 @@ namespace GAPConnect {
 			this->beendenToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->bearbeitenToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->deleteToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->toolStripSeparator7 = (gcnew System::Windows::Forms::ToolStripSeparator());
 			this->kompletterGraphToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->objekteditierenToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->ansichtToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -209,7 +220,6 @@ namespace GAPConnect {
 			this->toolStripButtonEdgeAutoEdit = (gcnew System::Windows::Forms::ToolStripButton());
 			this->toolStripSeparator5 = (gcnew System::Windows::Forms::ToolStripSeparator());
 			this->toolStripButtonDelete = (gcnew System::Windows::Forms::ToolStripButton());
-			this->toolStripSeparator6 = (gcnew System::Windows::Forms::ToolStripSeparator());
 			this->toolStripButtonCompleteGraph = (gcnew System::Windows::Forms::ToolStripButton());
 			this->toolStripButtonEdit = (gcnew System::Windows::Forms::ToolStripButton());
 			this->mainstatusStrip = (gcnew System::Windows::Forms::StatusStrip());
@@ -219,6 +229,10 @@ namespace GAPConnect {
 			this->openFileDialog1 = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->saveFileDialog1 = (gcnew System::Windows::Forms::SaveFileDialog());
 			this->control = (gcnew System::Windows::Forms::Panel());
+			this->gBStatus = (gcnew System::Windows::Forms::GroupBox());
+			this->tbTyp = (gcnew System::Windows::Forms::TextBox());
+			this->tBKommentar = (gcnew System::Windows::Forms::TextBox());
+			this->labelTyp = (gcnew System::Windows::Forms::Label());
 			this->zeichentools = (gcnew System::Windows::Forms::GroupBox());
 			this->zeichnenEdge = (gcnew System::Windows::Forms::ToolStrip());
 			this->toolStripButtonEdge = (gcnew System::Windows::Forms::ToolStripButton());
@@ -229,17 +243,25 @@ namespace GAPConnect {
 			this->toolStripButtonVertexRound = (gcnew System::Windows::Forms::ToolStripButton());
 			this->toolStripButtonVertexSquare = (gcnew System::Windows::Forms::ToolStripButton());
 			this->drawPanel = (gcnew System::Windows::Forms::Panel());
+			this->drawBox = (gcnew System::Windows::Forms::PictureBox());
 			this->imageListToolbar = (gcnew System::Windows::Forms::ImageList(this->components));
 			toolStripSeparator1 = (gcnew System::Windows::Forms::ToolStripSeparator());
 			toolStripSeparator2 = (gcnew System::Windows::Forms::ToolStripSeparator());
 			toolStripSeparator4 = (gcnew System::Windows::Forms::ToolStripSeparator());
+			toolStripSeparator7 = (gcnew System::Windows::Forms::ToolStripSeparator());
+			toolStripSeparator6 = (gcnew System::Windows::Forms::ToolStripSeparator());
+			Kommentar = (gcnew System::Windows::Forms::Label());
+			Typ = (gcnew System::Windows::Forms::Label());
 			this->mainmenuStrip->SuspendLayout();
 			this->maintoolStrip->SuspendLayout();
 			this->mainstatusStrip->SuspendLayout();
 			this->control->SuspendLayout();
+			this->gBStatus->SuspendLayout();
 			this->zeichentools->SuspendLayout();
 			this->zeichnenEdge->SuspendLayout();
 			this->zeichnenVertex->SuspendLayout();
+			this->drawPanel->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->drawBox))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// toolStripSeparator1
@@ -256,6 +278,34 @@ namespace GAPConnect {
 			// 
 			toolStripSeparator4->Name = L"toolStripSeparator4";
 			toolStripSeparator4->Size = System::Drawing::Size(6, 25);
+			// 
+			// toolStripSeparator7
+			// 
+			toolStripSeparator7->Name = L"toolStripSeparator7";
+			toolStripSeparator7->Size = System::Drawing::Size(212, 6);
+			// 
+			// toolStripSeparator6
+			// 
+			toolStripSeparator6->Name = L"toolStripSeparator6";
+			toolStripSeparator6->Size = System::Drawing::Size(6, 25);
+			// 
+			// Kommentar
+			// 
+			Kommentar->AutoSize = true;
+			Kommentar->Location = System::Drawing::Point(3, 33);
+			Kommentar->Name = L"Kommentar";
+			Kommentar->Size = System::Drawing::Size(66, 13);
+			Kommentar->TabIndex = 2;
+			Kommentar->Text = L"Kommentar :";
+			// 
+			// Typ
+			// 
+			Typ->AutoSize = true;
+			Typ->Location = System::Drawing::Point(4, 16);
+			Typ->Name = L"Typ";
+			Typ->Size = System::Drawing::Size(25, 13);
+			Typ->TabIndex = 4;
+			Typ->Text = L"Typ";
 			// 
 			// mainmenuStrip
 			// 
@@ -314,7 +364,7 @@ namespace GAPConnect {
 			// bearbeitenToolStripMenuItem
 			// 
 			this->bearbeitenToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(4) {this->deleteToolStripMenuItem, 
-				this->toolStripSeparator7, this->kompletterGraphToolStripMenuItem, this->objekteditierenToolStripMenuItem});
+				toolStripSeparator7, this->kompletterGraphToolStripMenuItem, this->objekteditierenToolStripMenuItem});
 			this->bearbeitenToolStripMenuItem->Name = L"bearbeitenToolStripMenuItem";
 			this->bearbeitenToolStripMenuItem->Size = System::Drawing::Size(75, 20);
 			this->bearbeitenToolStripMenuItem->Text = L"&Bearbeiten";
@@ -329,11 +379,6 @@ namespace GAPConnect {
 			this->deleteToolStripMenuItem->Text = L"&Löschen";
 			this->deleteToolStripMenuItem->ToolTipText = L"Löschen des markierten Objekts";
 			this->deleteToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::deleteMarkedElement_Click);
-			// 
-			// toolStripSeparator7
-			// 
-			this->toolStripSeparator7->Name = L"toolStripSeparator7";
-			this->toolStripSeparator7->Size = System::Drawing::Size(212, 6);
 			// 
 			// kompletterGraphToolStripMenuItem
 			// 
@@ -414,7 +459,7 @@ namespace GAPConnect {
 			this->maintoolStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(14) {this->toolStripButtonNew, 
 				this->toolStripButtonOpen, this->toolStripButtonSave, toolStripSeparator2, this->toolStripButtonGridControl, this->toolStripButtonGridFixed, 
 				toolStripSeparator4, this->toolStripButtonVertexAutoEdit, this->toolStripButtonEdgeAutoEdit, this->toolStripSeparator5, this->toolStripButtonDelete, 
-				this->toolStripSeparator6, this->toolStripButtonCompleteGraph, this->toolStripButtonEdit});
+				toolStripSeparator6, this->toolStripButtonCompleteGraph, this->toolStripButtonEdit});
 			this->maintoolStrip->Location = System::Drawing::Point(0, 24);
 			this->maintoolStrip->Name = L"maintoolStrip";
 			this->maintoolStrip->RenderMode = System::Windows::Forms::ToolStripRenderMode::System;
@@ -520,11 +565,6 @@ namespace GAPConnect {
 			this->toolStripButtonDelete->ToolTipText = L"Entferne markiertes Objekt (Entf)";
 			this->toolStripButtonDelete->Click += gcnew System::EventHandler(this, &Form1::deleteMarkedElement_Click);
 			// 
-			// toolStripSeparator6
-			// 
-			this->toolStripSeparator6->Name = L"toolStripSeparator6";
-			this->toolStripSeparator6->Size = System::Drawing::Size(6, 25);
-			// 
 			// toolStripButtonCompleteGraph
 			// 
 			this->toolStripButtonCompleteGraph->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Image;
@@ -588,12 +628,54 @@ namespace GAPConnect {
 			// control
 			// 
 			this->control->BackColor = System::Drawing::SystemColors::Control;
+			this->control->Controls->Add(this->gBStatus);
 			this->control->Controls->Add(this->zeichentools);
 			this->control->Dock = System::Windows::Forms::DockStyle::Left;
 			this->control->Location = System::Drawing::Point(0, 49);
 			this->control->Name = L"control";
 			this->control->Size = System::Drawing::Size(198, 691);
 			this->control->TabIndex = 6;
+			// 
+			// gBStatus
+			// 
+			this->gBStatus->Controls->Add(this->tbTyp);
+			this->gBStatus->Controls->Add(Typ);
+			this->gBStatus->Controls->Add(this->tBKommentar);
+			this->gBStatus->Controls->Add(Kommentar);
+			this->gBStatus->Controls->Add(this->labelTyp);
+			this->gBStatus->Location = System::Drawing::Point(0, 237);
+			this->gBStatus->Name = L"gBStatus";
+			this->gBStatus->Size = System::Drawing::Size(198, 156);
+			this->gBStatus->TabIndex = 1;
+			this->gBStatus->TabStop = false;
+			this->gBStatus->Text = L"Status";
+			// 
+			// tbTyp
+			// 
+			this->tbTyp->Location = System::Drawing::Point(75, 13);
+			this->tbTyp->Name = L"tbTyp";
+			this->tbTyp->ReadOnly = true;
+			this->tbTyp->Size = System::Drawing::Size(118, 20);
+			this->tbTyp->TabIndex = 5;
+			this->tbTyp->TabStop = false;
+			// 
+			// tBKommentar
+			// 
+			this->tBKommentar->Location = System::Drawing::Point(7, 50);
+			this->tBKommentar->Multiline = true;
+			this->tBKommentar->Name = L"tBKommentar";
+			this->tBKommentar->ReadOnly = true;
+			this->tBKommentar->Size = System::Drawing::Size(186, 100);
+			this->tBKommentar->TabIndex = 3;
+			this->tBKommentar->TabStop = false;
+			// 
+			// labelTyp
+			// 
+			this->labelTyp->AutoSize = true;
+			this->labelTyp->Location = System::Drawing::Point(65, 20);
+			this->labelTyp->Name = L"labelTyp";
+			this->labelTyp->Size = System::Drawing::Size(0, 13);
+			this->labelTyp->TabIndex = 1;
 			// 
 			// zeichentools
 			// 
@@ -717,18 +799,30 @@ namespace GAPConnect {
 			this->drawPanel->BackColor = System::Drawing::SystemColors::Window;
 			this->drawPanel->BackgroundImage = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"drawPanel.BackgroundImage")));
 			this->drawPanel->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
+			this->drawPanel->Controls->Add(this->drawBox);
 			this->drawPanel->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->drawPanel->Location = System::Drawing::Point(198, 49);
 			this->drawPanel->MinimumSize = System::Drawing::Size(500, 500);
 			this->drawPanel->Name = L"drawPanel";
 			this->drawPanel->Size = System::Drawing::Size(810, 691);
 			this->drawPanel->TabIndex = 7;
-			this->drawPanel->Scroll += gcnew System::Windows::Forms::ScrollEventHandler(this, &Form1::drawPanel_Scroll);
-			this->drawPanel->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &Form1::drawPanel_Paint);
-			this->drawPanel->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &Form1::drawPanel_MouseDown);
-			this->drawPanel->MouseLeave += gcnew System::EventHandler(this, &Form1::drawPanel_MouseLeave);
-			this->drawPanel->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &Form1::drawPanel_MouseMove);
-			this->drawPanel->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &Form1::drawPanel_MouseUp);
+			// 
+			// drawBox
+			// 
+			this->drawBox->BackgroundImage = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"drawBox.BackgroundImage")));
+			this->drawBox->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->drawBox->Location = System::Drawing::Point(0, 0);
+			this->drawBox->Name = L"drawBox";
+			this->drawBox->Size = System::Drawing::Size(3000, 3000);
+			this->drawBox->SizeMode = System::Windows::Forms::PictureBoxSizeMode::CenterImage;
+			this->drawBox->TabIndex = 0;
+			this->drawBox->TabStop = false;
+			this->drawBox->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &Form1::drawBox_Paint);
+			this->drawBox->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &Form1::drawBox_MouseDown);
+			this->drawBox->MouseLeave += gcnew System::EventHandler(this, &Form1::drawBox_MouseLeave);
+			this->drawBox->MouseHover += gcnew System::EventHandler(this, &Form1::drawBox_MouseHover);
+			this->drawBox->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &Form1::drawBox_MouseMove);
+			this->drawBox->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &Form1::drawBox_MouseUp);
 			// 
 			// imageListToolbar
 			// 
@@ -764,12 +858,16 @@ namespace GAPConnect {
 			this->mainstatusStrip->PerformLayout();
 			this->control->ResumeLayout(false);
 			this->control->PerformLayout();
+			this->gBStatus->ResumeLayout(false);
+			this->gBStatus->PerformLayout();
 			this->zeichentools->ResumeLayout(false);
 			this->zeichentools->PerformLayout();
 			this->zeichnenEdge->ResumeLayout(false);
 			this->zeichnenEdge->PerformLayout();
 			this->zeichnenVertex->ResumeLayout(false);
 			this->zeichnenVertex->PerformLayout();
+			this->drawPanel->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->drawBox))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -804,8 +902,9 @@ private: bool isGraphChangedDialog( void ){
 				 if(MessageBox::Show(L"Es sind Änderungen vorhanden! Diese werden durch ihre Aktion verworfen! Wollen Sie dies wirklich?", L"Änderungen vorhanden!", MessageBoxButtons::YesNo, MessageBoxIcon::Question) == System::Windows::Forms::DialogResult::Yes){
 					 return(true);
 				 }
+				 return(false);
 			 }
-			 return(false);
+			 return(true);
 		 }
 
 ///<summary> Laden einer Datei </summary>
@@ -831,23 +930,24 @@ private: System::Void speichernMenu_Click(System::Object^ sender, System::EventA
 			 }
 		 }
 ///<summary> Maus Bewegung im Zeichenbereich Zeigt Koordinaten im Tooltip an. Plus Drag and Drop Behandlung</summary>
-private: System::Void drawPanel_MouseMove(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+private: System::Void drawBox_MouseMove(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
 			 //label update immer!
 			 this->toolStripLabelMouseX->Text = String::Concat(L"X: ", e->X );
 			 this->toolStripLabelMouseY->Text = String::Concat(L"Y: ", e->Y );
 			 //linke Maustaste gedrückt
 			 if( (e->Button & System::Windows::Forms::MouseButtons::Left) == System::Windows::Forms::MouseButtons::Left){
 				 //mouse außerhalb der dragBox ereigniss auslösen
-				 if (dragBoxFromMouseDown != System::Drawing::Rectangle::Empty && !dragBoxFromMouseDown.Contains(e->X,e->Y)){
+				 if (this->dragBoxFromMouseDown != System::Drawing::Rectangle::Empty && !this->dragBoxFromMouseDown.Contains(e->X,e->Y)){
 					 this->toolStripStatusLabelModus->Text = String::Concat(L"Dragging X = ",abs(this->dragBoxFromMouseDown.X - e->X), L" Y = ", abs(this->dragBoxFromMouseDown.Y - e->Y));
 				 }
 			 }
 		 }
 ///<summary> Maus verläßt Zeichenbereich. Koordinatenwerte auf Defaults </summary>
-private: System::Void drawPanel_MouseLeave(System::Object^  sender, System::EventArgs^  e) {
+private: System::Void drawBox_MouseLeave(System::Object^  sender, System::EventArgs^  e) {
 			 this->toolStripLabelMouseX->Text = L"X: ";
 			 this->toolStripLabelMouseY->Text = L"Y: ";
-			 //TODO drag Operation abbrechen
+			 //drag Operation abbrechen
+			 this->ResetDragAndDrop();
 		 }
 ///<summary> Neues Dokument </summary>
  private: System::Void neuMenu_Click(System::Object^ sender, System::EventArgs^ e){
@@ -861,9 +961,9 @@ private: System::Void drawPanel_MouseLeave(System::Object^  sender, System::Even
 
 				//Kanten je nach vorhandenen Knoten enablen
 				this->toolStripButtonEdgesEnable();
+				this->m_unsavedChanges = false;
+				this->RefreshDrawBox();
 			 }
-			 this->m_unsavedChanges = false;
-			 this->RefreshDrawPanel();
 		  }
 ///<summary> Überprüft beim Auswählen von Toolbuttons, dass auch nur einer ausgewählt ist.</summary>
 private: System::Void toolStripButtonsOnlyOneChecked(System::Object^  sender, System::EventArgs^  e) {
@@ -883,15 +983,14 @@ private: System::Void toolStripButtonsOnlyOneChecked(System::Object^  sender, Sy
 			 //und der markierung sollte eine vorhanden sein
 			 this->m_graph->unmarkLastMarked();
 			 //ZeichenCursor setzen
-			 this->drawPanelCursorChange();
+			 this->drawBoxCursorChange();
 			 //neu zeichnen
-			 this->RefreshDrawPanel();
+			 this->RefreshDrawBox();
 		 }
 ///<summary> Schaltet das Grid ein bzw. aus </summary>
 private: System::Void toolStripButtonGridControl_Click(System::Object^  sender, System::EventArgs^  e) {
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Form1::typeid));
-			//TODO
-			this->drawPanel->BackgroundImage = this->isGridActivated ? (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"drawPanel.BackgroundImage"))) : nullptr;
+			this->drawBox->BackgroundImage = this->isGridActivated ? (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"drawBox.BackgroundImage"))) : nullptr;
 			//markierungen setzen
 			if (e != nullptr){
 				this->isGridActivated = !this->isGridActivated;
@@ -928,29 +1027,27 @@ private: void toolStripButtonEdgesEnable(){
 				 this->toolStripButtonCompleteGraph->Enabled = false;
 			 }
 		 }
-///<summary> weist je nach ausgewähltem ZeichenModus dem drawPanel cursor einen neuen Cursor zu</summary>
-private: void drawPanelCursorChange( void ){
+///<summary> weist je nach ausgewähltem ZeichenModus dem drawBox cursor einen neuen Cursor zu</summary>
+private: void drawBoxCursorChange( void ){
 			//hole ausgewähltes
 			System::Windows::Forms::ToolStripButton^ active = this->toolBarChosen;
 			//nichts aktiv
 			if(active==nullptr){
-				this->drawPanel->Cursor = System::Windows::Forms::Cursors::Default;
+				this->drawBox->Cursor = System::Windows::Forms::Cursors::Default;
 			}else if(active==this->toolStripButtonVertexRound){
-				this->drawPanel->Cursor = gcnew System::Windows::Forms::Cursor(L"cursor_round.cur");
+				this->drawBox->Cursor = gcnew System::Windows::Forms::Cursor(L"cursor_round.cur");
 			}else if(active==this->toolStripButtonVertexSquare){
-				this->drawPanel->Cursor = gcnew System::Windows::Forms::Cursor(L"cursor_square.cur");
+				this->drawBox->Cursor = gcnew System::Windows::Forms::Cursor(L"cursor_square.cur");
 			}else if(active==this->toolStripButtonEdge || active==this->toolStripButtonEdgeCapacity){
-				this->drawPanel->Cursor = gcnew System::Windows::Forms::Cursor(L"cursor_edge.cur");
+				this->drawBox->Cursor = gcnew System::Windows::Forms::Cursor(L"cursor_edge.cur");
 			}else if(active== this->toolStripButtonArc || active==this->toolStripButtonArcCapacity){
-				this->drawPanel->Cursor = gcnew System::Windows::Forms::Cursor(L"cursor_arc.cur");
+				this->drawBox->Cursor = gcnew System::Windows::Forms::Cursor(L"cursor_arc.cur");
 			}
 		 }
-///<summary> Scrollen des Draw Panels muss redraw triggern</summary>
-private: System::Void drawPanel_Scroll(System::Object^  sender, System::Windows::Forms::ScrollEventArgs^  e) {
-			 this->RefreshDrawPanel();
-		 }
+
+
  ///<summary> mit Beenden des Klicks (Up) zeichnen des Objekts an der Stelle des Mousecursors. </summary>
-private: System::Void drawPanel_MouseUp(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+private: System::Void drawBox_MouseUp(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
 			 //nur executen wenn auch Zeichnen Modus ausgewählt
 			 System::Windows::Forms::ToolStripButton^ chosenOption = this->toolBarChosen;
 			 if(chosenOption != nullptr){
@@ -964,14 +1061,19 @@ private: System::Void drawPanel_MouseUp(System::Object^  sender, System::Windows
 
 				if (chosenOption == this->toolStripButtonVertexRound || chosenOption == this->toolStripButtonVertexSquare)
 				{
-					//Vertex schreiben
-					this->m_graph->CreateVertex(System::Drawing::Point(mouseX, mouseY), chosenOption == this->toolStripButtonVertexRound, this->toolStripButtonVertexAutoEdit->Checked);
-					//Auswahl deaktivieren
-					chosenOption->Checked=false;
-					//Veränderungen markieren
-					m_unsavedChanges = true;
-					this->toolStripButtonEdgesEnable();
-
+					//auf Überschneidungen achten
+					if (this->m_graph->getHandleOfVertex(Point(mouseX,mouseY)) != nullptr){//andere Kontrollzone eines Vertex im Weg
+						//TODO
+						MessageBox::Show(L"Knoten zu nah an anderem Knoten Positioniert! Beachten Sie bitte, das der Mouse Pointer die Mitte des zu Platzierenden Knoten darstellt.", L"Knoten Überschneidungen!", MessageBoxButtons::OK , MessageBoxIcon::Hand);
+					}else{
+						//Vertex schreiben
+						this->m_graph->CreateVertex(System::Drawing::Point(mouseX, mouseY), chosenOption == this->toolStripButtonVertexRound, this->toolStripButtonVertexAutoEdit->Checked);
+						//Auswahl deaktivieren
+						chosenOption->Checked=false;
+						//Veränderungen markieren
+						m_unsavedChanges = true;
+						this->toolStripButtonEdgesEnable();
+					}
 				}else if (chosenOption == this->toolStripButtonArc || chosenOption == this->toolStripButtonArcCapacity || chosenOption == toolStripButtonEdge || chosenOption == toolStripButtonEdgeCapacity)
 				{
 					//Kanten Zeichnen Modus - nicht die durch Grid veränderten Mouse Koords nehmen!
@@ -985,17 +1087,17 @@ private: System::Void drawPanel_MouseUp(System::Object^  sender, System::Windows
 					}
 				}
 				//Refresh im Zeichnenmodus
-				this->RefreshDrawPanel();
+				this->RefreshDrawBox();
 			 }else{
 				 //nicht im ZeichnenModus dann ist es Drag and Drop - TODO
-				 this->dragBoxFromMouseDown = System::Drawing::Rectangle::Empty;
-				 //Status
-				 this->toolStripStatusLabelModus->Text = L"";
+				 //erstmal nur Reset
+				 this->ResetDragAndDrop();
 			 }
 		 }
-///<summary> Auswahl von Element, Möglicherweise Drag and Drop, vielleicht auch sonstige Elemente</summary>
- public: System::Void drawPanel_MouseDown(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
-			 GAPConnect::vertexView^ vertex = this->m_graph->getHandleOfVertex(e->Location);
+///<summary> Versucht an Punkt ein Element zu markieren (demarkieren) und gibt zurück ob es Änderungen gegeben hat </summary>
+private: bool markElementAtKoords(System::Drawing::Point p){
+			 GAPConnect::vertexView^ vertex = this->m_graph->getHandleOfVertex(p);
+			 System::Windows::Forms::ToolStripButton^ chosenOption = this->toolBarChosen;
 			 if (vertex != nullptr){
 				 //Markieren
 				 this->m_graph->markElement(vertex);
@@ -1004,35 +1106,46 @@ private: System::Void drawPanel_MouseUp(System::Object^  sender, System::Windows
 				 //Drag Vertex merken im Falle es ist ein Drag
 				 this->handleOfVertexUnderMouseToDrag = vertex;
 				 //D&D Rechteck hat mouse click koords in der Mitte
-				 System::Drawing::Point ddRectangleLocation = System::Drawing::Point(e->X - (dragSize.Width /2), e->Y - (dragSize.Height /2));
+				 System::Drawing::Point ddRectangleLocation = System::Drawing::Point(p.X - (dragSize.Width /2), p.Y - (dragSize.Height /2));
 				 this->dragBoxFromMouseDown = Rectangle(ddRectangleLocation, dragSize);
 				 //D&D Status
 				 this->toolStripStatusLabelModus->Text = L"Dragging";
+				 //Änderungen gegeben
+				 return(true);
 			 }else{
 				 //also kein Vertex, vielleicht also edge Auswahl
-				 GAPConnect::edgeView^ edge = this->m_graph->getHandleOfEdge(e->Location);
+				 GAPConnect::edgeView^ edge = this->m_graph->getHandleOfEdge(p);
 				 if (edge != nullptr)
 				 {
 					 //also doch Kante
 					 this->m_graph->markElement(edge);
+					 return(true);
 				 }else{
 					 //kein Knoten und keine Kante
 					 if (this->m_graph->IsSomethingMarked() && ! this->m_graph->IsDrawingLine)//nicht wenn Kanten Zeichnen modus
 					 {
 						 this->m_graph->unmarkElement(this->m_graph->getMarkedElement);
+						 return(true);
 					 }
 				 }
 			 }
-			 //neu Zeichnen
-			 this->RefreshDrawPanel();
+			 return(false);
 		 }
-private: System::Void drawPanel_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
+///<summary> Auswahl von Element, Möglicherweise Drag and Drop, vielleicht auch sonstige Elemente</summary>
+private: System::Void drawBox_MouseDown(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+			 //neu Zeichnen wenn Änderungen
+			 if (this->markElementAtKoords(e->Location)){
+				 this->RefreshDrawBox();
+			 }
+		 }
+private: System::Void drawBox_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
+			 e->Graphics->PixelOffsetMode = System::Drawing::Drawing2D::PixelOffsetMode::HighQuality;
 			 //Anti Aliasing
 			 e->Graphics->SmoothingMode = System::Drawing::Drawing2D::SmoothingMode::AntiAlias;
+
 			 //Graph zeichnen
 			 this->m_graph->drawGraph(e);
 		 }
-
 ///<summary> Aktiviert oder Deaktiviert alle Löschen und Edit Steuerelemente </summary>
 private: void activateItemsOnMark( bool active ){
 			 //lösch Items
@@ -1051,24 +1164,26 @@ private: System::Void deleteMarkedElement_Click(System::Object^  sender, System:
 			 if (security)
 			 {
 				 this->m_graph->deleteDrawnElement(this->m_graph->getMarkedElement);
-				 this->RefreshDrawPanel();
+				 this->RefreshDrawBox();
 			 }
 		 }
 ///<summary> Refresh auf dem DrawPanel </summary>
-public: void RefreshDrawPanel( void ){
+public: void RefreshDrawBox( void ){
 			this->activateItemsOnMark(this->m_graph->IsSomethingMarked() && ! this->m_graph->IsDrawingLine);//Items nur aktivieren wenn Objekt markiert, aber nicht wenn dies nur zum linien ziehen genutzt wird
-			this->drawPanel->SuspendLayout();
-			this->drawPanel->Refresh();
-			this->drawPanel->ResumeLayout(true);
+			this->drawBox->SuspendLayout();
+			this->drawBox->Refresh();
+			this->drawBox->ResumeLayout(true);
 		}
-
 ///<summary>Zeichnen eines Vollständigen Graphen</summary>
 private: System::Void CompleteGraph_Click(System::Object^  sender, System::EventArgs^  e) {
+			 bool yes = true;
 			 if (this->m_graph->CountEdges != 0){//wenn Kanten dann Warnungsdialog
-				 if(MessageBox::Show(L"Es wird ein kompletter Graph erstellt. Dazu werden alle vorhanden Kanten entfernt. Wollen Sie dies wirklich?", L"Kompletter Graph", MessageBoxButtons::YesNo, MessageBoxIcon::Question) == System::Windows::Forms::DialogResult::Yes){
+				 yes = (MessageBox::Show(L"Es wird ein kompletter Graph erstellt. Dazu werden alle vorhanden Kanten entfernt. Wollen Sie dies wirklich?", L"Kompletter Graph", MessageBoxButtons::YesNo, MessageBoxIcon::Question) == System::Windows::Forms::DialogResult::Yes);
+			 }
+			 if (yes)
+			 {
 					 this->m_graph->CreateCompleteGraph();
-					 this->RefreshDrawPanel();
-				 }
+					 this->RefreshDrawBox();
 			 }
 		 }
 ///<summary> Startet den Edit Dialog des Markierten Objectes </summary>
@@ -1079,8 +1194,33 @@ private: System::Void EditMarkedObject_Click(System::Object^  sender, System::Ev
 				 if (dynamic_cast<GAPConnect::vertexView^ >(this->m_graph->getMarkedElement) != nullptr){
 					 this->m_graph->ReCalcDockingPoints(dynamic_cast<GAPConnect::vertexView^>(this->m_graph->getMarkedElement));
 				 }
-				 this->RefreshDrawPanel();
+				 this->RefreshDrawBox();
 			 }
+		 }
+///<summary> Hover zeigt KommentarInfos an </summary>
+private: System::Void drawBox_MouseHover(System::Object^  sender, System::EventArgs^  e) {
+			 //neu Zeichnen wenn Änderungen
+			 Point mouseScreen = this->drawBox->MousePosition;//Ist in Screen Coords
+			 Point mouseClient = this->drawBox->PointToClient(mouseScreen);//Übersetzen in Client Koords
+			 GAPConnect::basicView^ element = this->m_graph->getHandleOfElement(mouseClient);
+			 if (element != nullptr)
+			 {
+				 this->tBKommentar->Text = element->Kommentar;
+				 if (dynamic_cast<GAPConnect::edgeView^ > (element) != nullptr){
+					 this->tbTyp->Text = L"Kante";
+				 } 
+				 else{
+					 this->tbTyp->Text = L"Knoten";
+				 }
+			 }else{
+				 tbTyp->Text = L"";
+				 tBKommentar->Text = L"";
+			 }
+		 }
+private: void ResetDragAndDrop( void ){
+			 this->dragBoxFromMouseDown = System::Drawing::Rectangle::Empty;
+			 this->handleOfVertexUnderMouseToDrag = nullptr;
+			 this->toolStripStatusLabelModus->Text = L"";
 		 }
 };//Form1 class
 }//namespace
