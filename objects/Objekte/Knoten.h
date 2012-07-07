@@ -11,8 +11,7 @@ using namespace System::Collections::Generic;
 ref class Knoten
 {
 public:
-	int coord_x;
-	int coord_y;
+	System::Drawing::Point coords;
 	Kommentar^ comment;
 	System::Collections::Generic::List<Kante^> ^edges;
 	System::String^ label;

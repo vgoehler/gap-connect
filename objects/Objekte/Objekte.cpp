@@ -36,7 +36,7 @@ int main(array<System::String ^> ^args)
 	graphi->create_edge(graphi->verticles[0],graphi->verticles[3],2);
 	graphi->edges[2]->wertung=2;
 	graphi->create_edge(graphi->verticles[1],graphi->verticles[2],2);
-	graphi->edges[3]->wertung=4;
+	graphi->edges[3]->wertung=1;
 	graphi->create_edge(graphi->verticles[1],graphi->verticles[4],2);
 	graphi->edges[4]->wertung=3;
 	graphi->create_edge(graphi->verticles[2],graphi->verticles[3],2);
@@ -78,15 +78,19 @@ int main(array<System::String ^> ^args)
 	Graph^ graph2 = Graph::load_graph("xgraphfile");
 */
 	Dijkstra^ my_diggi =graphi->init_dijkstra(graphi->verticles[0]);
-	int i=1;
-	while(i >0)
+	Knoten^ i;
+	
+	do
 	{
 		i=my_diggi->next_step();
-	}
+	}while(i != nullptr);
+	my_diggi->cut_outdated();
+
 	//graphi->edges[0];
 	//delete graphi->verticles[1];
 	int breakpoint1=0;
 	my_diggi;
+	delete my_diggi;
 	/*trim test
 	System::Collections::Generic::List<int> listy =gcnew List<int>();
 	int x=5;
@@ -102,7 +106,7 @@ int main(array<System::String ^> ^args)
 	System::Diagnostics::Debug::WriteLine("list consists of:{0} {1}",listy.Count,listy.Capacity);
 	*/
 //	System::Diagnostics::Debug::WriteLine("comment=comy:{0}",(knot.comment==%comy));
-
+	int breakpoint=0;
 	}
 	int breakpoint=0;
 	/*

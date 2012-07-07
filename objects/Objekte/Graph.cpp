@@ -31,6 +31,8 @@ Graph::~Graph(void)
 				for (int i=c_edges-1;i>=0;i--)
 					delete edges[i];
 		edges->Clear();
+		delete edges;
+		edges=nullptr;
 	}
 	if (verticles)							//zur Sicherheit (falls array nicht initialisiert)
 	{	
@@ -39,6 +41,8 @@ Graph::~Graph(void)
 			for (int i=c_verticles-1;i>=0;i--)
 				delete verticles[i];
 		verticles->Clear();
+		delete verticles;
+		verticles=nullptr;
 	}
 }
 
