@@ -73,6 +73,8 @@ public:
 	}
 	///<summary> Berechnet die Dockpunkte einer Kante zu einem Knoten neu </summary>
 	void ReCalcDockingPoints(GAPConnect::vertexView^ vertex);
+	///<summary> Überprüft einen Punkt, an dem ein Vertex gezeichnet werden soll, auf Gültigkeit </summary>
+	bool vertexTooClose( Point pkt, Size sz);
 
 private:
 	///<summary>Handle um edge Zeichnen in progress zu signalisieren, speichert den Start, ansonsten nullptr</summary>

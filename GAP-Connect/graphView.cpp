@@ -222,4 +222,17 @@ void graphView::ReCalcDockingPoints( GAPConnect::vertexView^ vertex )
 	}
 }
 
+bool graphView::vertexTooClose( Point pkt, Size sz )
+{
+	//KontrollRechteck zum Überprüfen holen; input size modifizieren, da Pixel dazwischen bleiben müssen,
+	System::Drawing::Rectangle OwnRectangle = Rectangle(pkt.X-(sz.Width+15)/2 , pkt.Y-(sz.Height+15)/2, sz.Width+15, sz.Height+15);
+	//mit anderen auf Überschneidungen testen
+	for each (GAPConnect::vertexView^ vertex in this->vertexList){
+		if (vertex->GetBorderRectangle.IntersectsWith(OwnRectangle)){
+			return(true);
+		}
+	}
+	return(false);
+}
+
 }//namespace

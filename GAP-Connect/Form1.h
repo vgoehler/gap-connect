@@ -111,7 +111,7 @@ namespace GAPConnect {
 	private: System::Windows::Forms::GroupBox^  gBStatus;
 	private: System::Windows::Forms::TextBox^  tBKommentar;
 
-	private: System::Windows::Forms::Label^  labelTyp;
+
 	private: System::Windows::Forms::TextBox^  tbTyp;
 
 
@@ -232,7 +232,6 @@ namespace GAPConnect {
 			this->gBStatus = (gcnew System::Windows::Forms::GroupBox());
 			this->tbTyp = (gcnew System::Windows::Forms::TextBox());
 			this->tBKommentar = (gcnew System::Windows::Forms::TextBox());
-			this->labelTyp = (gcnew System::Windows::Forms::Label());
 			this->zeichentools = (gcnew System::Windows::Forms::GroupBox());
 			this->zeichnenEdge = (gcnew System::Windows::Forms::ToolStrip());
 			this->toolStripButtonEdge = (gcnew System::Windows::Forms::ToolStripButton());
@@ -642,7 +641,6 @@ namespace GAPConnect {
 			this->gBStatus->Controls->Add(Typ);
 			this->gBStatus->Controls->Add(this->tBKommentar);
 			this->gBStatus->Controls->Add(Kommentar);
-			this->gBStatus->Controls->Add(this->labelTyp);
 			this->gBStatus->Location = System::Drawing::Point(0, 237);
 			this->gBStatus->Name = L"gBStatus";
 			this->gBStatus->Size = System::Drawing::Size(198, 156);
@@ -652,6 +650,7 @@ namespace GAPConnect {
 			// 
 			// tbTyp
 			// 
+			this->tbTyp->Cursor = System::Windows::Forms::Cursors::Arrow;
 			this->tbTyp->Location = System::Drawing::Point(75, 13);
 			this->tbTyp->Name = L"tbTyp";
 			this->tbTyp->ReadOnly = true;
@@ -661,21 +660,15 @@ namespace GAPConnect {
 			// 
 			// tBKommentar
 			// 
+			this->tBKommentar->Cursor = System::Windows::Forms::Cursors::Arrow;
 			this->tBKommentar->Location = System::Drawing::Point(7, 50);
 			this->tBKommentar->Multiline = true;
 			this->tBKommentar->Name = L"tBKommentar";
 			this->tBKommentar->ReadOnly = true;
+			this->tBKommentar->ScrollBars = System::Windows::Forms::ScrollBars::Vertical;
 			this->tBKommentar->Size = System::Drawing::Size(186, 100);
 			this->tBKommentar->TabIndex = 3;
 			this->tBKommentar->TabStop = false;
-			// 
-			// labelTyp
-			// 
-			this->labelTyp->AutoSize = true;
-			this->labelTyp->Location = System::Drawing::Point(65, 20);
-			this->labelTyp->Name = L"labelTyp";
-			this->labelTyp->Size = System::Drawing::Size(0, 13);
-			this->labelTyp->TabIndex = 1;
 			// 
 			// zeichentools
 			// 
@@ -820,7 +813,6 @@ namespace GAPConnect {
 			this->drawBox->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &Form1::drawBox_Paint);
 			this->drawBox->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &Form1::drawBox_MouseDown);
 			this->drawBox->MouseLeave += gcnew System::EventHandler(this, &Form1::drawBox_MouseLeave);
-			this->drawBox->MouseHover += gcnew System::EventHandler(this, &Form1::drawBox_MouseHover);
 			this->drawBox->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &Form1::drawBox_MouseMove);
 			this->drawBox->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &Form1::drawBox_MouseUp);
 			// 
@@ -934,6 +926,9 @@ private: System::Void drawBox_MouseMove(System::Object^  sender, System::Windows
 			 //label update immer!
 			 this->toolStripLabelMouseX->Text = String::Concat(L"X: ", e->X );
 			 this->toolStripLabelMouseY->Text = String::Concat(L"Y: ", e->Y );
+			 //Kommentar Text Reseten
+			 tbTyp->Text = L"";
+			 tBKommentar->Text = L"";
 			 //linke Maustaste gedrückt
 			 if( (e->Button & System::Windows::Forms::MouseButtons::Left) == System::Windows::Forms::MouseButtons::Left){
 				 //mouse außerhalb der dragBox ereigniss auslösen
@@ -941,6 +936,8 @@ private: System::Void drawBox_MouseMove(System::Object^  sender, System::Windows
 					 this->toolStripStatusLabelModus->Text = String::Concat(L"Dragging X = ",abs(this->dragBoxFromMouseDown.X - e->X), L" Y = ", abs(this->dragBoxFromMouseDown.Y - e->Y));
 				 }
 			 }
+			 //Kommentare schreiben
+			 this->ExtractCommentFromElement(e->Location);
 		 }
 ///<summary> Maus verläßt Zeichenbereich. Koordinatenwerte auf Defaults </summary>
 private: System::Void drawBox_MouseLeave(System::Object^  sender, System::EventArgs^  e) {
@@ -948,6 +945,9 @@ private: System::Void drawBox_MouseLeave(System::Object^  sender, System::EventA
 			 this->toolStripLabelMouseY->Text = L"Y: ";
 			 //drag Operation abbrechen
 			 this->ResetDragAndDrop();
+			 //Kommentar Text Reseten
+			 tbTyp->Text = L"";
+			 tBKommentar->Text = L"";
 		 }
 ///<summary> Neues Dokument </summary>
  private: System::Void neuMenu_Click(System::Object^ sender, System::EventArgs^ e){
@@ -1045,8 +1045,7 @@ private: void drawBoxCursorChange( void ){
 			}
 		 }
 
-
- ///<summary> mit Beenden des Klicks (Up) zeichnen des Objekts an der Stelle des Mousecursors. </summary>
+///<summary> mit Beenden des Klicks (Up) zeichnen des Objekts an der Stelle des Mousecursors. </summary>
 private: System::Void drawBox_MouseUp(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
 			 //nur executen wenn auch Zeichnen Modus ausgewählt
 			 System::Windows::Forms::ToolStripButton^ chosenOption = this->toolBarChosen;
@@ -1062,8 +1061,7 @@ private: System::Void drawBox_MouseUp(System::Object^  sender, System::Windows::
 				if (chosenOption == this->toolStripButtonVertexRound || chosenOption == this->toolStripButtonVertexSquare)
 				{
 					//auf Überschneidungen achten
-					if (this->m_graph->getHandleOfVertex(Point(mouseX,mouseY)) != nullptr){//andere Kontrollzone eines Vertex im Weg
-						//TODO
+					if (this->m_graph->vertexTooClose(Drawing::Point(mouseX,mouseY), Drawing::Size(25,25))){//andere Kontrollzone eines Vertex im Weg
 						MessageBox::Show(L"Knoten zu nah an anderem Knoten Positioniert! Beachten Sie bitte, das der Mouse Pointer die Mitte des zu Platzierenden Knoten darstellt.", L"Knoten Überschneidungen!", MessageBoxButtons::OK , MessageBoxIcon::Hand);
 					}else{
 						//Vertex schreiben
@@ -1197,12 +1195,15 @@ private: System::Void EditMarkedObject_Click(System::Object^  sender, System::Ev
 				 this->RefreshDrawBox();
 			 }
 		 }
-///<summary> Hover zeigt KommentarInfos an </summary>
-private: System::Void drawBox_MouseHover(System::Object^  sender, System::EventArgs^  e) {
-			 //neu Zeichnen wenn Änderungen
-			 Point mouseScreen = this->drawBox->MousePosition;//Ist in Screen Coords
-			 Point mouseClient = this->drawBox->PointToClient(mouseScreen);//Übersetzen in Client Koords
-			 GAPConnect::basicView^ element = this->m_graph->getHandleOfElement(mouseClient);
+///<summary> Setzt das Drag and Drop zurück</summary>
+private: void ResetDragAndDrop( void ){
+			 this->dragBoxFromMouseDown = System::Drawing::Rectangle::Empty;
+			 this->handleOfVertexUnderMouseToDrag = nullptr;
+			 this->toolStripStatusLabelModus->Text = L"";
+		 }
+///<summary> Exrahiert Kommentar aus dem Element und schreibt ihn im Formular </summary>
+private: void ExtractCommentFromElement(Point pkt){
+			 GAPConnect::basicView^ element = this->m_graph->getHandleOfElement(pkt);
 			 if (element != nullptr)
 			 {
 				 this->tBKommentar->Text = element->Kommentar;
@@ -1213,15 +1214,11 @@ private: System::Void drawBox_MouseHover(System::Object^  sender, System::EventA
 					 this->tbTyp->Text = L"Knoten";
 				 }
 			 }else{
-				 tbTyp->Text = L"";
-				 tBKommentar->Text = L"";
+				 this->tbTyp->Text = L"";
+				 this->tBKommentar->Text = L"";
 			 }
 		 }
-private: void ResetDragAndDrop( void ){
-			 this->dragBoxFromMouseDown = System::Drawing::Rectangle::Empty;
-			 this->handleOfVertexUnderMouseToDrag = nullptr;
-			 this->toolStripStatusLabelModus->Text = L"";
-		 }
+		 
 };//Form1 class
 }//namespace
 
