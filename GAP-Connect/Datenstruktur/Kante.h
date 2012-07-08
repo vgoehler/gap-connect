@@ -1,6 +1,6 @@
 #pragma once
 #include "Kommentar.h"
-enum KantenFormat{NORMAL,STREIFEN,PUNKTE,WELLE}; //und sonstige ideen - je nach implementierung...
+enum KantenFormat{NORMAL,DISABLED,STREIFEN,PUNKTE,WELLE}; //und sonstige ideen - je nach implementierung...
 using namespace System;
 
 ref class Knoten;

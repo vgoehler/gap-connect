@@ -13,7 +13,7 @@ Kante::Kante( Graph^ graph_init,Knoten^ knoten_begin,Knoten^ knoten_ending,int g
 	knoten_end->add_edge(this);
 	gerichtet=gerichtet_init;
 	shape=shape_init;
-	wertung=0;
+	string_wertung="";
 	owning_graph=graph_init;
 	comment=gcnew Kommentar();
 
