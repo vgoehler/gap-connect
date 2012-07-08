@@ -15,8 +15,9 @@ public basicView
 {
 public:
 	///<summary> Konstruktor </summary>
-	edgeView(System::Windows::Forms::Form^ , GAPConnect::drawTools^, vertexView^ ,vertexView^ , int);
-
+	edgeView(System::Windows::Forms::Form^ , GAPConnect::drawTools^, vertexView^ ,vertexView^ , int, Graph^ parentDataGraph);
+	///<summary> Destruktor </summary>
+	~edgeView();
 	///<summary> Methode zum Zeichnen der Kanten </summary>
 	System::Void drawEdge(System::Windows::Forms::PaintEventArgs^  e);
 	///<summary> Ist eine Schlinge </summary>
@@ -100,6 +101,12 @@ public:
 	bool Crosses (GAPConnect::edgeView^ otherEdge);
 	///<summary> Dockpunkt berechnen </summary>
 	void calculateDockingPoint( void );
+	///<summary> Gibt Daten Kante zurück, kann auch gesetzt werden </summary>
+	property Kante^ DataEdge{
+		Kante^ get( void ){
+			return(this->m_dataEdge);
+		}
+	}
 
 private:
 	vertexView^ m_startVertex;
@@ -130,6 +137,8 @@ private:
 	double edgeView::LengthFromPointToPoint(Point^ pkt1, Point^ pkt2);
 	///<summary> sollen Hilfslinien von der Kante zum Text angezeigt werden </summary>
 	bool m_aidLine;
+	///<summary> Anschluß an Datenmember </summary>
+	Kante^ m_dataEdge;
 };
 
 }//namespace

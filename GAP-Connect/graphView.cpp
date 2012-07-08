@@ -1,8 +1,5 @@
 #include "StdAfx.h"
 #include "graphView.h"				 
-#include "Datenstruktur/Graph.h"
-#include "Datenstruktur/Dijkstra.h"
-
 
 namespace GAPConnect {
 
@@ -11,6 +8,7 @@ graphView::graphView(System::Windows::Forms::Form^ inParent): m_parent(inParent)
 	this->vertexList = gcnew System::Collections::Generic::List< GAPConnect::vertexView^ >();
 	this->edgeList = gcnew System::Collections::Generic::List< GAPConnect::edgeView^ >();
 	this->m_drawTools = gcnew GAPConnect::drawTools();
+	this->m_dataGraph = gcnew Graph();
 }
 
 graphView::graphView( void ): m_parent(nullptr), m_startedDrawing(nullptr)
@@ -22,6 +20,7 @@ graphView::~graphView( void )
 	delete this->edgeList;
 	delete this->vertexList;
 	delete this->m_drawTools;
+	delete this->m_dataGraph;
 }
 
 void graphView::unmarkElement( GAPConnect::basicView^ element){
@@ -51,18 +50,21 @@ bool graphView::CreateEdge( Point location, bool isArc, bool withConfigDialog, b
 			this->m_startedDrawing = clickedVertex;
 		}else{
 			//wenn bereits gestartet dann ende vermerken und objekt initialisieren
-			edgeView^ edge = gcnew edgeView(this->m_parent, this->m_drawTools, this->m_startedDrawing, clickedVertex, isArc?1:0);
+			edgeView^ edge = gcnew edgeView(this->m_parent, this->m_drawTools, this->m_startedDrawing, clickedVertex, isArc?1:0, this->m_dataGraph);
 
 			this->edgeList->Add(edge);
 
 			//ende muss noch markierungen entfernen auf Knoten (Startknoten wird von checkstate change entfernt); geht mit mark Weil dieser vorher markiert ist, also der letzte
 			this->markElement(clickedVertex);
 
+
 			//Dialog zum Beschriften einblenden
 			if (withConfigDialog || forceConfigDialog)
 			{
 				edge->startConfigDialog(false);
 			}
+
+
 			return(true);
 		}
 	}
@@ -72,7 +74,7 @@ bool graphView::CreateEdge( Point location, bool isArc, bool withConfigDialog, b
 void graphView::CreateVertex( Point location, bool isRound, bool withConfigDialog )
 {
 	//Vertex schreiben
-	vertexView^ vertex = (gcnew vertexView(this->m_parent, this->m_drawTools));
+	vertexView^ vertex = (gcnew vertexView(this->m_parent, this->m_drawTools, this->m_dataGraph));
 	vertex->LocationCenter = location;
 
 	//VertexArt
@@ -88,6 +90,7 @@ void graphView::CreateVertex( Point location, bool isRound, bool withConfigDialo
 	if (withConfigDialog){
 		vertex->startConfigDialog(false);
 	}
+
 }
 
 void graphView::markElement( GAPConnect::basicView^ element )
@@ -208,7 +211,7 @@ void graphView::CreateCompleteGraph( void )
 	for each (GAPConnect::vertexView^ vertex in this->vertexList){
 		for each (GAPConnect::vertexView^ neighbor in this->vertexList){
 			if (vertex != neighbor){//wenn wir nicht wir selber sind: Kante
-				GAPConnect::edgeView^ edge = gcnew GAPConnect::edgeView(this->m_parent, this->m_drawTools, vertex, neighbor, 0);
+				GAPConnect::edgeView^ edge = gcnew GAPConnect::edgeView(this->m_parent, this->m_drawTools, vertex, neighbor, 0, this->m_dataGraph);
 				this->edgeList->Add(edge);
 			}
 		}

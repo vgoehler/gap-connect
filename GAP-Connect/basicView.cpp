@@ -3,7 +3,7 @@
 
 
 namespace GAPConnect {
-basicView::basicView(System::Windows::Forms::Form^ inParent, GAPConnect::drawTools^ inDrawTools):Parent(inParent), m_drawTools(inDrawTools), m_marked(false), m_enable(true)
+basicView::basicView(System::Windows::Forms::Form^ inParent, GAPConnect::drawTools^ inDrawTools, Graph^ parentDataGraph):Parent(inParent), m_drawTools(inDrawTools), m_marked(false), m_enable(true), m_dataGraph(parentDataGraph)
 {
 		this->Size = System::Drawing::Size(25,25);
 		this->m_minsize = System::Drawing::Size(4,4);//damit wir irgendwas klickbares haben

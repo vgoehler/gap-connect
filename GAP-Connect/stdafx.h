@@ -7,6 +7,12 @@
 #include <cstdlib>
 #include <cmath>
 #define PI 3.14159265
+
+//Data
+#include "Datenstruktur/Graph.h"
+#include "Datenstruktur/Dijkstra.h"
+
+//View
 #include "drawTools.h"
 #include "about.h"
 #include "VertexChangeDialog.h"
