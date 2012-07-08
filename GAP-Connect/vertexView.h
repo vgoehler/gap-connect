@@ -32,6 +32,7 @@ namespace GAPConnect {
 			void set(System::Drawing::Point inValue){
 				this->Location = System::Drawing::Point(inValue.X - this->Width/2,
 														inValue.Y - this->Height/2);
+				this->m_dataVertex->coords = this->Location;
 			}
 			System::Drawing::Point get(void){
 				return(Point(this->Location.X + this->Width /2, this->Location.Y + this->Height /2));
@@ -61,6 +62,33 @@ namespace GAPConnect {
 		property Knoten^ DataVertex{
 			Knoten^ get( void ){
 				return(this->m_dataVertex);
+			}
+		}
+		property System::Drawing::Size Size{
+			virtual void set(System::Drawing::Size inValue) override{
+				this->basicView::Size = inValue;
+				if (this->TypeofVertex){//square
+					dynamic_cast<KnotenEckig^ >(this->m_dataVertex)->height = this->Height;
+					dynamic_cast<KnotenEckig^ >(this->m_dataVertex)->width = this->Width;
+				}
+			}
+		}
+	///<summary> Eintrag für die Beschriftung </summary>
+	property System::String^ Text{
+			void set (System::String^ inValue){
+				this->m_dataVertex->label = inValue;
+			}
+			System::String^ get (void){
+				return(this->m_dataVertex->label);
+			}
+		}
+	///<summary> Eintrag für den Kommentar </summary>
+	property System::String^ Kommentar{
+			void set (System::String^ inValue){
+				this->m_dataVertex->comment->label = inValue;
+			}
+			System::String^ get (void){
+				return(this->m_dataVertex->comment->label);
 			}
 		}
 

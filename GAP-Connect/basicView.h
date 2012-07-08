@@ -19,7 +19,7 @@ public:
 	}
 	///<summary> Schreibt und Liest die Größe des Elements</summary>
 	property System::Drawing::Size Size{
-		void set (System::Drawing::Size inValue){
+		virtual void set (System::Drawing::Size inValue){
 			this->Height = inValue.Height;
 			this->Width = inValue.Width;
 		}
@@ -101,24 +101,6 @@ public:
 			this->m_enable = inValue;
 		}
 	}
-	///<summary> Eintrag für die Wichtung </summary>
-	property System::String^ Text{
-			void set (System::String^ inValue){
-				this->m_text = inValue;
-			}
-			System::String^ get (void){
-				return(this->m_text);
-			}
-		}
-	///<summary> Eintrag für den Kommentar </summary>
-	property System::String^ Kommentar{
-			void set (System::String^ inValue){
-				this->m_kommentar = inValue;
-			}
-			System::String^ get (void){
-				return(this->m_kommentar);
-			}
-		}
 	///<summary> Gibt Wahr/Falsch zurück wenn Punkt im Kontrollrechteck liegt </summary>
 	bool Contains (System::Drawing::Point& pkt);
 	///<summary> Config Dialog muss Überschrieben werden</summary>
@@ -150,9 +132,5 @@ private:
 	bool m_enable;
 	///<summary> Markiert ob Element Ausgewählt wurde. </summary>
 	bool m_marked;
-	///<summary> Text </summary>
-	String^ m_text;
-	///<summary> Kommentar </summary>
-	String^ m_kommentar;
 };
 }

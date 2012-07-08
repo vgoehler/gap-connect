@@ -1354,13 +1354,15 @@ private: void ExtractCommentFromElement(Point pkt){
 			 GAPConnect::basicView^ element = this->m_graph->getHandleOfElement(pkt);
 			 if (element != nullptr)
 			 {
-				 this->tBKommentar->Text = element->Kommentar;
 				 GAPConnect::vertexView^ vertex = dynamic_cast<GAPConnect::vertexView^ > (element);
 				 if ( vertex != nullptr){
+					 this->tBKommentar->Text = vertex->Kommentar;
 					 this->tbTyp->Text = String::Concat(L"Knoten", L" ", vertex->TypeofVertex == 0 ? L"(Rund)" : L"(Eckig)");
 				 } 
 				 else{
 					 this->tbTyp->Text = L"Kante";
+					 GAPConnect::edgeView^ edge = dynamic_cast<GAPConnect::edgeView^ >(element);
+					 this->tBKommentar->Text = edge->Kommentar;
 				 }
 			 }else{
 				 this->tbTyp->Text = L"";

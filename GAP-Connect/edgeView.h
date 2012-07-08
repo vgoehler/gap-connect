@@ -107,6 +107,24 @@ public:
 			return(this->m_dataEdge);
 		}
 	}
+	///<summary> Eintrag für die Wertung </summary>
+	property System::String^ Text{
+			void set (System::String^ inValue){
+				this->m_dataEdge->string_wertung = inValue;
+			}
+			System::String^ get (void){
+				return(this->m_dataEdge->string_wertung);
+			}
+		}
+	///<summary> Eintrag für den Kommentar </summary>
+	property System::String^ Kommentar{
+			void set (System::String^ inValue){
+				this->m_dataEdge->comment->label = inValue;
+			}
+			System::String^ get (void){
+				return(this->m_dataEdge->comment->label);
+			}
+		}
 
 private:
 	vertexView^ m_startVertex;
