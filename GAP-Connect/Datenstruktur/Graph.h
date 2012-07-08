@@ -44,7 +44,8 @@ public:
 	static Dijkstra^ init_dijkstra(Knoten ^knoten_start);
 
 	int optimize();
-
+private:
+	bool crossing();
 	
 };
 

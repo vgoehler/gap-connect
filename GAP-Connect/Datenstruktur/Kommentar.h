@@ -7,10 +7,12 @@ private:
 	System::String^ string_label;
 public:
 	Kommentar(System::String^ string_label,int coord_x,int coord_y);
+	Kommentar(void);
 	~Kommentar(void);
 	property System::String^ label{
 		void set(System::String^ l){
-			delete[] string_label;
+			if(string_label)
+				delete[] string_label;
 			string_label=l;
 		}
 		System::String^ get(void){

@@ -363,6 +363,29 @@ Dijkstra^ Graph::init_dijkstra(Knoten ^knoten_start)
 
 int Graph::optimize()
 {
+	//Rectangle creation
+	System::Collections::Generic::List<System::Drawing::Rectangle> ^rectangles=gcnew List<System::Drawing::Rectangle>();
+	/*for each(Kante^ ka in edges)
+	{
+		int x1 = ka->get_knoten_start()->coords.X;
+		int y1 = ka->get_knoten_start()->coords.Y;
+		int x2 = ka->get_knoten_end()->coords.X;
+		int y2 = ka->get_knoten_end()->coords.Y;
+		if(x1<x2)
+			if(y1<y2)
+				System::Drawing::Rectangle(x1,y1,x2-x1,y2-y1);
+			else
+				System::Drawing::Rectangle(x1,y2,x2-x1,y1-y2);
+		else
+			if
+		
+
+	}*/
 	return 0;
+}
+
+bool Graph::crossing()
+{
+	return false;
 }
 

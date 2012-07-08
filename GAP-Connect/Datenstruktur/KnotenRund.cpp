@@ -6,6 +6,7 @@ KnotenRund::KnotenRund(void)
 {
 	radius=10;
 	edges=gcnew List<Kante^>();
+	comment=gcnew Kommentar();
 }
 
 KnotenRund::KnotenRund(Graph^ graph_init,System::String^ string_label,System::String^ string_tooltip,double radius_init)
@@ -14,6 +15,7 @@ KnotenRund::KnotenRund(Graph^ graph_init,System::String^ string_label,System::St
 	tooltip=string_tooltip;
 	radius=radius_init;
 	edges=gcnew List<Kante^>();
+	comment=gcnew Kommentar();
 	owning_graph=graph_init;
 }
 
