@@ -1,6 +1,6 @@
 #pragma once
 #include "Graph.h"
-ref class Dijkstra
+public ref class Dijkstra
 {
 public:
 	System::Collections::Generic::List<Knoten^> ^verticles_target;

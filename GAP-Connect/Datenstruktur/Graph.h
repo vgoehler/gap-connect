@@ -5,7 +5,7 @@
 using namespace System;
 ref class Dijkstra;
 [Serializable]
-ref class Graph
+public ref class Graph
 {
 public:
 	System::Collections::Generic::List<Kante^> ^edges;
@@ -15,6 +15,11 @@ protected:
 public:
 	Graph(void);
 	Graph(System::String^ string_label);
+	property System::String^ name{
+		System::String^ get(void){
+			return label;
+		}
+	}
 	~Graph(void);
 	Kante^ create_edge( Knoten^ knoten_begin,Knoten^ knoten_ending,int gerichtet_init,KantenFormat shape_init);				//Kante: knoten_begin,knoten_end,gerichtet(-1,0,1,2),shape(NORMAL,STREIFEN,PUNKTE,WELLE)
 	Kante^ create_edge( Knoten^ knoten_begin,Knoten^ knoten_ending,int gerichtet_init);										//"gerichtet" und/oder "shape" kann weggelassen werden.Dann: gerichtet=0,shape=NORMAL
@@ -34,7 +39,8 @@ public:
 	bool save_graph(System::String ^string_fileName );
 	static Graph^ load_graph(System::String ^string_fileName);
 	static Dijkstra^ init_dijkstra(Knoten ^knoten_start);
-	//addcomment-system?
+
+
 
 	
 };

@@ -1,19 +1,21 @@
 #pragma once
 using namespace System;
 [ Serializable ]
-ref class Kommentar
+public ref class Kommentar
 {
 private:
-	System::String^ label;
-public:
-	int x;
-	int y;
-	int height;
-	int width;
+	System::String^ string_label;
 public:
 	Kommentar(System::String^ string_label,int coord_x,int coord_y);
 	~Kommentar(void);
-	void set_label(System::String^ string_label);	
-
+	property System::String^ label{
+		void set(System::String^ l){
+			delete[] string_label;
+			string_label=l;
+		}
+		System::String^ get(void){
+			return string_label;
+		}
+	}
 };
 
