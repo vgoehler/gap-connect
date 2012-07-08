@@ -77,6 +77,15 @@ public:
 	bool vertexTooClose( Point pkt, Size sz);
 	///<summary> weitere Version von vertexTooClose allerdings wird noch ein initialisierender Knoten übergeben - Drag'nDrop</summary>
 	bool vertexTooClose( Point pkt, Size sz, vertexView^ vertex);
+	///<summary> holt/setzt den Namen des Graphen </summary>
+	property System::String^ Graphname{
+		void set(System::String^ inValue){
+			this->m_dataGraph->name = inValue;
+		}
+		System::String^ get( void ){
+			return(this->m_dataGraph->name);
+		}
+	}
 
 private:
 	///<summary>Handle um edge Zeichnen in progress zu signalisieren, speichert den Start, ansonsten nullptr</summary>

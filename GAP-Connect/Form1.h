@@ -15,11 +15,12 @@ namespace GAPConnect {
 	public ref class Form1 : public System::Windows::Forms::Form
 	{
 	public:
-		Form1(void):dragBoxFromMouseDown(System::Drawing::Rectangle::Empty), dragAndDropVertexOldLocation(System::Drawing::Point::Empty)
+		Form1(void):dragBoxFromMouseDown(System::Drawing::Rectangle::Empty), dragAndDropVertexOldLocation(System::Drawing::Point::Empty), m_graph(nullptr)
 		{
 			InitializeComponent();
 			this->changedGraph = false;
 			this->m_graph = gcnew GAPConnect::graphView(this);
+			this->toolStripTextBoxGraphenname->Text = this->m_graph->Graphname;
 			//TODO Werte aus Ini Laden
 			this->loadDefaultValues();
 			//Disablen
@@ -123,6 +124,8 @@ private: System::Windows::Forms::ToolStripMenuItem^  kanteToolStripMenuItem;
 private: System::Windows::Forms::ToolStripMenuItem^  kanteMitWertToolStripMenuItem;
 private: System::Windows::Forms::ToolStripMenuItem^  bogenToolStripMenuItem;
 private: System::Windows::Forms::ToolStripMenuItem^  bogenMitWertToolStripMenuItem;
+private: System::Windows::Forms::ToolStripTextBox^  toolStripTextBoxGraphenname;
+
 
 
 
@@ -202,6 +205,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  bogenMitWertToolStripMenuIt
 			System::Windows::Forms::Label^  Kommentar;
 			System::Windows::Forms::Label^  Typ;
 			System::Windows::Forms::ToolStripSeparator^  toolStripSeparator3;
+			System::Windows::Forms::ToolStripLabel^  toolStripLabel1;
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Form1::typeid));
 			this->mainmenuStrip = (gcnew System::Windows::Forms::MenuStrip());
 			this->dateiToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -239,6 +243,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  bogenMitWertToolStripMenuIt
 			this->toolStripButtonDelete = (gcnew System::Windows::Forms::ToolStripButton());
 			this->toolStripButtonCompleteGraph = (gcnew System::Windows::Forms::ToolStripButton());
 			this->toolStripButtonEdit = (gcnew System::Windows::Forms::ToolStripButton());
+			this->toolStripTextBoxGraphenname = (gcnew System::Windows::Forms::ToolStripTextBox());
 			this->mainstatusStrip = (gcnew System::Windows::Forms::StatusStrip());
 			this->toolStripLabelMouseX = (gcnew System::Windows::Forms::ToolStripStatusLabel());
 			this->toolStripLabelMouseY = (gcnew System::Windows::Forms::ToolStripStatusLabel());
@@ -269,6 +274,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  bogenMitWertToolStripMenuIt
 			Kommentar = (gcnew System::Windows::Forms::Label());
 			Typ = (gcnew System::Windows::Forms::Label());
 			toolStripSeparator3 = (gcnew System::Windows::Forms::ToolStripSeparator());
+			toolStripLabel1 = (gcnew System::Windows::Forms::ToolStripLabel());
 			this->mainmenuStrip->SuspendLayout();
 			this->maintoolStrip->SuspendLayout();
 			this->mainstatusStrip->SuspendLayout();
@@ -328,6 +334,13 @@ private: System::Windows::Forms::ToolStripMenuItem^  bogenMitWertToolStripMenuIt
 			// 
 			toolStripSeparator3->Name = L"toolStripSeparator3";
 			toolStripSeparator3->Size = System::Drawing::Size(179, 6);
+			// 
+			// toolStripLabel1
+			// 
+			toolStripLabel1->Alignment = System::Windows::Forms::ToolStripItemAlignment::Right;
+			toolStripLabel1->Name = L"toolStripLabel1";
+			toolStripLabel1->Size = System::Drawing::Size(111, 22);
+			toolStripLabel1->Text = L"Name des Graphen:";
 			// 
 			// mainmenuStrip
 			// 
@@ -533,10 +546,10 @@ private: System::Windows::Forms::ToolStripMenuItem^  bogenMitWertToolStripMenuIt
 			// 
 			this->maintoolStrip->BackColor = System::Drawing::SystemColors::MenuBar;
 			this->maintoolStrip->GripStyle = System::Windows::Forms::ToolStripGripStyle::Hidden;
-			this->maintoolStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(14) {this->toolStripButtonNew, 
+			this->maintoolStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(16) {this->toolStripButtonNew, 
 				this->toolStripButtonOpen, this->toolStripButtonSave, toolStripSeparator2, this->toolStripButtonGridControl, this->toolStripButtonGridFixed, 
 				toolStripSeparator4, this->toolStripButtonVertexAutoEdit, this->toolStripButtonEdgeAutoEdit, this->toolStripSeparator5, this->toolStripButtonDelete, 
-				toolStripSeparator6, this->toolStripButtonCompleteGraph, this->toolStripButtonEdit});
+				toolStripSeparator6, this->toolStripButtonCompleteGraph, this->toolStripButtonEdit, this->toolStripTextBoxGraphenname, toolStripLabel1});
 			this->maintoolStrip->Location = System::Drawing::Point(0, 24);
 			this->maintoolStrip->Name = L"maintoolStrip";
 			this->maintoolStrip->RenderMode = System::Windows::Forms::ToolStripRenderMode::System;
@@ -666,6 +679,13 @@ private: System::Windows::Forms::ToolStripMenuItem^  bogenMitWertToolStripMenuIt
 			this->toolStripButtonEdit->ToolTipText = L"Öffnet einen Dialog der Daten des Knoten oder der Kante einblenden und die dann V" 
 				L"eränderbar sind";
 			this->toolStripButtonEdit->Click += gcnew System::EventHandler(this, &Form1::EditMarkedObject_Click);
+			// 
+			// toolStripTextBoxGraphenname
+			// 
+			this->toolStripTextBoxGraphenname->Alignment = System::Windows::Forms::ToolStripItemAlignment::Right;
+			this->toolStripTextBoxGraphenname->Name = L"toolStripTextBoxGraphenname";
+			this->toolStripTextBoxGraphenname->Size = System::Drawing::Size(100, 25);
+			this->toolStripTextBoxGraphenname->TextChanged += gcnew System::EventHandler(this, &Form1::toolStripTextBoxGraphenname_TextChanged);
 			// 
 			// mainstatusStrip
 			// 
@@ -1031,6 +1051,7 @@ private: System::Void drawBox_MouseLeave(System::Object^  sender, System::EventA
 				delete this->m_graph;
 				//neu initialisieren
 				this->m_graph = gcnew GAPConnect::graphView(this);
+				this->toolStripTextBoxGraphenname->Text = this->m_graph->Graphname;
 
 				//Kanten je nach vorhandenen Knoten enablen
 				this->toolStripButtonEdgesEnable();
@@ -1346,7 +1367,8 @@ private: void ExtractCommentFromElement(Point pkt){
 				 this->tBKommentar->Text = L"";
 			 }
 		 }
-		 
+	
+///<summary> Gleichschaltung des Zeichnen Menüs und der entsprechenden Toolbox</summary>
 private: System::Void zeichnenToolStripMenuItems_Click(System::Object^  sender, System::EventArgs^  e) {
 			 if (sender == this->runderKnotenToolStripMenuItem)
 			 {
@@ -1368,6 +1390,12 @@ private: System::Void zeichnenToolStripMenuItems_Click(System::Object^  sender, 
 			 }else{
 				 throw gcnew Exception("Falscher Sender in zeichenToolStripMenuItems_Click!");
 			 }
+		 }
+///<summary> Updaten des Namens des Graphen </summary>
+private: System::Void toolStripTextBoxGraphenname_TextChanged(System::Object^  sender, System::EventArgs^  e) {
+			if (this->m_graph != nullptr){
+				this->m_graph->Graphname = this->toolStripTextBoxGraphenname->Text;
+			}
 		 }
 };//Form1 class
 }//namespace
