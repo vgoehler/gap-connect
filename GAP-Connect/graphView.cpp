@@ -81,6 +81,9 @@ void graphView::CreateVertex( Point location, bool isRound, bool withConfigDialo
 	//Button Drawpanel hinzufügen
 	this->vertexList->Add(vertex);
 
+	//Refresh um Knoten anzuzeigen
+	dynamic_cast<GAPConnect::Form1^ >(this->m_parent)->RefreshDrawBox();
+
 	//Dialog zum Beschriften einblenden
 	if (withConfigDialog){
 		vertex->startConfigDialog(false);
@@ -146,7 +149,6 @@ GAPConnect::basicView^ graphView::getHandleOfElement( System::Drawing::Point pkt
 {
 	return(this->getHandleOfElement(pkt, true, true));
 }
-
 
 GAPConnect::edgeView^ graphView::getHandleOfEdge( System::Drawing::Point pkt )
 {
@@ -224,12 +226,19 @@ void graphView::ReCalcDockingPoints( GAPConnect::vertexView^ vertex )
 
 bool graphView::vertexTooClose( Point pkt, Size sz )
 {
+	return(this->vertexTooClose(pkt, sz, nullptr));
+}
+
+bool graphView::vertexTooClose( Point pkt, Size sz, vertexView^ vertex )
+{
 	//KontrollRechteck zum Überprüfen holen; input size modifizieren, da Pixel dazwischen bleiben müssen,
 	System::Drawing::Rectangle OwnRectangle = Rectangle(pkt.X-(sz.Width+15)/2 , pkt.Y-(sz.Height+15)/2, sz.Width+15, sz.Height+15);
 	//mit anderen auf Überschneidungen testen
-	for each (GAPConnect::vertexView^ vertex in this->vertexList){
-		if (vertex->GetBorderRectangle.IntersectsWith(OwnRectangle)){
-			return(true);
+	for each (GAPConnect::vertexView^ vertexFromList in this->vertexList){
+		if (vertexFromList->GetBorderRectangle.IntersectsWith(OwnRectangle)){
+			if (vertex != vertexFromList){
+				return(true);
+			}
 		}
 	}
 	return(false);

@@ -15,7 +15,7 @@ namespace GAPConnect {
 	public ref class Form1 : public System::Windows::Forms::Form
 	{
 	public:
-		Form1(void):dragBoxFromMouseDown(System::Drawing::Rectangle::Empty)
+		Form1(void):dragBoxFromMouseDown(System::Drawing::Rectangle::Empty), dragAndDropVertexOldLocation(System::Drawing::Point::Empty)
 		{
 			InitializeComponent();
 			this->changedGraph = false;
@@ -42,11 +42,13 @@ namespace GAPConnect {
 	///<summary>Member um Veränderungen im Inhalt zu charakterisieren</summary>
 		bool m_unsavedChanges;
 	///<summary> Drag and Drop Variable</summary>
-		GAPConnect::vertexView^ handleOfVertexUnderMouseToDrag;
+		GAPConnect::vertexView^ dragAndDropHandleOfVertex;
 	///<summary> Drag and Drop Rectangle - Größe des Bereichs ab dem die DaD Operation startet</summary>
 		System::Drawing::Rectangle dragBoxFromMouseDown;
 	///<summary> Enthält den zu Zeichnenden Graphen</summary>
 		GAPConnect::graphView^ m_graph;
+	///<summary> Drag and Drop - speichern der Ursprungslokation für Rücksetzen </summary>
+		System::Drawing::Point dragAndDropVertexOldLocation; 
 
 	private: System::Windows::Forms::MenuStrip^  mainmenuStrip;
 	private: System::Windows::Forms::ToolStripMenuItem^  dateiToolStripMenuItem;
@@ -926,18 +928,13 @@ private: System::Void drawBox_MouseMove(System::Object^  sender, System::Windows
 			 //label update immer!
 			 this->toolStripLabelMouseX->Text = String::Concat(L"X: ", e->X );
 			 this->toolStripLabelMouseY->Text = String::Concat(L"Y: ", e->Y );
-			 //Kommentar Text Reseten
-			 tbTyp->Text = L"";
-			 tBKommentar->Text = L"";
-			 //linke Maustaste gedrückt
-			 if( (e->Button & System::Windows::Forms::MouseButtons::Left) == System::Windows::Forms::MouseButtons::Left){
-				 //mouse außerhalb der dragBox ereigniss auslösen
-				 if (this->dragBoxFromMouseDown != System::Drawing::Rectangle::Empty && !this->dragBoxFromMouseDown.Contains(e->X,e->Y)){
-					 this->toolStripStatusLabelModus->Text = String::Concat(L"Dragging X = ",abs(this->dragBoxFromMouseDown.X - e->X), L" Y = ", abs(this->dragBoxFromMouseDown.Y - e->Y));
-				 }
-			 }
 			 //Kommentare schreiben
 			 this->ExtractCommentFromElement(e->Location);
+
+			 //linke Maustaste gedrückt - Drag and Drop
+			 if( (e->Button & System::Windows::Forms::MouseButtons::Left) == System::Windows::Forms::MouseButtons::Left){
+				 this->DoDrag(e->Location);
+			 }
 		 }
 ///<summary> Maus verläßt Zeichenbereich. Koordinatenwerte auf Defaults </summary>
 private: System::Void drawBox_MouseLeave(System::Object^  sender, System::EventArgs^  e) {
@@ -1049,15 +1046,14 @@ private: void drawBoxCursorChange( void ){
 private: System::Void drawBox_MouseUp(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
 			 //nur executen wenn auch Zeichnen Modus ausgewählt
 			 System::Windows::Forms::ToolStripButton^ chosenOption = this->toolBarChosen;
+			 //mouseKoords an Lock Modus von grid anpassen
+			 int mouseX = e->X;
+			 int mouseY = e->Y;
+			 if (this->isGridFixed){
+				 mouseX = mouseX%50 > 25 ? mouseX-mouseX%50 +50 : mouseX - mouseX%50;
+				 mouseY = mouseY%50 > 25 ? mouseY-mouseY%50 +50 : mouseY - mouseY%50;
+			 }
 			 if(chosenOption != nullptr){
-				 //Mouse Koordinaten an Situation anpassen - Lock Modus beachten - TODO Grid !!!
-				 int mouseX = e->X;
-				 int mouseY = e->Y;
-				 if (this->isGridFixed){//TODO
-					 mouseX = mouseX%50 > 25 ? mouseX-mouseX%50 +50 : mouseX - mouseX%50;
-					 mouseY = mouseY%50 > 25 ? mouseY-mouseY%50 +50 : mouseY - mouseY%50;
-				 }
-
 				if (chosenOption == this->toolStripButtonVertexRound || chosenOption == this->toolStripButtonVertexSquare)
 				{
 					//auf Überschneidungen achten
@@ -1087,32 +1083,27 @@ private: System::Void drawBox_MouseUp(System::Object^  sender, System::Windows::
 				//Refresh im Zeichnenmodus
 				this->RefreshDrawBox();
 			 }else{
-				 //nicht im ZeichnenModus dann ist es Drag and Drop - TODO
-				 //erstmal nur Reset
-				 this->ResetDragAndDrop();
+				 //nicht im ZeichnenModus
+				 if (this->dragAndDropHandleOfVertex != nullptr){
+					 //DnD Vertex gesetzt, also Drop
+					 this->DoDrop(Point(mouseX, mouseY));
+				 }
 			 }
 		 }
-///<summary> Versucht an Punkt ein Element zu markieren (demarkieren) und gibt zurück ob es Änderungen gegeben hat </summary>
-private: bool markElementAtKoords(System::Drawing::Point p){
-			 GAPConnect::vertexView^ vertex = this->m_graph->getHandleOfVertex(p);
+///<summary> Versucht an Punkt ein Element zu markieren (demarkieren) und gibt zurück ob es Änderungen gegeben hat. Initialisiert das Drag and Drop bei klick auf Knoten </summary>
+private: bool markElementAtKoords(System::Drawing::Point pkt){
+			 GAPConnect::vertexView^ vertex = this->m_graph->getHandleOfVertex(pkt);
 			 System::Windows::Forms::ToolStripButton^ chosenOption = this->toolBarChosen;
 			 if (vertex != nullptr){
 				 //Markieren
 				 this->m_graph->markElement(vertex);
-				 //Drag Rectangle generieren
-				 System::Drawing::Size dragSize = System::Windows::Forms::SystemInformation::DragSize;
-				 //Drag Vertex merken im Falle es ist ein Drag
-				 this->handleOfVertexUnderMouseToDrag = vertex;
-				 //D&D Rechteck hat mouse click koords in der Mitte
-				 System::Drawing::Point ddRectangleLocation = System::Drawing::Point(p.X - (dragSize.Width /2), p.Y - (dragSize.Height /2));
-				 this->dragBoxFromMouseDown = Rectangle(ddRectangleLocation, dragSize);
-				 //D&D Status
-				 this->toolStripStatusLabelModus->Text = L"Dragging";
+				 //Drag and Drop Start
+				 this->StartDragAndDrop(vertex, pkt);
 				 //Änderungen gegeben
 				 return(true);
 			 }else{
 				 //also kein Vertex, vielleicht also edge Auswahl
-				 GAPConnect::edgeView^ edge = this->m_graph->getHandleOfEdge(p);
+				 GAPConnect::edgeView^ edge = this->m_graph->getHandleOfEdge(pkt);
 				 if (edge != nullptr)
 				 {
 					 //also doch Kante
@@ -1136,6 +1127,7 @@ private: System::Void drawBox_MouseDown(System::Object^  sender, System::Windows
 				 this->RefreshDrawBox();
 			 }
 		 }
+///<summary> OnPaint Ereigniss, muß Zeichenfeld zeichnen </summary>
 private: System::Void drawBox_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
 			 e->Graphics->PixelOffsetMode = System::Drawing::Drawing2D::PixelOffsetMode::HighQuality;
 			 //Anti Aliasing
@@ -1168,9 +1160,7 @@ private: System::Void deleteMarkedElement_Click(System::Object^  sender, System:
 ///<summary> Refresh auf dem DrawPanel </summary>
 public: void RefreshDrawBox( void ){
 			this->activateItemsOnMark(this->m_graph->IsSomethingMarked() && ! this->m_graph->IsDrawingLine);//Items nur aktivieren wenn Objekt markiert, aber nicht wenn dies nur zum linien ziehen genutzt wird
-			this->drawBox->SuspendLayout();
 			this->drawBox->Refresh();
-			this->drawBox->ResumeLayout(true);
 		}
 ///<summary>Zeichnen eines Vollständigen Graphen</summary>
 private: System::Void CompleteGraph_Click(System::Object^  sender, System::EventArgs^  e) {
@@ -1197,9 +1187,55 @@ private: System::Void EditMarkedObject_Click(System::Object^  sender, System::Ev
 		 }
 ///<summary> Setzt das Drag and Drop zurück</summary>
 private: void ResetDragAndDrop( void ){
-			 this->dragBoxFromMouseDown = System::Drawing::Rectangle::Empty;
-			 this->handleOfVertexUnderMouseToDrag = nullptr;
-			 this->toolStripStatusLabelModus->Text = L"";
+			 if (this->dragAndDropHandleOfVertex != nullptr){//Gibts überhaupt einen Drag
+				 this->dragAndDropHandleOfVertex->Location = this->dragAndDropVertexOldLocation;
+				 this->m_graph->ReCalcDockingPoints(this->dragAndDropHandleOfVertex);
+				 this->RefreshDrawBox();
+				 this->dragAndDropHandleOfVertex = nullptr;
+				 this->dragAndDropVertexOldLocation = Point::Empty;
+				 this->dragBoxFromMouseDown = System::Drawing::Rectangle::Empty;
+				 this->toolStripStatusLabelModus->Text = L"";
+			 }
+		 }
+private: void StartDragAndDrop( vertexView^ vertexToDrag, Point pkt ){
+			 //Drag Rectangle generieren
+			 System::Drawing::Size dragSize = System::Windows::Forms::SystemInformation::DragSize;
+			 //Drag Vertex merken im Falle es ist ein Drag
+			 this->dragAndDropHandleOfVertex = vertexToDrag;
+			 this->dragAndDropVertexOldLocation = vertexToDrag->Location;
+			 //D&D Rechteck hat mouse click koords in der Mitte
+			 System::Drawing::Point ddRectangleLocation = System::Drawing::Point(pkt.X - (dragSize.Width /2), pkt.Y - (dragSize.Height /2));
+			 this->dragBoxFromMouseDown = Rectangle(ddRectangleLocation, dragSize);
+			 //D&D Status
+			 this->toolStripStatusLabelModus->Text = L"Dragging";
+		 }
+///<summary> ziehen eines Knotens </summary>
+private: void DoDrag( Point pkt ){
+		 //haben wir eine dragBox ?
+		 if (this->dragBoxFromMouseDown != System::Drawing::Rectangle::Empty){
+			 //mouse außerhalb der dragBox ->  dragging
+			 if ( !this->dragBoxFromMouseDown.Contains(pkt) ){
+				 //Label updaten
+				 this->toolStripStatusLabelModus->Text = String::Concat(L"Dragging X = ",abs(this->dragBoxFromMouseDown.X - pkt.X), L" Y = ", abs(this->dragBoxFromMouseDown.Y - pkt.Y));
+				 //neue Position an Knoten übergeben
+				 this->dragAndDropHandleOfVertex->LocationCenter = pkt;
+				 this->m_graph->ReCalcDockingPoints(this->dragAndDropHandleOfVertex);
+				 //Änderungen Darstellen
+				 this->RefreshDrawBox();
+			 }
+		 }
+		 }
+///<summary> führt ablegen des Knotens aus </summary>
+private: void DoDrop( Point pkt ){
+			 //testen ob aktuelle Position gut zum ablegen ist
+			 if (this->m_graph->vertexTooClose(pkt, this->dragAndDropHandleOfVertex->Size, this->dragAndDropHandleOfVertex)){
+				 MessageBox::Show(L"Sie können keinen Knoten auf einem anderen ablegen! Beachten Sie bitte weiter eine schmale Knotenfreie Zone um den jeweiligen Knoten.", L"Knoten Konflikt!", MessageBoxButtons::OK, MessageBoxIcon::Hand);
+				 this->ResetDragAndDrop();
+			 }else{
+				 //ablegen, Punkt modifizieren, so dass er auf die Mitte weist um Refresh zu verhindern
+				 this->dragAndDropVertexOldLocation = Point(pkt.X - this->dragAndDropHandleOfVertex->Width/2, pkt.Y - this->dragAndDropHandleOfVertex->Height/2);
+				 this->ResetDragAndDrop();
+			 }
 		 }
 ///<summary> Exrahiert Kommentar aus dem Element und schreibt ihn im Formular </summary>
 private: void ExtractCommentFromElement(Point pkt){
@@ -1207,11 +1243,12 @@ private: void ExtractCommentFromElement(Point pkt){
 			 if (element != nullptr)
 			 {
 				 this->tBKommentar->Text = element->Kommentar;
-				 if (dynamic_cast<GAPConnect::edgeView^ > (element) != nullptr){
-					 this->tbTyp->Text = L"Kante";
+				 GAPConnect::vertexView^ vertex = dynamic_cast<GAPConnect::vertexView^ > (element);
+				 if ( vertex != nullptr){
+					 this->tbTyp->Text = String::Concat(L"Knoten", L" ", vertex->TypeofVertex == 0 ? L"(Rund)" : L"(Eckig)");
 				 } 
 				 else{
-					 this->tbTyp->Text = L"Knoten";
+					 this->tbTyp->Text = L"Kante";
 				 }
 			 }else{
 				 this->tbTyp->Text = L"";

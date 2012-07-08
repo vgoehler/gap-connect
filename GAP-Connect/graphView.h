@@ -75,6 +75,8 @@ public:
 	void ReCalcDockingPoints(GAPConnect::vertexView^ vertex);
 	///<summary> Überprüft einen Punkt, an dem ein Vertex gezeichnet werden soll, auf Gültigkeit </summary>
 	bool vertexTooClose( Point pkt, Size sz);
+	///<summary> weitere Version von vertexTooClose allerdings wird noch ein initialisierender Knoten übergeben - Drag'nDrop</summary>
+	bool vertexTooClose( Point pkt, Size sz, vertexView^ vertex);
 
 private:
 	///<summary>Handle um edge Zeichnen in progress zu signalisieren, speichert den Start, ansonsten nullptr</summary>
