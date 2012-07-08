@@ -16,6 +16,8 @@ public basicView
 public:
 	///<summary> Konstruktor </summary>
 	edgeView(System::Windows::Forms::Form^ , GAPConnect::drawTools^, vertexView^ ,vertexView^ , int, Graph^ parentDataGraph);
+	///<summary> Konstruktor aus Daten </summary>
+	edgeView(System::Windows::Forms::Form^ inParent, GAPConnect::drawTools^ inDrawTools, Graph^ parentDataGraph, Kante^ dataEdge);
 	///<summary> Destruktor </summary>
 	~edgeView();
 	///<summary> Methode zum Zeichnen der Kanten </summary>
@@ -64,13 +66,14 @@ public:
 		bool get( void ){
 			return(basicView::IsEnabled);
 		}
-		void set(bool inValue){
+		virtual void set(bool inValue) override{
 			basicView::IsEnabled = inValue;
 			if (inValue){
 				this->m_edgePen = this->m_drawTools->m_edge;
 			}else{
 				this->m_edgePen = this->m_drawTools->m_edgeDeactivated;
 			}
+			this->m_dataEdge->shape = inValue ? PUNKTE : NORMAL;
 		}
 	}
 	///<summary> Methode zum Aufrufen des Konfigurationsdialogs</summary>

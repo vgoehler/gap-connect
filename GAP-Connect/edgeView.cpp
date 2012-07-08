@@ -5,12 +5,18 @@
 namespace GAPConnect {
 edgeView::edgeView(System::Windows::Forms::Form^ inParent, GAPConnect::drawTools^ inDrawTools, vertexView^ startVertex, vertexView^ endVertex, int mode, Graph^ parentDataGraph):basicView(inParent, inDrawTools, parentDataGraph), m_startVertex(nullptr), m_endVertex(nullptr), m_aidLine(false)
 {
-	this->IsEnabled = true;//Enablen um Stift zu initialisieren
 	this->StartVertex = startVertex;
 	this->EndVertex = endVertex;
 	//Datenrepräsentation verknüpfen
 	this->m_dataEdge = this->m_dataGraph->create_edge(startVertex->DataVertex, endVertex->DataVertex);
 	this->IsArc = (mode == 0)? false:true;//hier setzen um auch Daten mit entsprechenden Informationen zu füllen
+	this->IsEnabled = true;//Enablen um Stift zu initialisieren
+}
+
+edgeView::edgeView( System::Windows::Forms::Form^ inParent, GAPConnect::drawTools^ inDrawTools, Graph^ parentDataGraph, Kante^ dataEdge ):basicView(inParent, inDrawTools, parentDataGraph), m_startVertex(nullptr), m_endVertex(nullptr), m_aidLine(false), m_dataEdge(dataEdge)
+{
+	this->m_lineMode = this->m_dataEdge->gerichtet == 0 ? 0 : 1;//ignorieren hier alle anderen Werte
+	this->IsEnabled = this->m_dataEdge->shape == PUNKTE ? true : false;
 }
 
 System::Drawing::Size edgeView::createSize( void )

@@ -15,7 +15,7 @@ namespace GAPConnect {
 	public ref class Form1 : public System::Windows::Forms::Form
 	{
 	public:
-		Form1(void):dragBoxFromMouseDown(System::Drawing::Rectangle::Empty), dragAndDropVertexOldLocation(System::Drawing::Point::Empty), m_graph(nullptr)
+		Form1(void):dragBoxFromMouseDown(System::Drawing::Rectangle::Empty), dragAndDropVertexOldLocation(System::Drawing::Point::Empty), m_graph(nullptr), filename(L"")
 		{
 			InitializeComponent();
 			this->changedGraph = false;
@@ -50,6 +50,8 @@ namespace GAPConnect {
 		GAPConnect::graphView^ m_graph;
 	///<summary> Drag and Drop - speichern der Ursprungslokation für Rücksetzen </summary>
 		System::Drawing::Point dragAndDropVertexOldLocation; 
+	///<summary> Filename der Datei </summary>
+		String^ filename;
 
 	private: System::Windows::Forms::MenuStrip^  mainmenuStrip;
 	private: System::Windows::Forms::ToolStripMenuItem^  dateiToolStripMenuItem;
@@ -290,7 +292,7 @@ private: System::Windows::Forms::ToolStripTextBox^  toolStripTextBoxGraphenname;
 			// toolStripSeparator1
 			// 
 			toolStripSeparator1->Name = L"toolStripSeparator1";
-			toolStripSeparator1->Size = System::Drawing::Size(140, 6);
+			toolStripSeparator1->Size = System::Drawing::Size(149, 6);
 			// 
 			// toolStripSeparator2
 			// 
@@ -364,35 +366,35 @@ private: System::Windows::Forms::ToolStripTextBox^  toolStripTextBoxGraphenname;
 			// neuToolStripMenuItem
 			// 
 			this->neuToolStripMenuItem->Name = L"neuToolStripMenuItem";
-			this->neuToolStripMenuItem->Size = System::Drawing::Size(143, 22);
+			this->neuToolStripMenuItem->Size = System::Drawing::Size(152, 22);
 			this->neuToolStripMenuItem->Text = L"&Neu";
 			this->neuToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::neuMenu_Click);
 			// 
 			// ladenToolStripMenuItem
 			// 
 			this->ladenToolStripMenuItem->Name = L"ladenToolStripMenuItem";
-			this->ladenToolStripMenuItem->Size = System::Drawing::Size(143, 22);
+			this->ladenToolStripMenuItem->Size = System::Drawing::Size(152, 22);
 			this->ladenToolStripMenuItem->Text = L"&Laden";
 			this->ladenToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::ladenMenu_Click);
 			// 
 			// speichernToolStripMenuItem
 			// 
 			this->speichernToolStripMenuItem->Name = L"speichernToolStripMenuItem";
-			this->speichernToolStripMenuItem->Size = System::Drawing::Size(143, 22);
+			this->speichernToolStripMenuItem->Size = System::Drawing::Size(152, 22);
 			this->speichernToolStripMenuItem->Text = L"&Speichern";
 			this->speichernToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::speichernMenu_Click);
 			// 
 			// speichernalsToolStripMenuItem
 			// 
 			this->speichernalsToolStripMenuItem->Name = L"speichernalsToolStripMenuItem";
-			this->speichernalsToolStripMenuItem->Size = System::Drawing::Size(143, 22);
+			this->speichernalsToolStripMenuItem->Size = System::Drawing::Size(152, 22);
 			this->speichernalsToolStripMenuItem->Text = L"Speichern &als";
 			this->speichernalsToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::speichernMenu_Click);
 			// 
 			// beendenToolStripMenuItem
 			// 
 			this->beendenToolStripMenuItem->Name = L"beendenToolStripMenuItem";
-			this->beendenToolStripMenuItem->Size = System::Drawing::Size(143, 22);
+			this->beendenToolStripMenuItem->Size = System::Drawing::Size(152, 22);
 			this->beendenToolStripMenuItem->Text = L"&Beenden";
 			this->beendenToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::beendenToolStripMenuItem_Click);
 			// 
@@ -716,10 +718,14 @@ private: System::Windows::Forms::ToolStripTextBox^  toolStripTextBoxGraphenname;
 			// 
 			// openFileDialog1
 			// 
+			this->openFileDialog1->DefaultExt = L"*.gra";
+			this->openFileDialog1->Filter = L"Graphdateien|*.gra";
 			this->openFileDialog1->InitialDirectory = L".";
 			// 
 			// saveFileDialog1
 			// 
+			this->saveFileDialog1->DefaultExt = L"*.gra";
+			this->saveFileDialog1->Filter = L"Graphdateien|*.gra";
 			this->saveFileDialog1->InitialDirectory = L".";
 			// 
 			// control
@@ -989,7 +995,7 @@ private: System::Void Form1_FormClosing(System::Object^  sender, System::Windows
  ///<summary> Änderungen am Graph dialog einblenden, gibt true zurück wenn abgebrochen werden soll. </summary>
 private: bool isGraphChangedDialog( void ){
 			 if (this->changedGraph){
-				 if(MessageBox::Show(L"Es sind Änderungen vorhanden! Diese werden durch ihre Aktion verworfen! Wollen Sie vorher Abspeichern?", L"Änderungen vorhanden!", MessageBoxButtons::YesNo, MessageBoxIcon::Question) == System::Windows::Forms::DialogResult::Yes){
+				 if(MessageBox::Show(L"Es sind Änderungen vorhanden! Diese werden durch ihre Aktion verworfen! Wollen Sie vorher Abspeichern?", L"Änderungen vorhanden!", MessageBoxButtons::YesNo, MessageBoxIcon::Question) == System::Windows::Forms::DialogResult::No){
 					 return(true);
 				 }
 				 return(false);
@@ -999,24 +1005,36 @@ private: bool isGraphChangedDialog( void ){
 
 ///<summary> Laden einer Datei </summary>
 private: System::Void ladenMenu_Click(System::Object^  sender, System::EventArgs^  e) {
-			 System::IO::Stream^ inputStream;
 
 			 if(this->openFileDialog1->ShowDialog(this) == System::Windows::Forms::DialogResult::OK){
-				 if( (inputStream = this->openFileDialog1->OpenFile()) != nullptr ){//sanity check
-					 //TODO Modus unterscheiden
-					 //TODO lesen
-					 inputStream->Close();
-					 //zuletzt
-					 m_unsavedChanges=false;
-					 this->toolStripButtonEdgesEnable();
+				 if (RemoveGraphAndStartAnew()){//Graph gelöscht; können laden
+					 if(!this->m_graph->LoadGraph(this->openFileDialog1->FileName)){
+						 //irgendein Fehler passiert; nichts geladen
+						 MessageBox::Show(L"Außerordentlicher Fehler. Keine Daten geladen.",L"Fehler beim Laden",MessageBoxButtons::OK, MessageBoxIcon::Error);
+					 }else{
+
+
+						 this->toolStripButtonEdgesEnable();
+						 this->RefreshDrawBox();
+						 this->filename = this->openFileDialog1->FileName;//falls Datei lädt
+						 this->toolStripTextBoxGraphenname->Text = this->m_graph->Graphname;
+					 }
 				 }
 			 }
 		 }
 ///<summary> Speichern des Graphen </summary>
 private: System::Void speichernMenu_Click(System::Object^ sender, System::EventArgs^ e){
-			 if(this->saveFileDialog1->ShowDialog(this) == System::Windows::Forms::DialogResult::OK){
-				 //TODO hier speichern initialisieren
-				 //this->Text = this->saveFileDialog1->FileName;
+			 bool answer = true;
+			 if (filename == L"" || sender == this->speichernalsToolStripMenuItem){
+				 answer = this->saveFileDialog1->ShowDialog(this) == System::Windows::Forms::DialogResult::OK;
+			 }
+			 if(answer){
+				 //Speichern
+				 if(!this->m_graph->SaveGraph(this->saveFileDialog1->FileName)){
+					 //Fehler passiert
+					 MessageBox::Show(L"Fehler beim Speichern. Keine Daten geschrieben.", L"Fehler beim Speichern", MessageBoxButtons::OK, MessageBoxIcon::Error);
+				 }
+				 this->changedGraph = false;
 			 }
 		 }
 ///<summary> Maus Bewegung im Zeichenbereich Zeigt Koordinaten im Tooltip an. Plus Drag and Drop Behandlung</summary>
@@ -1042,9 +1060,8 @@ private: System::Void drawBox_MouseLeave(System::Object^  sender, System::EventA
 			 tbTyp->Text = L"";
 			 tBKommentar->Text = L"";
 		 }
-///<summary> Neues Dokument </summary>
- private: System::Void neuMenu_Click(System::Object^ sender, System::EventArgs^ e){
-			  //TODO nachfragen ob gespeichert werden soll
+///<summary> Graph elemenieren und Neuladen </summary>
+private: bool RemoveGraphAndStartAnew( void ){
 			 if (this->isGraphChangedDialog())
 			 {
 				//Graph löschen
@@ -1055,9 +1072,17 @@ private: System::Void drawBox_MouseLeave(System::Object^  sender, System::EventA
 
 				//Kanten je nach vorhandenen Knoten enablen
 				this->toolStripButtonEdgesEnable();
-				this->m_unsavedChanges = false;
+				this->changedGraph = false;
 				this->RefreshDrawBox();
+				this->filename = "";
+				return (true);
 			 }
+			 return(false);
+		 }
+///<summary> Neues Dokument </summary>
+ private: System::Void neuMenu_Click(System::Object^ sender, System::EventArgs^ e){
+			  //TODO nachfragen ob gespeichert werden soll
+			  this->RemoveGraphAndStartAnew();
 		  }
 ///<summary> Überprüft beim Auswählen von Toolbuttons, dass auch nur einer ausgewählt ist.</summary>
 private: System::Void toolStripButtonsOnlyOneChecked(System::Object^  sender, System::EventArgs^  e) {
@@ -1169,7 +1194,7 @@ private: System::Void drawBox_MouseUp(System::Object^  sender, System::Windows::
 						//Auswahl deaktivieren
 						chosenOption->Checked=false;
 						//Veränderungen markieren
-						m_unsavedChanges = true;
+						this->changedGraph = true;
 						this->toolStripButtonEdgesEnable();
 					}
 				}else if (chosenOption == this->toolStripButtonArc || chosenOption == this->toolStripButtonArcCapacity || chosenOption == toolStripButtonEdge || chosenOption == toolStripButtonEdgeCapacity)
@@ -1181,7 +1206,7 @@ private: System::Void drawBox_MouseUp(System::Object^  sender, System::Windows::
 						//Auswahl deaktivieren
 						chosenOption->Checked=false;
 						//Veränderungen markieren
-						m_unsavedChanges = true;
+						this->changedGraph = true;
 					}
 				}
 				//Refresh im Zeichnenmodus
@@ -1348,6 +1373,7 @@ private: void DoDrop( Point pkt ){
 				 }else{
 					 //ablegen, Punkt modifizieren, so dass er auf die Mitte weist um Refresh zu verhindern
 					 this->dragAndDropVertexOldLocation = Point(pkt.X - this->dragAndDropHandleOfVertex->Width/2, pkt.Y - this->dragAndDropHandleOfVertex->Height/2);
+					 this->changedGraph = true;
 				 }
 			 }
 			 this->ResetDragAndDrop();

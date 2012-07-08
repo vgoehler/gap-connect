@@ -247,4 +247,54 @@ bool graphView::vertexTooClose( Point pkt, Size sz, vertexView^ vertex )
 	return(false);
 }
 
+void graphView::BuildViewFromData( void )
+{
+	//Alle Knoten durchlaufen und Erschaffen
+	for each (Knoten^ vtx in this->m_dataGraph->verticles){
+		this->vertexList->Add(gcnew GAPConnect::vertexView(this->m_parent, this->m_drawTools, this->m_dataGraph, vtx));
+	}
+	//Alle Kanten durchlaufen und Erschaffen
+	for each (Kante^ edge in this->m_dataGraph->edges){
+		edgeView^ eV = gcnew edgeView(this->m_parent, this->m_drawTools, this->m_dataGraph, edge);
+		//start und Ziel suchen
+		vertexView^ startV = nullptr;
+		vertexView^ endV = nullptr;
+		Knoten^ startK = edge->get_knoten_start();
+		Knoten^ endK = edge->get_knoten_end();
+		for each (vertexView^ tmpV in this->vertexList){
+			if (tmpV->DataVertex == startK){
+				startV = tmpV;
+			}
+			if (tmpV->DataVertex == endK){
+				endV = tmpV;
+			}
+			if (startV != nullptr && endV != nullptr)
+			{
+				break;//Abbruchkriterium
+			}
+		}
+		eV->StartVertex = startV;
+		eV->EndVertex = endV;
+		this->edgeList->Add(eV);
+	}
+}
+
+bool graphView::LoadGraph( String^ filename )
+{
+	this->m_dataGraph = Graph::load_graph(filename);
+	if (this->m_dataGraph == nullptr)
+	{// wenn nullptr dann neuen Graph erstellen und Falsch zurückgeben
+		this->m_dataGraph = gcnew Graph();
+		return(false);
+	}
+	this->BuildViewFromData();
+
+	return(true);
+}
+
+bool graphView::SaveGraph( String^ filename )
+{
+	return(this->m_dataGraph->save_graph(filename));
+}
+
 }//namespace

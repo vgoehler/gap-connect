@@ -15,6 +15,8 @@ namespace GAPConnect {
 	public:
 		///<summary> Konstruktor </summary>
 		vertexView(System::Windows::Forms::Form^, GAPConnect::drawTools^, Graph^ parentDataGraph);
+		///<summary> Konstruktor mit Übergabe eines Knotens </summary>
+		vertexView(System::Windows::Forms::Form^, GAPConnect::drawTools^, Graph^ parentDataGraph, Knoten^ inKnoten);
 		///<summary> Destruktor </summary>
 		~vertexView();
 
@@ -47,10 +49,7 @@ namespace GAPConnect {
 		void paintVertex(System::Windows::Forms::PaintEventArgs^ e);
 		///<summary> Aktivierungszustand des Elements kann gesetzt werden bzw. abgefragt. Überschrieben.</summary>
 		property bool IsEnabled{
-			bool get( void ){
-				return(basicView::IsEnabled);
-			}
-			void set(bool inValue){
+			virtual void set(bool inValue) override{
 				basicView::IsEnabled = inValue;
 				if (inValue){
 					this->m_vertexSolidBrush = this->m_drawTools->m_vertexFill;

@@ -86,6 +86,12 @@ public:
 			return(this->m_dataGraph->name);
 		}
 	}
+	///<summary> schreibt den Datengraphen in eine Datei </summary>
+	bool SaveGraph( String^ filename );
+	///<summary> einlesen des Datengraphen </summary>
+	bool LoadGraph( String^ filename );
+	///<summary> Erstellt aus dem dataGraph Member einen View-Graphen </summary>
+	void BuildViewFromData( void );
 
 private:
 	///<summary>Handle um edge Zeichnen in progress zu signalisieren, speichert den Start, ansonsten nullptr</summary>

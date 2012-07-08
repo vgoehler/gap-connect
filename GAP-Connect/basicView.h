@@ -97,7 +97,7 @@ public:
 		bool get( void ){
 			return(this->m_enable);
 		}
-		void set(bool inValue){
+		virtual void set(bool inValue){
 			this->m_enable = inValue;
 		}
 	}

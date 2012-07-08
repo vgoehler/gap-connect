@@ -21,6 +21,29 @@ namespace GAPConnect {
 		this->Kommentar = L"";
 	}
 
+	vertexView::vertexView( System::Windows::Forms::Form^ inParent, GAPConnect::drawTools^ inDrawTools, Graph^ parentDataGraph, Knoten^ inKnoten ):basicView(inParent, inDrawTools, parentDataGraph), m_dataVertex(inKnoten)
+	{
+		this->MinSize = System::Drawing::Size(20,20);
+		this->MaxSize = System::Drawing::Size(100,100);
+
+		KnotenEckig^ eckig = dynamic_cast<KnotenEckig^ >(this->m_dataVertex);
+		if(eckig != nullptr){//eckig
+			this->m_vertexType = 1;
+			this->Size = System::Drawing::Size(Int32(eckig->width),Int32(eckig->height));
+		}else{
+			KnotenRund^ rund = dynamic_cast<KnotenRund^ >(this->m_dataVertex);
+			if (rund != nullptr){//rund
+				this->m_vertexType = 0;
+				this->Size = System::Drawing::Size(Int32(rund->radius),Int32(rund->radius));
+			}else{
+				throw gcnew Exception("Kann Typ nicht casten. Im Konstruktor.");
+			}
+		}
+		//Zuweisen TODO
+		this->IsEnabled = true;
+		this->Location = this->m_dataVertex->coords;
+	}
+
 	void vertexView::paintVertex(System::Windows::Forms::PaintEventArgs^ e)
 	{
 		//graphic
