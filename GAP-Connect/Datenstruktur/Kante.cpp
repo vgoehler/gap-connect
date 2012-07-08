@@ -15,6 +15,8 @@ Kante::Kante( Graph^ graph_init,Knoten^ knoten_begin,Knoten^ knoten_ending,int g
 	shape=shape_init;
 	wertung=0;
 	owning_graph=graph_init;
+	comment=gcnew Kommentar();
+
 }
 
 Kante::~Kante()

@@ -7,6 +7,7 @@ KnotenEckig::KnotenEckig(void)
 	height=10;
 	width=15;
 	edges=gcnew List<Kante^>();
+	comment=gcnew Kommentar();
 }
 
 KnotenEckig::KnotenEckig(Graph^ graph_init,System::String^ string_label,System::String^ string_tooltip,double height_init,double width_init)
@@ -16,6 +17,7 @@ KnotenEckig::KnotenEckig(Graph^ graph_init,System::String^ string_label,System::
 	height=height_init;
 	width=width_init;
 	edges=gcnew List<Kante^>();
+	comment=gcnew Kommentar();
 	owning_graph=graph_init;
 }
 
