@@ -180,8 +180,8 @@ void Graph::convert_adjacency_to_graph(array<int,2>^ array_adj)
 	{
 		for (int j=0;j < N_array_adj;j++)
 		{
-			if(array_adj[i,j]==49)
-			{	if (array_adj[j,i]==49)
+			if(array_adj[i,j]==1)
+			{	if (array_adj[j,i]==1)
 					create_edge(verticles[i],verticles[j],2);	//wenn beidseitig vorhanden dann 1 doppelseitige kante
 				else
 					create_edge(verticles[i],verticles[j],1);
@@ -234,7 +234,18 @@ array<int,2>^ Graph::read_file_to_adjacency( System::String^ string_fileName )
 		while ((string_line = sr->ReadLine()) != nullptr) 
 		{
 			for(int j=0;j<N;j++)
-				array_adj[i,j]=string_line[2*j];
+				if (string_line[2*j]==49)
+					array_adj[i,j]=1;
+				else
+				{
+					if (string_line[2*j]==48)
+						array_adj[i,j]=0;
+					else
+					{
+						sr->Close();
+						return nullptr;
+					}
+				}
 			i++;
 			if (i>N)
 			{

@@ -66,16 +66,21 @@ Knoten^ Dijkstra::next_step()
 	for_max=(knoten_current->edges)->Count;
 	for(int i=0;i<for_max;i++)
 	{
+		int wertung_current=0;
 		Knoten^ knoten_target=(knoten_current->edges[i]->find_other_vertex(knoten_current));
 		if(knoten_target!=knoten_current && knoten_target != verticles_predecessor[i_current_position])
 		//darf keine schleife sein und nicht dem weg zurück zum vorgänger entsprechen
 		{
+			//wenn Wertung der aktuell bearbeiteten Kante <0, dann wird sie als 0 angesehn.
+			//sowie durch wertung-Property bedingt: wenn Wertung nicht in zahl umwandelbar ebenfalls Wertung=0.
+			if((knoten_current->edges[i]->wertung)>=0)
+				wertung_current=knoten_current->edges[i]->wertung;
 			if (verticles_target->Contains(knoten_target))
 			{
 				int index_target=find_IndexOf(knoten_target);
 				if (index_target==-1)
 					return nullptr;
-				if ((int_distance[i_current_position]+knoten_current->edges[i]->wertung) < int_distance[index_target])
+				if ((int_distance[i_current_position]+wertung_current) < int_distance[index_target])
 				//wenn Weg(momentaner knoten + neue kante) < alter Weg zu neuem knoten
 				{	
 					int_finished->Add(index_target);//makre alten weg als bereits abgearbeitet, damit später kein leerlauf entsteht
@@ -83,7 +88,7 @@ Knoten^ Dijkstra::next_step()
 					verticles_target->Add(knoten_target);
 					verticles_predecessor->Add(knoten_current);
 					edges->Add(knoten_current->edges[i]);
-					int_distance->Add((int_distance[i_current_position]+knoten_current->edges[i]->wertung));
+					int_distance->Add((int_distance[i_current_position]+wertung_current));
 				}
 				//ansonsten wird nichts getan
 			}
@@ -92,7 +97,7 @@ Knoten^ Dijkstra::next_step()
 				verticles_target->Add(knoten_target);
 				verticles_predecessor->Add(knoten_current);
 				edges->Add(knoten_current->edges[i]);
-				int_distance->Add((int_distance[i_current_position]+knoten_current->edges[i]->wertung));
+				int_distance->Add((int_distance[i_current_position]+wertung_current));
 			}
 		}	
 	}//*end for* (alle kanten des knotens abgearbeitet)

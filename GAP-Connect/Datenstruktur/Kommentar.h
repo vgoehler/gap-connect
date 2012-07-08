@@ -10,7 +10,7 @@ public:
 	~Kommentar(void);
 	property System::String^ label{
 		void set(System::String^ l){
-			delete[] label;
+			delete[] string_label;
 			string_label=l;
 		}
 		System::String^ get(void){

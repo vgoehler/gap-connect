@@ -11,7 +11,7 @@ ref class Graph;	/*reine Deklaration von "Knoten" und "Graph" zur verwendung der
 public ref class Kante
 {
 public:
-	int wertung;
+	System::String^ string_wertung;
 	int gerichtet;	/*(-1: gerichtet mit Startpunkt 'knoten_end'?? wenn ja dann adjazenz-funktion prüfen)
 					 * 0: ungerichtet
 					 * 1: gerichtet mit Startpunkt 'knoten_start'
@@ -29,6 +29,19 @@ public:
 	//möglicherweise einfachere überladungsmethode bekannt?
 	Kante(Graph^ graph_init,Knoten^ knoten_begin,Knoten^ knoten_ending,int gerichtet_init,KantenFormat shape_init);
 	~Kante();
+	property int wertung{
+		void set(int wert){
+			//delete[] string_wertung;
+			string_wertung=wert.ToString();	
+		}
+		int get(void){
+			int wert;
+			if(int::TryParse(string_wertung,wert))
+				return wert;
+			else 
+				return 0;
+		}
+	}
 	Knoten^ get_knoten_start();
 	Knoten^ get_knoten_end();
 	Knoten^ find_other_vertex(Knoten^ edge_origin);
