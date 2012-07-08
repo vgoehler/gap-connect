@@ -210,7 +210,7 @@ void graphView::CreateCompleteGraph( void )
 	this->edgeList = gcnew System::Collections::Generic::List< GAPConnect::edgeView^ >();
 	for each (GAPConnect::vertexView^ vertex in this->vertexList){
 		for each (GAPConnect::vertexView^ neighbor in this->vertexList){
-			if (vertex != neighbor){//wenn wir nicht wir selber sind: Kante
+			if (vertex != neighbor){//wenn wir nicht wir selber sind: Kante - haben hier doppelt soviele Kanten wie nötig
 				GAPConnect::edgeView^ edge = gcnew GAPConnect::edgeView(this->m_parent, this->m_drawTools, vertex, neighbor, 0, this->m_dataGraph);
 				this->edgeList->Add(edge);
 			}

@@ -3,7 +3,7 @@
 
 
 namespace GAPConnect {
-	vertexView::vertexView(System::Windows::Forms::Form^ inParent, GAPConnect::drawTools^ inDrawTools, Graph^ parentDataGraph):basicView(inParent, inDrawTools, parentDataGraph), m_vertexType(0)
+	vertexView::vertexView(System::Windows::Forms::Form^ inParent, GAPConnect::drawTools^ inDrawTools, Graph^ parentDataGraph):basicView(inParent, inDrawTools, parentDataGraph), m_vertexType(0), m_dataVertex(nullptr)
 	{
 		this->IsEnabled = true;//Zuweisen um Zeichenfarbe zu initialisieren
 		this->Size = System::Drawing::Size(25,25);
@@ -11,7 +11,11 @@ namespace GAPConnect {
 		this->MaxSize = System::Drawing::Size(100,100);
 
 		//Datenrepräsentation verknüpfen
-		this->m_dataVertex = this->m_dataGraph->create_vertex(L"", double(this->Height), double(this->Width));
+		if(this->m_vertexType == 0){
+			this->m_dataVertex = this->m_dataGraph->create_vertex(L"", double(this->Height)/2);
+		}else{
+			this->m_dataVertex = this->m_dataGraph->create_vertex(L"", double(this->Height), double(this->Width));
+		}
 
 		this->Text = L"";
 		this->Kommentar = L"";
@@ -138,6 +142,25 @@ namespace GAPConnect {
 	{
 		delete this->m_dataVertex;
 		this->m_dataVertex = nullptr;
+	}
+
+	void vertexView::updateDataVertex( void )
+	{
+		if (this->m_dataVertex != nullptr)//Absichern gegen Konstruktor aufrufung
+		{
+			KnotenEckig^ eckig = dynamic_cast<KnotenEckig^ >(this->m_dataVertex);
+			if (eckig != nullptr){
+				eckig->height = double(this->Height);
+				eckig->width = double(this->Width);
+			}else{
+				KnotenRund^ rund = dynamic_cast<KnotenRund^ >(this->m_dataVertex);
+				if (rund != nullptr){
+					rund->radius = double(this->Height)/2;
+				}else{
+					throw gcnew Exception("Cast Fehler in DataVertex. Typ Unbekannt.");
+				}
+			}
+		}
 	}
 
 

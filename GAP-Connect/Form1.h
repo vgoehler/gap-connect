@@ -989,7 +989,7 @@ private: System::Void Form1_FormClosing(System::Object^  sender, System::Windows
  ///<summary> Änderungen am Graph dialog einblenden, gibt true zurück wenn abgebrochen werden soll. </summary>
 private: bool isGraphChangedDialog( void ){
 			 if (this->changedGraph){
-				 if(MessageBox::Show(L"Es sind Änderungen vorhanden! Diese werden durch ihre Aktion verworfen! Wollen Sie dies wirklich?", L"Änderungen vorhanden!", MessageBoxButtons::YesNo, MessageBoxIcon::Question) == System::Windows::Forms::DialogResult::Yes){
+				 if(MessageBox::Show(L"Es sind Änderungen vorhanden! Diese werden durch ihre Aktion verworfen! Wollen Sie vorher Abspeichern?", L"Änderungen vorhanden!", MessageBoxButtons::YesNo, MessageBoxIcon::Question) == System::Windows::Forms::DialogResult::Yes){
 					 return(true);
 				 }
 				 return(false);
@@ -1338,16 +1338,19 @@ private: void DoDrop( Point pkt ){
 			 //testen ob dragBox verlassen
 			 if (this->dragBoxFromMouseDown != System::Drawing::Rectangle::Empty && !this->dragBoxFromMouseDown.Contains(pkt))
 			 {
-				 //testen ob aktuelle Position gut zum ablegen ist
-				 if (this->m_graph->vertexTooClose(pkt, this->dragAndDropHandleOfVertex->Size, this->dragAndDropHandleOfVertex)){
-					 MessageBox::Show(L"Sie können keinen Knoten auf einem anderen ablegen! Beachten Sie bitte weiter eine schmale Knotenfreie Zone um den jeweiligen Knoten.", L"Knoten Konflikt!", MessageBoxButtons::OK, MessageBoxIcon::Hand);
-					 this->ResetDragAndDrop();
+				 //In bounds der Anwendung
+				 if (!this->drawBox->Bounds.Contains(pkt))
+				 {
+					 MessageBox::Show(L"Kein Ablegen außerhalb des Zeichenbereichs.", L"Knoten Außerhalb!", MessageBoxButtons::OK, MessageBoxIcon::Hand);
+				 }else if (this->m_graph->vertexTooClose(pkt, this->dragAndDropHandleOfVertex->Size, this->dragAndDropHandleOfVertex)){
+					 //testen ob aktuelle Position gut zum ablegen ist - Nähe zu anderem Knoten
+					 MessageBox::Show(L"Sie können keinen Knoten auf einem Anderen oder in seiner Nähe ablegen!", L"Knoten Konflikt!", MessageBoxButtons::OK, MessageBoxIcon::Hand);
 				 }else{
 					 //ablegen, Punkt modifizieren, so dass er auf die Mitte weist um Refresh zu verhindern
 					 this->dragAndDropVertexOldLocation = Point(pkt.X - this->dragAndDropHandleOfVertex->Width/2, pkt.Y - this->dragAndDropHandleOfVertex->Height/2);
-					 this->ResetDragAndDrop();
 				 }
 			 }
+			 this->ResetDragAndDrop();
 		 }
 ///<summary> Exrahiert Kommentar aus dem Element und schreibt ihn im Formular </summary>
 private: void ExtractCommentFromElement(Point pkt){

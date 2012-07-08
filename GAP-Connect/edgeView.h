@@ -82,6 +82,7 @@ public:
 		}
 		void set ( bool inValue){
 			this->m_lineMode = (inValue ? 1 : 0);
+			this->m_dataEdge->gerichtet = this->m_lineMode;
 		}
 	}
 	property PointF RichtungsVektor{

@@ -3,13 +3,14 @@
 
 
 namespace GAPConnect {
-edgeView::edgeView(System::Windows::Forms::Form^ inParent, GAPConnect::drawTools^ inDrawTools, vertexView^ startVertex, vertexView^ endVertex, int mode, Graph^ parentDataGraph):basicView(inParent, inDrawTools, parentDataGraph), m_lineMode(mode), m_startVertex(nullptr), m_endVertex(nullptr), m_aidLine(false)
+edgeView::edgeView(System::Windows::Forms::Form^ inParent, GAPConnect::drawTools^ inDrawTools, vertexView^ startVertex, vertexView^ endVertex, int mode, Graph^ parentDataGraph):basicView(inParent, inDrawTools, parentDataGraph), m_startVertex(nullptr), m_endVertex(nullptr), m_aidLine(false)
 {
 	this->IsEnabled = true;//Enablen um Stift zu initialisieren
 	this->StartVertex = startVertex;
 	this->EndVertex = endVertex;
 	//Datenrepräsentation verknüpfen
 	this->m_dataEdge = this->m_dataGraph->create_edge(startVertex->DataVertex, endVertex->DataVertex);
+	this->IsArc = (mode == 0)? false:true;//hier setzen um auch Daten mit entsprechenden Informationen zu füllen
 }
 
 System::Drawing::Size edgeView::createSize( void )

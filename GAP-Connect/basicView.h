@@ -19,7 +19,7 @@ public:
 	}
 	///<summary> Schreibt und Liest die Größe des Elements</summary>
 	property System::Drawing::Size Size{
-		virtual void set (System::Drawing::Size inValue){
+		void set (System::Drawing::Size inValue){
 			this->Height = inValue.Height;
 			this->Width = inValue.Width;
 		}
@@ -29,7 +29,7 @@ public:
 	}
 	///<summary> Gibt Höhe des Elemnts zurück und Schreibt dieselbe</summary>
 	property Int32 Height{
-		void set (Int32 inValue){
+		virtual void set (Int32 inValue){
 			if (inValue > this->m_maxsize.Height && this->m_maxsize.Height != 0){
 				inValue = this->m_maxsize.Height;
 			}else if (inValue < this->m_minsize.Height){
@@ -44,7 +44,7 @@ public:
 	}
 	///<summary> Gibt Breite des Elements zurück und Schreibt dieselbe</summary>
 	property Int32 Width{
-		void set (Int32 inValue){
+		virtual void set (Int32 inValue){
 			if (inValue > this->m_maxsize.Width && this->m_maxsize.Width != 0){
 				inValue = this->m_maxsize.Width;
 			}else if (inValue < this->m_minsize.Width){

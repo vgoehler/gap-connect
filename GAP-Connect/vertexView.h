@@ -21,7 +21,10 @@ namespace GAPConnect {
 		///<summary> Ändert die Art des Knoten.</summary>
 		property int TypeofVertex{
 			void set(int inValue){
-				this->m_vertexType = inValue;
+				if (this->m_vertexType != inValue){
+					this->m_vertexType = inValue;
+					//TODO einen auf den anderen Type umwandeln
+				}
 			}
 			int get (void){
 				return(this->m_vertexType);
@@ -64,33 +67,36 @@ namespace GAPConnect {
 				return(this->m_dataVertex);
 			}
 		}
-		property System::Drawing::Size Size{
-			virtual void set(System::Drawing::Size inValue) override{
-				this->basicView::Size = inValue;
-				if (this->TypeofVertex){//square
-					dynamic_cast<KnotenEckig^ >(this->m_dataVertex)->height = this->Height;
-					dynamic_cast<KnotenEckig^ >(this->m_dataVertex)->width = this->Width;
+		property Int32 Height{
+			virtual void set(Int32 inValue) override{
+				this->basicView::Height = inValue;
+				this->updateDataVertex();
+			}
+		}
+		property Int32 Width{
+			virtual void set(Int32 inValue) override{
+				this->basicView::Width = inValue;
+				this->updateDataVertex();
+			}
+		}
+		///<summary> Eintrag für die Beschriftung </summary>
+		property System::String^ Text{
+				void set (System::String^ inValue){
+					this->m_dataVertex->label = inValue;
+				}
+				System::String^ get (void){
+					return(this->m_dataVertex->label);
 				}
 			}
-		}
-	///<summary> Eintrag für die Beschriftung </summary>
-	property System::String^ Text{
-			void set (System::String^ inValue){
-				this->m_dataVertex->label = inValue;
+		///<summary> Eintrag für den Kommentar </summary>
+		property System::String^ Kommentar{
+				void set (System::String^ inValue){
+					this->m_dataVertex->comment->label = inValue;
+				}
+				System::String^ get (void){
+					return(this->m_dataVertex->comment->label);
+				}
 			}
-			System::String^ get (void){
-				return(this->m_dataVertex->label);
-			}
-		}
-	///<summary> Eintrag für den Kommentar </summary>
-	property System::String^ Kommentar{
-			void set (System::String^ inValue){
-				this->m_dataVertex->comment->label = inValue;
-			}
-			System::String^ get (void){
-				return(this->m_dataVertex->comment->label);
-			}
-		}
 
 	private:
 			///<summary> Typ des Knotens 0 - Rund; 1 - Eckig </summary>
@@ -105,5 +111,7 @@ namespace GAPConnect {
 			void ScaleVertex(void);
 			///<summary> Farbe mit der der Knoten gezeichnet wird. </summary>
 			System::Drawing::SolidBrush^ m_vertexSolidBrush;
+			///<summary> setzt je nach Eckig oder Rund die Größe im data</summary>
+			void updateDataVertex( void );
 	};
 }
