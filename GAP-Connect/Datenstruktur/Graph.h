@@ -39,7 +39,8 @@ public:
 	bool save_graph(System::String ^string_fileName );
 	static Graph^ load_graph(System::String ^string_fileName);
 	static Dijkstra^ init_dijkstra(Knoten ^knoten_start);
-	//addcomment-system?
+
+
 
 	
 };
