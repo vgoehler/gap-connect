@@ -16,6 +16,9 @@ public:
 	Graph(void);
 	Graph(System::String^ string_label);
 	property System::String^ name{
+		void set(System::String^ string_label){
+			label=string_label;
+		}
 		System::String^ get(void){
 			return label;
 		}
@@ -40,7 +43,7 @@ public:
 	static Graph^ load_graph(System::String ^string_fileName);
 	static Dijkstra^ init_dijkstra(Knoten ^knoten_start);
 
-
+	int optimize();
 
 	
 };

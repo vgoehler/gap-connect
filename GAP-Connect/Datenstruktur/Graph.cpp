@@ -361,3 +361,8 @@ Dijkstra^ Graph::init_dijkstra(Knoten ^knoten_start)
 	return gcnew Dijkstra(knoten_start);
 }
 
+int Graph::optimize()
+{
+	return 0;
+}
+
