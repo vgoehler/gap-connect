@@ -91,6 +91,8 @@ private:
 	System::Windows::Forms::Form^ m_parent;
 	///<summary> lastMarked Element</summary>
 	GAPConnect::basicView^ m_lastMarkedElement;
+	///<summary> Anschluﬂ an den Datenteil </summary>
+	Graph^ m_dataGraph;
 };
 
 }//namespace

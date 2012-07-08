@@ -14,7 +14,9 @@ namespace GAPConnect {
 	{
 	public:
 		///<summary> Konstruktor </summary>
-		vertexView(System::Windows::Forms::Form^, GAPConnect::drawTools^);
+		vertexView(System::Windows::Forms::Form^, GAPConnect::drawTools^, Graph^ parentDataGraph);
+		///<summary> Destruktor </summary>
+		~vertexView();
 
 		///<summary> Ändert die Art des Knoten.</summary>
 		property int TypeofVertex{
@@ -55,11 +57,18 @@ namespace GAPConnect {
 		}
 		///<summary> gibt Dockpunkt an sich selbst zurück spezifisch zum Übergebenen Winkel </summary>
 		System::Drawing::Point  getDockPoint(double angle);
+		///<summary> Gibt Daten Knoten zurück </summary>
+		property Knoten^ DataVertex{
+			Knoten^ get( void ){
+				return(this->m_dataVertex);
+			}
+		}
 
 	private:
 			///<summary> Typ des Knotens 0 - Rund; 1 - Eckig </summary>
 			int m_vertexType;
-			//TODO Ownervariable als Dateninterface
+			///<summary> Datenknoten </summary>
+			Knoten^ m_dataVertex;
 			///<summary> Initializiert alle Felder des Dialogs mit passenden Werten aus sich selbst (zu bearbeitender Knoten).</summary>
 			void InitializeDialogValues(System::Windows::Forms::Form^);
 			///<summary> Setzt die Werte des Knoten aus dem Konfigdialog heraus</summary>

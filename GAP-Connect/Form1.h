@@ -53,7 +53,8 @@ namespace GAPConnect {
 	private: System::Windows::Forms::MenuStrip^  mainmenuStrip;
 	private: System::Windows::Forms::ToolStripMenuItem^  dateiToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  bearbeitenToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^  ansichtToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  zeichnenToolStripMenuItem;
+
 	private: System::Windows::Forms::ToolStripMenuItem^  optionenToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  hilfeToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  aboutToolStripMenuItem;
@@ -115,6 +116,13 @@ namespace GAPConnect {
 
 
 	private: System::Windows::Forms::TextBox^  tbTyp;
+private: System::Windows::Forms::ToolStripMenuItem^  runderKnotenToolStripMenuItem;
+private: System::Windows::Forms::ToolStripMenuItem^  eckigerKnotenToolStripMenuItem;
+
+private: System::Windows::Forms::ToolStripMenuItem^  kanteToolStripMenuItem;
+private: System::Windows::Forms::ToolStripMenuItem^  kanteMitWertToolStripMenuItem;
+private: System::Windows::Forms::ToolStripMenuItem^  bogenToolStripMenuItem;
+private: System::Windows::Forms::ToolStripMenuItem^  bogenMitWertToolStripMenuItem;
 
 
 
@@ -193,6 +201,7 @@ namespace GAPConnect {
 			System::Windows::Forms::ToolStripSeparator^  toolStripSeparator6;
 			System::Windows::Forms::Label^  Kommentar;
 			System::Windows::Forms::Label^  Typ;
+			System::Windows::Forms::ToolStripSeparator^  toolStripSeparator3;
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Form1::typeid));
 			this->mainmenuStrip = (gcnew System::Windows::Forms::MenuStrip());
 			this->dateiToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -205,7 +214,13 @@ namespace GAPConnect {
 			this->deleteToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->kompletterGraphToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->objekteditierenToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->ansichtToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->zeichnenToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->runderKnotenToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->eckigerKnotenToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->kanteToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->kanteMitWertToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->bogenToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->bogenMitWertToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->optionenToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->gridDeAktivierenToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->gridArretierungToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -253,6 +268,7 @@ namespace GAPConnect {
 			toolStripSeparator6 = (gcnew System::Windows::Forms::ToolStripSeparator());
 			Kommentar = (gcnew System::Windows::Forms::Label());
 			Typ = (gcnew System::Windows::Forms::Label());
+			toolStripSeparator3 = (gcnew System::Windows::Forms::ToolStripSeparator());
 			this->mainmenuStrip->SuspendLayout();
 			this->maintoolStrip->SuspendLayout();
 			this->mainstatusStrip->SuspendLayout();
@@ -308,11 +324,16 @@ namespace GAPConnect {
 			Typ->TabIndex = 4;
 			Typ->Text = L"Typ";
 			// 
+			// toolStripSeparator3
+			// 
+			toolStripSeparator3->Name = L"toolStripSeparator3";
+			toolStripSeparator3->Size = System::Drawing::Size(179, 6);
+			// 
 			// mainmenuStrip
 			// 
 			this->mainmenuStrip->BackColor = System::Drawing::SystemColors::MenuBar;
 			this->mainmenuStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(5) {this->dateiToolStripMenuItem, 
-				this->bearbeitenToolStripMenuItem, this->ansichtToolStripMenuItem, this->optionenToolStripMenuItem, this->hilfeToolStripMenuItem});
+				this->bearbeitenToolStripMenuItem, this->zeichnenToolStripMenuItem, this->optionenToolStripMenuItem, this->hilfeToolStripMenuItem});
 			this->mainmenuStrip->Location = System::Drawing::Point(0, 0);
 			this->mainmenuStrip->Name = L"mainmenuStrip";
 			this->mainmenuStrip->Size = System::Drawing::Size(1008, 24);
@@ -401,11 +422,66 @@ namespace GAPConnect {
 				L"eränderbar sind";
 			this->objekteditierenToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::EditMarkedObject_Click);
 			// 
-			// ansichtToolStripMenuItem
+			// zeichnenToolStripMenuItem
 			// 
-			this->ansichtToolStripMenuItem->Name = L"ansichtToolStripMenuItem";
-			this->ansichtToolStripMenuItem->Size = System::Drawing::Size(59, 20);
-			this->ansichtToolStripMenuItem->Text = L"&Ansicht";
+			this->zeichnenToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(7) {this->runderKnotenToolStripMenuItem, 
+				this->eckigerKnotenToolStripMenuItem, toolStripSeparator3, this->kanteToolStripMenuItem, this->kanteMitWertToolStripMenuItem, 
+				this->bogenToolStripMenuItem, this->bogenMitWertToolStripMenuItem});
+			this->zeichnenToolStripMenuItem->Name = L"zeichnenToolStripMenuItem";
+			this->zeichnenToolStripMenuItem->Size = System::Drawing::Size(68, 20);
+			this->zeichnenToolStripMenuItem->Text = L"&Zeichnen";
+			// 
+			// runderKnotenToolStripMenuItem
+			// 
+			this->runderKnotenToolStripMenuItem->Name = L"runderKnotenToolStripMenuItem";
+			this->runderKnotenToolStripMenuItem->ShortcutKeys = System::Windows::Forms::Keys::F5;
+			this->runderKnotenToolStripMenuItem->Size = System::Drawing::Size(182, 22);
+			this->runderKnotenToolStripMenuItem->Text = L"Runder Knoten";
+			this->runderKnotenToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::zeichnenToolStripMenuItems_Click);
+			// 
+			// eckigerKnotenToolStripMenuItem
+			// 
+			this->eckigerKnotenToolStripMenuItem->Name = L"eckigerKnotenToolStripMenuItem";
+			this->eckigerKnotenToolStripMenuItem->ShortcutKeys = System::Windows::Forms::Keys::F6;
+			this->eckigerKnotenToolStripMenuItem->Size = System::Drawing::Size(182, 22);
+			this->eckigerKnotenToolStripMenuItem->Text = L"Eckiger Knoten";
+			this->eckigerKnotenToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::zeichnenToolStripMenuItems_Click);
+			// 
+			// kanteToolStripMenuItem
+			// 
+			this->kanteToolStripMenuItem->Enabled = false;
+			this->kanteToolStripMenuItem->Name = L"kanteToolStripMenuItem";
+			this->kanteToolStripMenuItem->ShortcutKeys = System::Windows::Forms::Keys::F9;
+			this->kanteToolStripMenuItem->Size = System::Drawing::Size(182, 22);
+			this->kanteToolStripMenuItem->Text = L"Kante";
+			this->kanteToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::zeichnenToolStripMenuItems_Click);
+			// 
+			// kanteMitWertToolStripMenuItem
+			// 
+			this->kanteMitWertToolStripMenuItem->Enabled = false;
+			this->kanteMitWertToolStripMenuItem->Name = L"kanteMitWertToolStripMenuItem";
+			this->kanteMitWertToolStripMenuItem->ShortcutKeys = System::Windows::Forms::Keys::F10;
+			this->kanteMitWertToolStripMenuItem->Size = System::Drawing::Size(182, 22);
+			this->kanteMitWertToolStripMenuItem->Text = L"Kante mit Wert";
+			this->kanteMitWertToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::zeichnenToolStripMenuItems_Click);
+			// 
+			// bogenToolStripMenuItem
+			// 
+			this->bogenToolStripMenuItem->Enabled = false;
+			this->bogenToolStripMenuItem->Name = L"bogenToolStripMenuItem";
+			this->bogenToolStripMenuItem->ShortcutKeys = System::Windows::Forms::Keys::F11;
+			this->bogenToolStripMenuItem->Size = System::Drawing::Size(182, 22);
+			this->bogenToolStripMenuItem->Text = L"Bogen";
+			this->bogenToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::zeichnenToolStripMenuItems_Click);
+			// 
+			// bogenMitWertToolStripMenuItem
+			// 
+			this->bogenMitWertToolStripMenuItem->Enabled = false;
+			this->bogenMitWertToolStripMenuItem->Name = L"bogenMitWertToolStripMenuItem";
+			this->bogenMitWertToolStripMenuItem->ShortcutKeys = System::Windows::Forms::Keys::F12;
+			this->bogenMitWertToolStripMenuItem->Size = System::Drawing::Size(182, 22);
+			this->bogenMitWertToolStripMenuItem->Text = L"Bogen mit Wert";
+			this->bogenMitWertToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::zeichnenToolStripMenuItems_Click);
 			// 
 			// optionenToolStripMenuItem
 			// 
@@ -1004,6 +1080,7 @@ private: System::Void toolStripButtonGridFixed_Click(System::Object^  sender, Sy
 		 }
 ///<summary> Enabled bzw. Disabled ToolStripButtons die Kanten zeichnen.</summary>
 private: void toolStripButtonEdgesEnable(){
+			 //Toolbox Schalter
 			 if (this->m_graph->CountVertex > 0){
 				 for each (System::Windows::Forms::ToolStripButton^ element in this->zeichnenEdge->Items)
 				 {
@@ -1015,6 +1092,12 @@ private: void toolStripButtonEdgesEnable(){
 					 element->Enabled = false;
 				 }
 			 }
+			 //Menü Einträge auf enbling der ToolButtons abstimmen
+			 this->kanteToolStripMenuItem->Enabled = this->toolStripButtonArc->Enabled;
+			 this->kanteMitWertToolStripMenuItem->Enabled = this->toolStripButtonArc->Enabled;
+			 this->bogenToolStripMenuItem->Enabled = this->toolStripButtonArc->Enabled;
+			 this->bogenMitWertToolStripMenuItem->Enabled = this->toolStripButtonArc->Enabled;
+
 			 //Kompletter Graph macht nur Sinn mit mindestens 2 Knoten
 			 if (this->m_graph->CountVertex > 2){
 				 this->kompletterGraphToolStripMenuItem->Enabled = true;
@@ -1097,8 +1180,11 @@ private: bool markElementAtKoords(System::Drawing::Point pkt){
 			 if (vertex != nullptr){
 				 //Markieren
 				 this->m_graph->markElement(vertex);
-				 //Drag and Drop Start
-				 this->StartDragAndDrop(vertex, pkt);
+				 //Drag and Drop Start - nur wenn kein Zeichnen
+				 if (chosenOption == nullptr)
+				 {
+					 this->StartDragAndDrop(vertex, pkt);
+				 }
 				 //Änderungen gegeben
 				 return(true);
 			 }else{
@@ -1155,6 +1241,7 @@ private: System::Void deleteMarkedElement_Click(System::Object^  sender, System:
 			 {
 				 this->m_graph->deleteDrawnElement(this->m_graph->getMarkedElement);
 				 this->RefreshDrawBox();
+				 this->toolStripButtonEdgesEnable();
 			 }
 		 }
 ///<summary> Refresh auf dem DrawPanel </summary>
@@ -1227,14 +1314,18 @@ private: void DoDrag( Point pkt ){
 		 }
 ///<summary> führt ablegen des Knotens aus </summary>
 private: void DoDrop( Point pkt ){
-			 //testen ob aktuelle Position gut zum ablegen ist
-			 if (this->m_graph->vertexTooClose(pkt, this->dragAndDropHandleOfVertex->Size, this->dragAndDropHandleOfVertex)){
-				 MessageBox::Show(L"Sie können keinen Knoten auf einem anderen ablegen! Beachten Sie bitte weiter eine schmale Knotenfreie Zone um den jeweiligen Knoten.", L"Knoten Konflikt!", MessageBoxButtons::OK, MessageBoxIcon::Hand);
-				 this->ResetDragAndDrop();
-			 }else{
-				 //ablegen, Punkt modifizieren, so dass er auf die Mitte weist um Refresh zu verhindern
-				 this->dragAndDropVertexOldLocation = Point(pkt.X - this->dragAndDropHandleOfVertex->Width/2, pkt.Y - this->dragAndDropHandleOfVertex->Height/2);
-				 this->ResetDragAndDrop();
+			 //testen ob dragBox verlassen
+			 if (this->dragBoxFromMouseDown != System::Drawing::Rectangle::Empty && !this->dragBoxFromMouseDown.Contains(pkt))
+			 {
+				 //testen ob aktuelle Position gut zum ablegen ist
+				 if (this->m_graph->vertexTooClose(pkt, this->dragAndDropHandleOfVertex->Size, this->dragAndDropHandleOfVertex)){
+					 MessageBox::Show(L"Sie können keinen Knoten auf einem anderen ablegen! Beachten Sie bitte weiter eine schmale Knotenfreie Zone um den jeweiligen Knoten.", L"Knoten Konflikt!", MessageBoxButtons::OK, MessageBoxIcon::Hand);
+					 this->ResetDragAndDrop();
+				 }else{
+					 //ablegen, Punkt modifizieren, so dass er auf die Mitte weist um Refresh zu verhindern
+					 this->dragAndDropVertexOldLocation = Point(pkt.X - this->dragAndDropHandleOfVertex->Width/2, pkt.Y - this->dragAndDropHandleOfVertex->Height/2);
+					 this->ResetDragAndDrop();
+				 }
 			 }
 		 }
 ///<summary> Exrahiert Kommentar aus dem Element und schreibt ihn im Formular </summary>
@@ -1256,6 +1347,28 @@ private: void ExtractCommentFromElement(Point pkt){
 			 }
 		 }
 		 
+private: System::Void zeichnenToolStripMenuItems_Click(System::Object^  sender, System::EventArgs^  e) {
+			 if (sender == this->runderKnotenToolStripMenuItem)
+			 {
+				 this->toolStripButtonVertexRound->Checked = !this->toolStripButtonVertexRound->Checked;
+			 }else if(sender == this->eckigerKnotenToolStripMenuItem)
+			 {
+				 this->toolStripButtonVertexSquare->Checked = !this->toolStripButtonVertexSquare->Checked;
+			 }else if(sender == this->kanteToolStripMenuItem)
+			 {
+				 this->toolStripButtonEdge->Checked = !this->toolStripButtonEdge->Checked;
+			 }else if(sender ==	this->kanteMitWertToolStripMenuItem)
+			 {
+				 this->toolStripButtonEdgeCapacity->Checked = !this->toolStripButtonEdgeCapacity->Checked;
+			 }else if(sender == this->bogenToolStripMenuItem)
+			 {
+				 this->toolStripButtonArc->Checked = !this->toolStripButtonArc->Checked;
+			 }else if(sender == this->bogenMitWertToolStripMenuItem){
+				 this->toolStripButtonArcCapacity->Checked = !this->toolStripButtonArcCapacity->Checked;
+			 }else{
+				 throw gcnew Exception("Falscher Sender in zeichenToolStripMenuItems_Click!");
+			 }
+		 }
 };//Form1 class
 }//namespace
 

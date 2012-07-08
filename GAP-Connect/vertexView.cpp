@@ -3,12 +3,16 @@
 
 
 namespace GAPConnect {
-	vertexView::vertexView(System::Windows::Forms::Form^ inParent, GAPConnect::drawTools^ inDrawTools):basicView(inParent, inDrawTools), m_vertexType(0)
+	vertexView::vertexView(System::Windows::Forms::Form^ inParent, GAPConnect::drawTools^ inDrawTools, Graph^ parentDataGraph):basicView(inParent, inDrawTools, parentDataGraph), m_vertexType(0)
 	{
 		this->IsEnabled = true;//Zuweisen um Zeichenfarbe zu initialisieren
 		this->Size = System::Drawing::Size(25,25);
 		this->MinSize = System::Drawing::Size(20,20);
 		this->MaxSize = System::Drawing::Size(100,100);
+
+		//Datenrepräsentation verknüpfen
+		this->m_dataVertex = this->m_dataGraph->create_vertex(L"", double(this->Height), double(this->Width));
+
 		this->Text = L"";
 		this->Kommentar = L"";
 	}
@@ -128,6 +132,12 @@ namespace GAPConnect {
 			return(Point(this->LocationCenter.X - int(xdiff), this->LocationCenter.Y - int(ydiff)));
 		}
 		return(Point::Empty);
+	}
+
+	vertexView::~vertexView()
+	{
+		delete this->m_dataVertex;
+		this->m_dataVertex = nullptr;
 	}
 
 

@@ -4,7 +4,7 @@ public ref class basicView abstract
 {
 public:
 	basicView(void);
-	basicView(System::Windows::Forms::Form^, GAPConnect::drawTools^);
+	basicView(System::Windows::Forms::Form^, GAPConnect::drawTools^, Graph^ parentDataGraph);
 	~basicView();
 
 	///<summary> Schreib und Liest die Position des Elements</summary>
@@ -131,6 +131,8 @@ protected:
 	GAPConnect::drawTools^ m_drawTools;
 	///<summary> Refresh des Parent wird angefordert. </summary>
 	void refreshParent(void);
+	///<summary> Datagraph </summary>
+	Graph^ m_dataGraph;
 private:
 	///<summary> Variable für die Location des Knotens </summary>
 	System::Drawing::Point m_location;
