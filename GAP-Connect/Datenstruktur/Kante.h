@@ -8,7 +8,7 @@ ref class Graph;	/*reine Deklaration von "Knoten" und "Graph" zur verwendung der
 					 *vermeidung von kreuzenden Einbindungen der Header (Knoten.h und Kante.h)
 					 */
 [Serializable]
-ref class Kante
+public ref class Kante
 {
 public:
 	int wertung;

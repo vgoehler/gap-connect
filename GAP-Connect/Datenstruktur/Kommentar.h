@@ -1,7 +1,7 @@
 #pragma once
 using namespace System;
 [ Serializable ]
-ref class Kommentar
+public ref class Kommentar
 {
 private:
 	System::String^ label;

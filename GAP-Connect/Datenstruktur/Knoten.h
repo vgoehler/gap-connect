@@ -8,7 +8,7 @@ ref class Graph;
 
 using namespace System::Collections::Generic;
 [Serializable]
-ref class Knoten
+public ref class Knoten
 {
 public:
 	System::Drawing::Point coords;
