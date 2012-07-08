@@ -57,14 +57,12 @@ namespace GAPConnect {
 	private: System::Windows::Forms::ToolStripMenuItem^  dateiToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  bearbeitenToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  zeichnenToolStripMenuItem;
-
 	private: System::Windows::Forms::ToolStripMenuItem^  optionenToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  hilfeToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  aboutToolStripMenuItem;
 	private: System::Windows::Forms::ToolStrip^  maintoolStrip;
 	private: System::Windows::Forms::StatusStrip^  mainstatusStrip;
 	private: System::Windows::Forms::ToolStripMenuItem^  neuToolStripMenuItem;
-
 	private: System::Windows::Forms::ToolStripMenuItem^  beendenToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripButton^  toolStripButtonNew;
 	private: System::Windows::Forms::ToolStripButton^  toolStripButtonOpen;
@@ -77,7 +75,6 @@ namespace GAPConnect {
 	private: System::Windows::Forms::ToolStripButton^  toolStripButtonSave;
 	private: System::Windows::Forms::OpenFileDialog^  openFileDialog1;
 	private: System::Windows::Forms::SaveFileDialog^  saveFileDialog1;
-
 	private: System::Windows::Forms::Panel^  control;
 	private: System::Windows::Forms::Panel^  drawPanel;
 	private: System::Windows::Forms::GroupBox^  zeichentools;
@@ -89,26 +86,17 @@ namespace GAPConnect {
 	private: System::Windows::Forms::ToolStripButton^  toolStripButtonArc;
 	private: System::Windows::Forms::ToolStripButton^  toolStripButtonEdgeCapacity;
 	private: System::Windows::Forms::ToolStripButton^  toolStripButtonArcCapacity;
-
 	private: System::Windows::Forms::ToolStripButton^  toolStripButtonGridControl;
 	private: System::Windows::Forms::ToolStripMenuItem^  gridDeAktivierenToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  gridArretierungToolStripMenuItem;
-
 	private: System::Windows::Forms::ToolStripButton^  toolStripButtonGridFixed;
-
-
-
-
-
 	private: System::Windows::Forms::ToolStripStatusLabel^  toolStripStatusLabelModus;
 	private: System::Windows::Forms::ToolStripButton^  toolStripButtonVertexAutoEdit;
 	private: System::Windows::Forms::ToolStripButton^  toolStripButtonEdgeAutoEdit;
 	private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator5;
 	private: System::Windows::Forms::ToolStripButton^  toolStripButtonDelete;
 	private: System::Windows::Forms::ToolStripMenuItem^  deleteToolStripMenuItem;
-
 	private: System::Windows::Forms::ToolStripButton^  toolStripButtonCompleteGraph;
-
 	private: System::Windows::Forms::ToolStripMenuItem^  kompletterGraphToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  objekteditierenToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripButton^  toolStripButtonEdit;
@@ -116,26 +104,18 @@ namespace GAPConnect {
 	private: System::Windows::Forms::PictureBox^  drawBox;
 	private: System::Windows::Forms::GroupBox^  gBStatus;
 	private: System::Windows::Forms::TextBox^  tBKommentar;
-
-
 	private: System::Windows::Forms::TextBox^  tbTyp;
 private: System::Windows::Forms::ToolStripMenuItem^  runderKnotenToolStripMenuItem;
 private: System::Windows::Forms::ToolStripMenuItem^  eckigerKnotenToolStripMenuItem;
-
 private: System::Windows::Forms::ToolStripMenuItem^  kanteToolStripMenuItem;
 private: System::Windows::Forms::ToolStripMenuItem^  kanteMitWertToolStripMenuItem;
 private: System::Windows::Forms::ToolStripMenuItem^  bogenToolStripMenuItem;
 private: System::Windows::Forms::ToolStripMenuItem^  bogenMitWertToolStripMenuItem;
 private: System::Windows::Forms::ToolStripTextBox^  toolStripTextBoxGraphenname;
-
-
-
-
-
-
-
-
-
+private: System::Windows::Forms::ToolStripMenuItem^  importtoolStripMenuItem;
+private: System::Windows::Forms::ToolStripMenuItem^  exporttoolStripMenuItem;
+private: System::Windows::Forms::OpenFileDialog^  ImportDialog;
+private: System::Windows::Forms::SaveFileDialog^  ExportDialog;
 	private: System::Windows::Forms::ImageList^  imageListToolbar;
 
 	///<summary>Änderungen am Graph in Property vermerken. set routine setzt auch enable im Menü</summary>
@@ -208,6 +188,7 @@ private: System::Windows::Forms::ToolStripTextBox^  toolStripTextBoxGraphenname;
 			System::Windows::Forms::Label^  Typ;
 			System::Windows::Forms::ToolStripSeparator^  toolStripSeparator3;
 			System::Windows::Forms::ToolStripLabel^  toolStripLabel1;
+			System::Windows::Forms::ToolStripSeparator^  toolStripSeparator8;
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Form1::typeid));
 			this->mainmenuStrip = (gcnew System::Windows::Forms::MenuStrip());
 			this->dateiToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -215,6 +196,8 @@ private: System::Windows::Forms::ToolStripTextBox^  toolStripTextBoxGraphenname;
 			this->ladenToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->speichernToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->speichernalsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->importtoolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->exporttoolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->beendenToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->bearbeitenToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->deleteToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -268,6 +251,8 @@ private: System::Windows::Forms::ToolStripTextBox^  toolStripTextBoxGraphenname;
 			this->drawPanel = (gcnew System::Windows::Forms::Panel());
 			this->drawBox = (gcnew System::Windows::Forms::PictureBox());
 			this->imageListToolbar = (gcnew System::Windows::Forms::ImageList(this->components));
+			this->ImportDialog = (gcnew System::Windows::Forms::OpenFileDialog());
+			this->ExportDialog = (gcnew System::Windows::Forms::SaveFileDialog());
 			toolStripSeparator1 = (gcnew System::Windows::Forms::ToolStripSeparator());
 			toolStripSeparator2 = (gcnew System::Windows::Forms::ToolStripSeparator());
 			toolStripSeparator4 = (gcnew System::Windows::Forms::ToolStripSeparator());
@@ -277,6 +262,7 @@ private: System::Windows::Forms::ToolStripTextBox^  toolStripTextBoxGraphenname;
 			Typ = (gcnew System::Windows::Forms::Label());
 			toolStripSeparator3 = (gcnew System::Windows::Forms::ToolStripSeparator());
 			toolStripLabel1 = (gcnew System::Windows::Forms::ToolStripLabel());
+			toolStripSeparator8 = (gcnew System::Windows::Forms::ToolStripSeparator());
 			this->mainmenuStrip->SuspendLayout();
 			this->maintoolStrip->SuspendLayout();
 			this->mainstatusStrip->SuspendLayout();
@@ -292,7 +278,7 @@ private: System::Windows::Forms::ToolStripTextBox^  toolStripTextBoxGraphenname;
 			// toolStripSeparator1
 			// 
 			toolStripSeparator1->Name = L"toolStripSeparator1";
-			toolStripSeparator1->Size = System::Drawing::Size(149, 6);
+			toolStripSeparator1->Size = System::Drawing::Size(140, 6);
 			// 
 			// toolStripSeparator2
 			// 
@@ -344,6 +330,11 @@ private: System::Windows::Forms::ToolStripTextBox^  toolStripTextBoxGraphenname;
 			toolStripLabel1->Size = System::Drawing::Size(111, 22);
 			toolStripLabel1->Text = L"Name des Graphen:";
 			// 
+			// toolStripSeparator8
+			// 
+			toolStripSeparator8->Name = L"toolStripSeparator8";
+			toolStripSeparator8->Size = System::Drawing::Size(140, 6);
+			// 
 			// mainmenuStrip
 			// 
 			this->mainmenuStrip->BackColor = System::Drawing::SystemColors::MenuBar;
@@ -357,8 +348,9 @@ private: System::Windows::Forms::ToolStripTextBox^  toolStripTextBoxGraphenname;
 			// 
 			// dateiToolStripMenuItem
 			// 
-			this->dateiToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(6) {this->neuToolStripMenuItem, 
-				this->ladenToolStripMenuItem, this->speichernToolStripMenuItem, this->speichernalsToolStripMenuItem, toolStripSeparator1, this->beendenToolStripMenuItem});
+			this->dateiToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(9) {this->neuToolStripMenuItem, 
+				this->ladenToolStripMenuItem, this->speichernToolStripMenuItem, this->speichernalsToolStripMenuItem, toolStripSeparator8, this->importtoolStripMenuItem, 
+				this->exporttoolStripMenuItem, toolStripSeparator1, this->beendenToolStripMenuItem});
 			this->dateiToolStripMenuItem->Name = L"dateiToolStripMenuItem";
 			this->dateiToolStripMenuItem->Size = System::Drawing::Size(46, 20);
 			this->dateiToolStripMenuItem->Text = L"&Datei";
@@ -366,35 +358,51 @@ private: System::Windows::Forms::ToolStripTextBox^  toolStripTextBoxGraphenname;
 			// neuToolStripMenuItem
 			// 
 			this->neuToolStripMenuItem->Name = L"neuToolStripMenuItem";
-			this->neuToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->neuToolStripMenuItem->Size = System::Drawing::Size(143, 22);
 			this->neuToolStripMenuItem->Text = L"&Neu";
 			this->neuToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::neuMenu_Click);
 			// 
 			// ladenToolStripMenuItem
 			// 
 			this->ladenToolStripMenuItem->Name = L"ladenToolStripMenuItem";
-			this->ladenToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->ladenToolStripMenuItem->Size = System::Drawing::Size(143, 22);
 			this->ladenToolStripMenuItem->Text = L"&Laden";
 			this->ladenToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::ladenMenu_Click);
 			// 
 			// speichernToolStripMenuItem
 			// 
 			this->speichernToolStripMenuItem->Name = L"speichernToolStripMenuItem";
-			this->speichernToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->speichernToolStripMenuItem->Size = System::Drawing::Size(143, 22);
 			this->speichernToolStripMenuItem->Text = L"&Speichern";
 			this->speichernToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::speichernMenu_Click);
 			// 
 			// speichernalsToolStripMenuItem
 			// 
 			this->speichernalsToolStripMenuItem->Name = L"speichernalsToolStripMenuItem";
-			this->speichernalsToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->speichernalsToolStripMenuItem->Size = System::Drawing::Size(143, 22);
 			this->speichernalsToolStripMenuItem->Text = L"Speichern &als";
 			this->speichernalsToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::speichernMenu_Click);
+			// 
+			// importtoolStripMenuItem
+			// 
+			this->importtoolStripMenuItem->Name = L"importtoolStripMenuItem";
+			this->importtoolStripMenuItem->Size = System::Drawing::Size(143, 22);
+			this->importtoolStripMenuItem->Text = L"&Importieren";
+			this->importtoolStripMenuItem->ToolTipText = L"Liest eine Adjazenzmatrix ein und konvertiert diese zu einem Graph.";
+			this->importtoolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::importtoolStripMenuItem_Click);
+			// 
+			// exporttoolStripMenuItem
+			// 
+			this->exporttoolStripMenuItem->Name = L"exporttoolStripMenuItem";
+			this->exporttoolStripMenuItem->Size = System::Drawing::Size(143, 22);
+			this->exporttoolStripMenuItem->Text = L"&Exportieren";
+			this->exporttoolStripMenuItem->ToolTipText = L"Graph als Adjazenzmatrix exportieren";
+			this->exporttoolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::exporttoolStripMenuItem_Click);
 			// 
 			// beendenToolStripMenuItem
 			// 
 			this->beendenToolStripMenuItem->Name = L"beendenToolStripMenuItem";
-			this->beendenToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->beendenToolStripMenuItem->Size = System::Drawing::Size(143, 22);
 			this->beendenToolStripMenuItem->Text = L"&Beenden";
 			this->beendenToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::beendenToolStripMenuItem_Click);
 			// 
@@ -927,6 +935,18 @@ private: System::Windows::Forms::ToolStripTextBox^  toolStripTextBoxGraphenname;
 			this->imageListToolbar->Images->SetKeyName(0, L"grid_activated.png");
 			this->imageListToolbar->Images->SetKeyName(1, L"grid_deactivated.png");
 			// 
+			// ImportDialog
+			// 
+			this->ImportDialog->DefaultExt = L"*.adj";
+			this->ImportDialog->Filter = L"Adjazenzmatritzen|*.adj|Alle|*.*";
+			this->ImportDialog->InitialDirectory = L".";
+			// 
+			// ExportDialog
+			// 
+			this->ExportDialog->DefaultExt = L"*.adj";
+			this->ExportDialog->Filter = L"Adjazenzmatritzen|*.adj|All|*.*";
+			this->ExportDialog->InitialDirectory = L".";
+			// 
 			// Form1
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -944,7 +964,6 @@ private: System::Windows::Forms::ToolStripTextBox^  toolStripTextBoxGraphenname;
 			this->MinimumSize = System::Drawing::Size(500, 600);
 			this->Name = L"Form1";
 			this->Text = L"GAP-Connect";
-			this->TopMost = true;
 			this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &Form1::Form1_FormClosing);
 			this->mainmenuStrip->ResumeLayout(false);
 			this->mainmenuStrip->PerformLayout();
@@ -1005,7 +1024,6 @@ private: bool isGraphChangedDialog( void ){
 
 ///<summary> Laden einer Datei </summary>
 private: System::Void ladenMenu_Click(System::Object^  sender, System::EventArgs^  e) {
-
 			 if(this->openFileDialog1->ShowDialog(this) == System::Windows::Forms::DialogResult::OK){
 				 if (RemoveGraphAndStartAnew()){//Graph gelöscht; können laden
 					 if(!this->m_graph->LoadGraph(this->openFileDialog1->FileName)){
@@ -1080,7 +1098,7 @@ private: bool RemoveGraphAndStartAnew( void ){
 			 return(false);
 		 }
 ///<summary> Neues Dokument </summary>
- private: System::Void neuMenu_Click(System::Object^ sender, System::EventArgs^ e){
+private: System::Void neuMenu_Click(System::Object^ sender, System::EventArgs^ e){
 			  //TODO nachfragen ob gespeichert werden soll
 			  this->RemoveGraphAndStartAnew();
 		  }
@@ -1132,11 +1150,13 @@ private: void toolStripButtonEdgesEnable(){
 				 {
 					 element->Enabled = true;
 				 }
+				 this->exporttoolStripMenuItem->Enabled = true;
 			 }else{
 				 for each (System::Windows::Forms::ToolStripButton^ element in this->zeichnenEdge->Items)
 				 {
 					 element->Enabled = false;
 				 }
+				 this->exporttoolStripMenuItem->Enabled = false;
 			 }
 			 //Menü Einträge auf enbling der ToolButtons abstimmen
 			 this->kanteToolStripMenuItem->Enabled = this->toolStripButtonArc->Enabled;
@@ -1427,6 +1447,31 @@ private: System::Void toolStripTextBoxGraphenname_TextChanged(System::Object^  s
 			if (this->m_graph != nullptr){
 				this->m_graph->Graphname = this->toolStripTextBoxGraphenname->Text;
 			}
+		 }
+///<summary> Importieren </summary>
+private: System::Void importtoolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+			 if(this->ImportDialog->ShowDialog(this) == System::Windows::Forms::DialogResult::OK){
+				 if (RemoveGraphAndStartAnew()){//Graph gelöscht; können laden
+					 if(!this->m_graph->ImportGraph(this->ImportDialog->FileName)){
+						 //irgendein Fehler passiert; nichts geladen
+						 MessageBox::Show(L"Außerordentlicher Fehler. Keine Daten importiert.",L"Fehler beim Importieren",MessageBoxButtons::OK, MessageBoxIcon::Error);
+					 }else{
+						 this->toolStripButtonEdgesEnable();
+						 this->RefreshDrawBox();
+						 this->toolStripTextBoxGraphenname->Text = L"Importierter Graph";
+					 }
+				 }
+			 }
+		 }
+///<summary> Exportieren </summary>
+private: System::Void exporttoolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+			 if(this->ExportDialog->ShowDialog(this) == System::Windows::Forms::DialogResult::OK){
+				 //Speichern
+				 if(!this->m_graph->ExportGraph(this->ExportDialog->FileName)){
+					 //Fehler passiert
+					 MessageBox::Show(L"Fehler beim Exportieren. Keine Daten geschrieben.", L"Fehler beim Exportieren", MessageBoxButtons::OK, MessageBoxIcon::Error);
+				 }
+			 }
 		 }
 };//Form1 class
 }//namespace

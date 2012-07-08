@@ -297,4 +297,35 @@ bool graphView::SaveGraph( String^ filename )
 	return(this->m_dataGraph->save_graph(filename));
 }
 
+bool graphView::ExportGraph( String^ filename )
+{
+	array<int, 2>^ arrTmp = this->m_dataGraph->convert_graph_to_adjacency();
+	if(arrTmp == nullptr){
+		return(false);
+	}
+	try
+	{
+		this->m_dataGraph->write_adjacency_to_file(filename, arrTmp);
+	}
+	catch (Exception^ e)
+	{
+		return(false);
+	}
+	return (true);
+}
+
+bool graphView::ImportGraph( String^ filename )
+{
+	array<int, 2>^ arrTmp = this->m_dataGraph->read_file_to_adjacency(filename);
+	if (arrTmp == nullptr){
+		return(false);//Fehler beim Einlesen
+	}
+	this->m_dataGraph->convert_adjacency_to_graph(arrTmp);
+
+	//ViewObjekte bauen
+	this->BuildViewFromData();
+
+	return (true);
+}
+
 }//namespace

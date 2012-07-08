@@ -92,6 +92,10 @@ public:
 	bool LoadGraph( String^ filename );
 	///<summary> Erstellt aus dem dataGraph Member einen View-Graphen </summary>
 	void BuildViewFromData( void );
+	///<summary> Zum Importieren von Graphen aus einer Adjazenzmatrix </summary>
+	bool ImportGraph( String^ filename );
+	///<summary> Zum Exportieren von Graphen in eine Adjazenzmatrix </summary>
+	bool ExportGraph( String^ filename );
 
 private:
 	///<summary>Handle um edge Zeichnen in progress zu signalisieren, speichert den Start, ansonsten nullptr</summary>

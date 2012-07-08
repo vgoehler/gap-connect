@@ -73,7 +73,7 @@ public:
 			}else{
 				this->m_edgePen = this->m_drawTools->m_edgeDeactivated;
 			}
-			this->m_dataEdge->shape = inValue ? PUNKTE : NORMAL;
+			this->m_dataEdge->shape = inValue ? DISABLED : NORMAL;
 		}
 	}
 	///<summary> Methode zum Aufrufen des Konfigurationsdialogs</summary>
