@@ -1043,16 +1043,19 @@ private: System::Void ladenMenu_Click(System::Object^  sender, System::EventArgs
 ///<summary> Speichern des Graphen </summary>
 private: System::Void speichernMenu_Click(System::Object^ sender, System::EventArgs^ e){
 			 bool answer = true;
-			 if (filename == L"" || sender == this->speichernalsToolStripMenuItem){
+			 String^ fname = this->filename;//Hilfsvariable um auch wirklich in die Datei zu schreiben die wir wollen
+			 if (this->filename == L"" || sender == this->speichernalsToolStripMenuItem){
 				 answer = this->saveFileDialog1->ShowDialog(this) == System::Windows::Forms::DialogResult::OK;
+				 fname = this->saveFileDialog1->FileName;
 			 }
 			 if(answer){
 				 //Speichern
-				 if(!this->m_graph->SaveGraph(this->saveFileDialog1->FileName)){
+				 if(!this->m_graph->SaveGraph(fname)){
 					 //Fehler passiert
 					 MessageBox::Show(L"Fehler beim Speichern. Keine Daten geschrieben.", L"Fehler beim Speichern", MessageBoxButtons::OK, MessageBoxIcon::Error);
+				 }else{
+					 this->changedGraph = false;
 				 }
-				 this->changedGraph = false;
 			 }
 		 }
 ///<summary> Maus Bewegung im Zeichenbereich Zeigt Koordinaten im Tooltip an. Plus Drag and Drop Behandlung</summary>

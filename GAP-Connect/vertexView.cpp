@@ -88,13 +88,6 @@ namespace GAPConnect {
 		{
 			//Werte setzen
 			this->SetDialogValues(configDialog);
-			//Größenanpassung max. bis MaxSize min bis MinSize
-			if (configDialog->DoAdjustSize){
-				this->ScaleVertex();
-			}else{
-				this->Width = 25;
-				this->Height = 25;
-			}
 			//toggle redraw um Änderungen anzuzeigen
 			if (refreshAfterDialog)
 			{
@@ -111,6 +104,7 @@ namespace GAPConnect {
 		dialog->Kommentar = this->Kommentar;
 		dialog->Knotenart = this->m_vertexType;
 		dialog->VertexEnabled = this->IsEnabled;
+		dialog->InitializeSizeControl(this->MinSize.Width, this->MaxSize.Width, this->Width);
 	}
 	void vertexView::SetDialogValues(System::Windows::Forms::Form^ configDialog){
 		GAPConnect::VertexChangeDialog^ dialog = dynamic_cast<GAPConnect::VertexChangeDialog^ >(configDialog);
@@ -122,6 +116,12 @@ namespace GAPConnect {
 		this->Kommentar = dialog->Kommentar;
 		//Enablement
 		this->IsEnabled = dialog->VertexEnabled;
+		//Größenanpassung max. bis MaxSize min bis MinSize
+		if (dialog->DoAdjustSize){
+			this->ScaleVertex();
+		}else{
+			this->Size = dialog->VertexSize;
+		}
 	}
 	void vertexView::ScaleVertex(void){
 		System::Drawing::Graphics^ g = this->Parent->CreateGraphics();

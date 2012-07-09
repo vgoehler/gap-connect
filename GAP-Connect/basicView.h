@@ -70,6 +70,9 @@ public:
 			this->Height = this->m_size.Height;
 			this->Width = this->m_size.Width;
 		}
+		System::Drawing::Size get (void){
+			return(this->m_minsize);
+		}
 	}
 	///<summary> Schreibt Maximal Größe </summary>
 	property System::Drawing::Size MaxSize{
@@ -77,6 +80,9 @@ public:
 			this->m_maxsize = inValue;
 			this->Height = this->m_size.Height;
 			this->Width = this->m_size.Width;
+		}
+		System::Drawing::Size get (void){
+			return(this->m_maxsize);
 		}
 	}
 	///<summary> Markiert Element und gibt Status zurück. Funktioniert als Toggle. </summary>

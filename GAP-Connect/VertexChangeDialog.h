@@ -75,6 +75,18 @@ namespace GAPConnect {
 				return(this->cBEnabled->Checked);
 			}
 		}
+		property System::Drawing::Size VertexSize{
+			System::Drawing::Size get( void ){
+				return(System::Drawing::Size(int(this->numericUpDownSize->Value), int(this->numericUpDownSize->Value)));
+			}
+		}
+
+		//Initialisiert die numeric Up Down Size kontrolle
+		void InitializeSizeControl(Int32 minimum, Int32 maximum, Int32 inValue){
+			this->numericUpDownSize->Minimum = minimum;
+			this->numericUpDownSize->Maximum = maximum;
+			this->numericUpDownSize->Value = inValue;
+		}
 
 	private: System::Windows::Forms::TextBox^  knotenText;
 	private: System::Windows::Forms::TextBox^  kommentar;
@@ -84,6 +96,7 @@ namespace GAPConnect {
 	private: System::Windows::Forms::Button^  Ok;
 	private: System::Windows::Forms::Button^  cancel;
 	private: System::Windows::Forms::CheckBox^  cBEnabled;
+	private: System::Windows::Forms::NumericUpDown^  numericUpDownSize;
 
 
 
@@ -104,6 +117,7 @@ namespace GAPConnect {
 			System::Windows::Forms::Label^  label1;
 			System::Windows::Forms::Label^  label2;
 			System::Windows::Forms::Label^  label3;
+			System::Windows::Forms::Label^  label4;
 			this->knotenText = (gcnew System::Windows::Forms::TextBox());
 			this->kommentar = (gcnew System::Windows::Forms::TextBox());
 			this->adjustSize = (gcnew System::Windows::Forms::CheckBox());
@@ -111,9 +125,12 @@ namespace GAPConnect {
 			this->Ok = (gcnew System::Windows::Forms::Button());
 			this->cancel = (gcnew System::Windows::Forms::Button());
 			this->cBEnabled = (gcnew System::Windows::Forms::CheckBox());
+			this->numericUpDownSize = (gcnew System::Windows::Forms::NumericUpDown());
 			label1 = (gcnew System::Windows::Forms::Label());
 			label2 = (gcnew System::Windows::Forms::Label());
 			label3 = (gcnew System::Windows::Forms::Label());
+			label4 = (gcnew System::Windows::Forms::Label());
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->numericUpDownSize))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// label1
@@ -137,7 +154,7 @@ namespace GAPConnect {
 			// label3
 			// 
 			label3->AutoSize = true;
-			label3->Location = System::Drawing::Point(13, 89);
+			label3->Location = System::Drawing::Point(12, 115);
 			label3->Name = L"label3";
 			label3->Size = System::Drawing::Size(53, 13);
 			label3->TabIndex = 6;
@@ -152,6 +169,7 @@ namespace GAPConnect {
 			// 
 			// kommentar
 			// 
+			this->kommentar->AcceptsReturn = true;
 			this->kommentar->Location = System::Drawing::Point(202, 32);
 			this->kommentar->Multiline = true;
 			this->kommentar->Name = L"kommentar";
@@ -167,12 +185,13 @@ namespace GAPConnect {
 			this->adjustSize->TabIndex = 1;
 			this->adjustSize->Text = L"Größe an Beschriftung anpassen";
 			this->adjustSize->UseVisualStyleBackColor = true;
+			this->adjustSize->CheckedChanged += gcnew System::EventHandler(this, &VertexChangeDialog::adjustSize_CheckedChanged);
 			// 
 			// cbType
 			// 
 			this->cbType->FormattingEnabled = true;
 			this->cbType->Items->AddRange(gcnew cli::array< System::Object^  >(2) {L"Kreis", L"Rechteck"});
-			this->cbType->Location = System::Drawing::Point(13, 108);
+			this->cbType->Location = System::Drawing::Point(12, 134);
 			this->cbType->Name = L"cbType";
 			this->cbType->Size = System::Drawing::Size(182, 21);
 			this->cbType->TabIndex = 3;
@@ -203,12 +222,30 @@ namespace GAPConnect {
 			this->cBEnabled->AutoSize = true;
 			this->cBEnabled->Checked = true;
 			this->cBEnabled->CheckState = System::Windows::Forms::CheckState::Checked;
-			this->cBEnabled->Location = System::Drawing::Point(12, 136);
+			this->cBEnabled->Location = System::Drawing::Point(11, 162);
 			this->cBEnabled->Name = L"cBEnabled";
 			this->cBEnabled->Size = System::Drawing::Size(64, 17);
 			this->cBEnabled->TabIndex = 7;
 			this->cBEnabled->Text = L"Aktiviert";
 			this->cBEnabled->UseVisualStyleBackColor = true;
+			// 
+			// numericUpDownSize
+			// 
+			this->numericUpDownSize->Location = System::Drawing::Point(75, 81);
+			this->numericUpDownSize->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) {20, 0, 0, 0});
+			this->numericUpDownSize->Name = L"numericUpDownSize";
+			this->numericUpDownSize->Size = System::Drawing::Size(119, 20);
+			this->numericUpDownSize->TabIndex = 8;
+			this->numericUpDownSize->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) {25, 0, 0, 0});
+			// 
+			// label4
+			// 
+			label4->AutoSize = true;
+			label4->Location = System::Drawing::Point(29, 83);
+			label4->Name = L"label4";
+			label4->Size = System::Drawing::Size(36, 13);
+			label4->TabIndex = 9;
+			label4->Text = L"Größe";
 			// 
 			// VertexChangeDialog
 			// 
@@ -217,6 +254,8 @@ namespace GAPConnect {
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->CancelButton = this->cancel;
 			this->ClientSize = System::Drawing::Size(434, 265);
+			this->Controls->Add(label4);
+			this->Controls->Add(this->numericUpDownSize);
 			this->Controls->Add(this->cBEnabled);
 			this->Controls->Add(this->cancel);
 			this->Controls->Add(this->Ok);
@@ -231,10 +270,14 @@ namespace GAPConnect {
 			this->Name = L"VertexChangeDialog";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 			this->Text = L"Knotenbearbeitung";
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->numericUpDownSize))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
 		}
 #pragma endregion
-	};
+	private: System::Void adjustSize_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
+				 this->numericUpDownSize->Enabled = adjustSize->Checked;
+			 }
+};
 }

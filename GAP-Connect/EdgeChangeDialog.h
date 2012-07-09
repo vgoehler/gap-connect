@@ -173,6 +173,7 @@ namespace GAPConnect {
 			// 
 			// tBkommentar
 			// 
+			this->tBkommentar->AcceptsReturn = true;
 			this->tBkommentar->Location = System::Drawing::Point(184, 25);
 			this->tBkommentar->Multiline = true;
 			this->tBkommentar->Name = L"tBkommentar";
