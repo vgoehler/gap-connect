@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "Graph.h"
 #include "Dijkstra.h"
+#define PI 3.14159265
 
 Graph::Graph(void)
 {
@@ -245,7 +246,7 @@ array<int,2>^ Graph::read_file_to_adjacency( System::String^ string_fileName )
 		int N=(string_line->Length +1)/2;
 		array_adj = gcnew array<int,2>(N,N);
 
-		for(int j=0;j<N;j++)							//schreibe erste zeile in Matrix
+		for(int j=0;j<N;j++)			//schreibe erste zeile in Matrix
 			if (string_line[2*j]==49)
 				array_adj[0,j]=1;
 			else
@@ -258,7 +259,7 @@ array<int,2>^ Graph::read_file_to_adjacency( System::String^ string_fileName )
 					return nullptr;
 				}
 			}
-		int i = 1;									//beginn des counters bei 2.Zeile
+		int i = 1;						//beginn des counters bei 2.Zeile
 		while ((string_line = sr->ReadLine()) != nullptr) 
 		{
 			for(int j=0;j<N;j++)
@@ -389,10 +390,13 @@ Dijkstra^ Graph::init_dijkstra(Knoten ^knoten_start)
 	return gcnew Dijkstra(knoten_start);
 }
 
-int Graph::optimize(int n)
+int Graph::optimize(int n,bool verticles_placed)
 {
-	System::Collections::Generic::List<System::Drawing::Point> ^positions=gcnew List<System::Drawing::Point>();
 	int v_count=verticles->Count;
+	if(!verticles_placed)
+		throw_points_around(1,v_count);
+
+	System::Collections::Generic::List<System::Drawing::Point> ^positions=gcnew List<System::Drawing::Point>();
 	for(int i=0;i<v_count;i++)
 	{
 		positions->Add(verticles[i]->coords);
@@ -401,7 +405,8 @@ int Graph::optimize(int n)
 
 
 	int crossing_counter=-1;
-	for(n;n>0;n--)
+	int n_counter=n;
+	for(n_counter;n_counter>0;n_counter--)
 	{
 		//Rectangle creation
 		System::Collections::Generic::List<System::Drawing::Rectangle> ^rectangles=gcnew List<System::Drawing::Rectangle>();
@@ -424,14 +429,18 @@ int Graph::optimize(int n)
 		}//*for end*
 		int temp_crossing_counter=0;
 		int count= rectangles->Count;
+		int y=0;
 		for (int i=0; i<count;i++)
-		{	for (int j=count; j<i;j--)
+		{	
+			for (int j=count-1; j>i;j--)
+			{	
 				if (crossing(rectangles[i],rectangles[j],edges[i],edges[j]))
 					temp_crossing_counter++;
+			}
 		}
 		delete rectangles;
 		//wenn weniger kreuzungen vorhanden, knotenpositionen speichern (außer beim ersten mal) und kreuzungs-zahl merken
-		if (temp_crossing_counter<crossing_counter || crossing_counter!=-1)
+		if (temp_crossing_counter<crossing_counter && crossing_counter!=-1)
 		{	crossing_counter=temp_crossing_counter;
 			for(int i=0;i<v_count;i++)
 				positions[i] = verticles[i]->coords;
@@ -439,12 +448,14 @@ int Graph::optimize(int n)
 		else
 			if(crossing_counter==-1)
 				crossing_counter=temp_crossing_counter;
-		if(crossing_counter==0 || n<=0)
+		if(crossing_counter==0 || n_counter<=0)
 			break;	//abbruch bei 0 kreuzungen oder n==0;
 
 		//eigentlicher random-algoritmus:
-
-
+		if(n_counter < n/2)
+			throw_points_around(2,v_count);
+		else
+			throw_points_around(1,v_count);
 
 	}//*algorithm end*
 	//setzen der Knoten-koordinaten auf bestes ergebnis
@@ -465,7 +476,10 @@ bool Graph::crossing(System::Drawing::Rectangle rec1,System::Drawing::Rectangle 
 			//wenn startpunkt oder endpunkt gleich, dann kann es keine crossings geben, lediglich inclusionen wenn ein rechteck im anderen ist
 			if (rec1.Contains(rec2) || rec2.Contains(rec1))
 			{
-				return(true);
+				if((rec1.Height/rec2.Height)*rec2.Width == rec1.Width)
+					return(true);
+				else
+					return (false);
 			}
 			return(false);
 		}
@@ -480,6 +494,10 @@ bool Graph::crossing(System::Drawing::Rectangle rec1,System::Drawing::Rectangle 
 		float faktor1 = (ov2.Y - ov1.Y + faktor2*rv2.Y)/rv1.Y;
 		//Schnittpunkt
 		System::Drawing::Point schnittpunkt = System::Drawing::Point(int(ceil(ov1.X+faktor1*rv1.X)), int(ceil(ov1.Y+faktor1*rv1.Y)));
+		rec1.X--;
+		rec1.Y--;
+		rec1.Height+=2;
+		rec1.Width+=2;
 		if (rec1.Contains(schnittpunkt))
 		{
 			return(true);
@@ -487,5 +505,82 @@ bool Graph::crossing(System::Drawing::Rectangle rec1,System::Drawing::Rectangle 
 	}
 	return(false);
 
+}
+
+void Graph::throw_points_around(int modi,int v_count)
+{
+	int x_start=300;
+	int y_start=300;
+	int possible_places=(int)(v_count*2.3);
+	int count = verticles->Count;
+	int max_edges1=0;
+	int max_edges2=0;
+	int max_edges_index1=0;
+	int max_edges_index2=0;
+	double my_random;
+	Random ^ rnd = gcnew Random;	
+
+	System::Collections::Generic::List<int>^ point_placement = gcnew System::Collections::Generic::List<int>(count);
+	for(int i =0; i<count;i++)
+	{
+		//suche nach hochgradigen knoten
+		if (verticles[i]->edges->Count > max_edges1)
+		{	max_edges1=verticles[i]->edges->Count;
+			max_edges_index1=i;
+		}
+		else
+			if(verticles[i]->edges->Count > max_edges2)
+			{	max_edges2=verticles[i]->edges->Count;
+				max_edges_index2=i;
+			}
+
+		my_random=rnd->Next(0,possible_places-1);
+		if (!(point_placement->Contains((int)my_random)))
+		{
+			point_placement->Add((int)my_random);
+		}
+		else
+			i--;
+	}
+	//höchster grad in mitte oder 2.höchster
+	int mid_index=0;
+	if(modi==1)
+		mid_index=max_edges_index1;
+	else if(modi==2)
+		mid_index=max_edges_index2;
+
+	bool my_switch=true;
+	for(int i=0;i<count;i++)
+	{
+		if (i==mid_index)
+		{
+			verticles[i]->coords.X =x_start;
+			verticles[i]->coords.Y =y_start;
+		}
+		else
+		{	
+			if(verticles[i]->edges->Count <= 1)	//knoten mit nur einer kante/isolierter knoten
+			{	my_random=point_placement[i]*2*PI/possible_places;
+				verticles[i]->coords.X =(int)((System::Math::Sin(my_random))*35+x_start);
+				verticles[i]->coords.Y =(int)((System::Math::Cos(my_random))*35+y_start);
+			}else
+				if(my_switch)
+				{
+					my_switch=false;
+					my_random=point_placement[i]*2*PI/possible_places;
+					verticles[i]->coords.X =(int)((System::Math::Sin(my_random))*100+x_start);
+					verticles[i]->coords.Y =(int)((System::Math::Cos(my_random))*100+y_start);
+				}
+				else
+				{
+					my_switch=true;
+					my_random=point_placement[i]*2*PI/possible_places;
+					verticles[i]->coords.X =(int)((System::Math::Sin(my_random))*200+x_start);
+					verticles[i]->coords.Y =(int)((System::Math::Cos(my_random))*200+y_start);
+				}
+		}
+	}
+
+	delete rnd;
 }
 
