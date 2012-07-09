@@ -129,6 +129,16 @@ public:
 				return(this->m_dataEdge->comment->label);
 			}
 		}
+	///<summary> Hilfslinie an/aus</summary>
+	property bool AidLine{
+		void set(bool inValue){
+			this->m_aidLine = inValue;
+			if (this->DataEdge != nullptr)
+			{
+				this->DataEdge->aid_line = inValue;
+			}
+		}
+	}
 
 private:
 	vertexView^ m_startVertex;

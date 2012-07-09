@@ -42,7 +42,7 @@ namespace GAPConnect {
 			}
 		}
 		//Zuweisen TODO
-		this->IsEnabled = true;
+		this->IsEnabled = this->DataVertex->enabled;
 		this->Location = this->m_dataVertex->coords;
 	}
 

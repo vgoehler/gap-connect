@@ -56,6 +56,10 @@ namespace GAPConnect {
 				}else{
 					this->m_vertexSolidBrush = this->m_drawTools->m_vertexDeactivated;
 				}
+				if (this->DataVertex != nullptr)
+				{
+					this->DataVertex->enabled = inValue;
+				}
 			}
 		}
 		///<summary> gibt Dockpunkt an sich selbst zurück spezifisch zum Übergebenen Winkel </summary>

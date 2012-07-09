@@ -17,6 +17,7 @@ edgeView::edgeView( System::Windows::Forms::Form^ inParent, GAPConnect::drawTool
 {
 	this->m_lineMode = this->m_dataEdge->gerichtet == 0 ? 0 : 1;//ignorieren hier alle anderen Werte
 	this->IsEnabled = this->m_dataEdge->shape == DISABLED ? true : false;
+	this->AidLine = this->m_dataEdge->aid_line;
 }
 
 System::Drawing::Size edgeView::createSize( void )
@@ -151,7 +152,7 @@ void edgeView::SetDialogValues( System::Windows::Forms::Form^ configDialog )
 	this->Kommentar = dialog->Kommentar;
 	this->IsEnabled = dialog->EdgeEnabled;
 	this->IsLoop = dialog->IsLoop;
-	this->m_aidLine = dialog->withAidLine;
+	this->AidLine = dialog->withAidLine;
 }
 
 void edgeView::drawText( System::Windows::Forms::PaintEventArgs^ e )
