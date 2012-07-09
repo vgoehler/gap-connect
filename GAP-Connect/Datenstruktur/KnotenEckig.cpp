@@ -19,6 +19,7 @@ KnotenEckig::KnotenEckig(Graph^ graph_init,System::String^ string_label,System::
 	edges=gcnew List<Kante^>();
 	comment=gcnew Kommentar();
 	owning_graph=graph_init;
+	enabled=true;
 }
 
 KnotenEckig::~KnotenEckig(void)

@@ -16,6 +16,7 @@ public:
 	System::Collections::Generic::List<Kante^> ^edges;
 	System::String^ label;
 	System::String^ tooltip;
+	bool enabled;
 protected:
 	Graph^ owning_graph;			/*achtung! hält "Graph" am leben, auch wenn dieser deleted wird, sofern nicht auch alle zugehörigen 
 									 *Knoten freigegeben werden! */

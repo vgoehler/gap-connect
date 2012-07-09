@@ -17,6 +17,7 @@ KnotenRund::KnotenRund(Graph^ graph_init,System::String^ string_label,System::St
 	edges=gcnew List<Kante^>();
 	comment=gcnew Kommentar();
 	owning_graph=graph_init;
+	enabled=true;
 }
 
 KnotenRund::~KnotenRund(void)
