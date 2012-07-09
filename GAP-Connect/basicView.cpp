@@ -25,8 +25,10 @@ void basicView::recalcRectangle( void )
 	//wenn breite oder höhe gleich der minsize sind, muss die location um minsize/2 versetzt werden
 	Int32 x = this->m_location.X;
 	Int32 y = this->m_location.Y;
-	x -= (this->Width == this->m_minsize.Width) ? m_minsize.Width /2 : 0;
-	y -= (this->Height == this->m_minsize.Height) ? m_minsize.Height /2 : 0;
+	if (this->m_minsize.Height < 10 || this->m_minsize.Width < 10){//nur für sehr kleine Objekte um anklicken zu gewährleisten
+		x -= (this->Width == this->m_minsize.Width) ? m_minsize.Width /2 : 0;
+		y -= (this->Height == this->m_minsize.Height) ? m_minsize.Height /2 : 0;
+	}
 	this->drawRectangle = System::Drawing::Rectangle(Point(x,y), m_size);
 }
 
