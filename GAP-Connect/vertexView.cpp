@@ -21,10 +21,12 @@ namespace GAPConnect {
 		this->Kommentar = L"";
 	}
 
-	vertexView::vertexView( System::Windows::Forms::Form^ inParent, GAPConnect::drawTools^ inDrawTools, Graph^ parentDataGraph, Knoten^ inKnoten ):basicView(inParent, inDrawTools, parentDataGraph), m_dataVertex(inKnoten)
+	vertexView::vertexView( System::Windows::Forms::Form^ inParent, GAPConnect::drawTools^ inDrawTools, Graph^ parentDataGraph, Knoten^ inKnoten ):basicView(inParent, inDrawTools, parentDataGraph), m_dataVertex(nullptr)
 	{
 		this->MinSize = System::Drawing::Size(20,20);
 		this->MaxSize = System::Drawing::Size(100,100);
+
+		this->m_dataVertex = inKnoten;
 
 		KnotenEckig^ eckig = dynamic_cast<KnotenEckig^ >(this->m_dataVertex);
 		if(eckig != nullptr){//eckig
@@ -34,7 +36,7 @@ namespace GAPConnect {
 			KnotenRund^ rund = dynamic_cast<KnotenRund^ >(this->m_dataVertex);
 			if (rund != nullptr){//rund
 				this->m_vertexType = 0;
-				this->Size = System::Drawing::Size(Int32(rund->radius),Int32(rund->radius));
+				this->Size = System::Drawing::Size(Int32(rund->radius)*2,Int32(rund->radius)*2);
 			}else{
 				throw gcnew Exception("Kann Typ nicht casten. Im Konstruktor.");
 			}
