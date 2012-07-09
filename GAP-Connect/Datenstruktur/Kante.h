@@ -18,6 +18,7 @@ public:
 					 *(2: gerichtet beidseitig??) [wenn nicht ändere "convert_from_adjacency"]
 					 */
 	KantenFormat shape;	//methode für redraw bei änderung?
+	bool aid_line;
 	Kommentar^ comment;
 private:
 	Knoten^ knoten_start;
