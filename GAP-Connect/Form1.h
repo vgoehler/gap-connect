@@ -1335,6 +1335,7 @@ private: System::Void EditMarkedObject_Click(System::Object^  sender, System::Ev
 				 if (dynamic_cast<GAPConnect::vertexView^ >(this->m_graph->getMarkedElement) != nullptr){
 					 this->m_graph->ReCalcDockingPoints(dynamic_cast<GAPConnect::vertexView^>(this->m_graph->getMarkedElement));
 				 }
+				 this->changedGraph = true;//wenn der user einen dialog einblendet dann ändert das potentiell den graph
 				 this->RefreshDrawBox();
 			 }
 		 }

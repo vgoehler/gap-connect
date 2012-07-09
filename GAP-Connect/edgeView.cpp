@@ -65,6 +65,9 @@ void edgeView::calculateDockingPoint( void ){
 		this->m_startDock = this->StartVertex->getDockPoint( angle );
 		angle = this->getAnglePointToPoint(this->EndVertex->LocationCenter, this->StartVertex->LocationCenter);
 		this->m_endDock = this->EndVertex->getDockPoint( angle );
+		//Rechteck neu berechnen
+		this->Location = this->createLocation();
+		this->Size = this->createSize();
 	}
 	}
 
