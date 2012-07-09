@@ -37,12 +37,22 @@ System::Void edgeView::drawEdge( System::Windows::Forms::PaintEventArgs^ e )
 		//Markierungslinie untendrunter zeichnen
 		e->Graphics->DrawLine(this->m_drawTools->m_edgeMarked, this->m_startDock, this->m_endDock);
 	}
-	//Linie
-	e->Graphics->DrawLine(this->m_edgePen, this->m_startDock, this->m_endDock);
-	//Modus beachten
-	if (this->IsArc)//Gerichtet
-	{
-		this->drawArrow(e);
+	if (this->IsLoop){
+		Point m = this->StartVertex->LocationCenter;
+		System::Drawing::Size s = this->StartVertex->Size;
+		e->Graphics->DrawBezier(this->m_edgePen, 
+			Point(m.X + s.Width/2, m.Y -2),
+			Point(m.X + s.Width/2+100, m.Y - 50), 
+			Point(m.X + s.Width/2+100, m.Y + 50), 
+			Point(m.X + s.Width/2, m.Y +2));
+	}else{
+		//Linie
+		e->Graphics->DrawLine(this->m_edgePen, this->m_startDock, this->m_endDock);
+		//Modus beachten
+		if (this->IsArc)//Gerichtet
+		{
+			this->drawArrow(e);
+		}
 	}
 	if (!String::IsNullOrWhiteSpace(this->Text))
 	{
@@ -185,6 +195,10 @@ bool edgeView::Contains( System::Drawing::Point pkt )
 	bool inRectangle = basicView::Contains(pkt);
 	if (inRectangle)//verfeinerung der Detection nur Notwendig wenn auch in Control Rectangle geklickt wurde
 	{
+		if (this->IsLoop)//Im Loop zählt das ganze Rechteck der einfachheithalber
+		{
+			return(true);
+		}
 		//Länge der Linie zu dem geklickten Punkt (liegt auf jedenfall im Rechteck)
 		double lengthtoPkt= this->LengthFromPointToPoint(this->m_startDock, pkt);
 		//Projektion dieses Punktes auf die Verbindungslinie zwischen den Dockpunkten

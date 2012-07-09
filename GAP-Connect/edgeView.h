@@ -31,6 +31,7 @@ public:
 			if (inValue){//Gleich setzen geht
 				this->EndVertex = this->StartVertex;
 			}else{//Können aus einer Schlinge keine Kanten machen
+				//throw gcnew Exception("Können aus einer Schlinge keine Kante machen!");
 			}
 		}
 	}
