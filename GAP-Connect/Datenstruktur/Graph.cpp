@@ -467,22 +467,43 @@ int Graph::optimize(int n,bool verticles_placed)
 bool Graph::crossing(System::Drawing::Rectangle rec1,System::Drawing::Rectangle rec2,Kante^ ka1,Kante^ ka2)
 {
 	//Kontrollrechtecke müssen sich überschneiden
+	int rec1_orig_height=rec1.Height;
+	int rec1_orig_width=rec1.Width;
+	int rec2_orig_height=rec2.Height;
+	int rec2_orig_width=rec2.Width;
+
+	rec1.X--;
+	rec1.Y--;
+	rec1.Height+=2;
+	rec1.Width+=2;
+	rec2.X--;
+	rec2.Y--;
+	rec2.Height+=2;
+	rec2.Width+=2;
 	if (rec1.IntersectsWith(rec2))
 	{
-		if ((ka1->get_knoten_start() == ka2->get_knoten_start() && ka1->get_knoten_end() == ka2->get_knoten_end() || ka1->get_knoten_start() == ka2->get_knoten_end() && ka1->get_knoten_end() == ka2->get_knoten_start())){
-			//Doppelkante, Falsch zurückgeben, da diese durch Knotenverschiebung nicht behoben wird
+		if ((ka1->get_knoten_start() == ka2->get_knoten_start() && ka1->get_knoten_end() == ka2->get_knoten_end() || ka1->get_knoten_start() == ka2->get_knoten_end() && ka1->get_knoten_end() == ka2->get_knoten_start()))
+		{	//Doppelkante, Falsch zurückgeben, da diese durch Knotenverschiebung nicht behoben wird
 			return(false);
-		}else if (ka1->get_knoten_start() == ka2->get_knoten_start() || ka1->get_knoten_start() == ka2->get_knoten_end() || ka1->get_knoten_end() == ka2->get_knoten_start() || ka1->get_knoten_end() == ka2->get_knoten_end()){
-			//wenn startpunkt oder endpunkt gleich, dann kann es keine crossings geben, lediglich inclusionen wenn ein rechteck im anderen ist
-			if (rec1.Contains(rec2) || rec2.Contains(rec1))
+		}else 
+			if (ka1->get_knoten_start() == ka2->get_knoten_start() || ka1->get_knoten_start() == ka2->get_knoten_end() || ka1->get_knoten_end() == ka2->get_knoten_start() || ka1->get_knoten_end() == ka2->get_knoten_end())
 			{
-				if((rec1.Height/rec2.Height)*rec2.Width == rec1.Width)
-					return(true);
-				else
-					return (false);
+				//wenn startpunkt oder endpunkt gleich, dann kann es keine crossings geben, lediglich inclusionen wenn ein rechteck im anderen ist
+				if (rec1.Contains(rec2) || rec2.Contains(rec1))
+				{
+					if(rec1_orig_height>0 && rec2_orig_height>0)
+						if(rec1_orig_height*rec2_orig_width/rec2_orig_height == rec1_orig_width)
+							return(true);
+						else
+							return (false);
+					else
+						if(rec1_orig_height==0 && rec2_orig_height==0)
+							return(true);
+						else
+							return(false);
+				}
+				return(false);
 			}
-			return(false);
-		}
 		//Geradengleichung aufstellen
 		System::Drawing::PointF rv1 = System::Drawing::PointF(float((ka1->get_knoten_end()->coords.X)-(ka1->get_knoten_start()->coords.X)),float((ka1->get_knoten_end()->coords.Y)-(ka1->get_knoten_start()->coords.Y)));
 		System::Drawing::PointF rv2 = System::Drawing::PointF(float((ka2->get_knoten_end()->coords.X)-(ka2->get_knoten_start()->coords.X)),float((ka2->get_knoten_end()->coords.Y)-(ka2->get_knoten_start()->coords.Y)));
@@ -492,12 +513,11 @@ bool Graph::crossing(System::Drawing::Rectangle rec1,System::Drawing::Rectangle 
 		//Umgestelltes Gleichungssystem ov1 + faktor1 * rv1 = ov2 + faktor2 * rv2
 		float faktor2 = (rv1.Y * (ov1.X-ov2.X) + rv1.X * (ov2.Y - ov1.Y)) / (rv1.Y * rv2.X - rv1.X * rv2.Y);
 		float faktor1 = (ov2.Y - ov1.Y + faktor2*rv2.Y)/rv1.Y;
+		
+		if(rv1.Y == 0)//vorläufig
+			return (true);
 		//Schnittpunkt
 		System::Drawing::Point schnittpunkt = System::Drawing::Point(int(ceil(ov1.X+faktor1*rv1.X)), int(ceil(ov1.Y+faktor1*rv1.Y)));
-		rec1.X--;
-		rec1.Y--;
-		rec1.Height+=2;
-		rec1.Width+=2;
 		if (rec1.Contains(schnittpunkt))
 		{
 			return(true);
@@ -542,7 +562,7 @@ void Graph::throw_points_around(int modi,int v_count)
 		else
 			i--;
 	}
-	//höchster grad in mitte oder 2.höchster
+	//höchsten grad in mitte setzen oder 2.höchsten
 	int mid_index=0;
 	if(modi==1)
 		mid_index=max_edges_index1;
@@ -561,8 +581,8 @@ void Graph::throw_points_around(int modi,int v_count)
 		{	
 			if(verticles[i]->edges->Count <= 1)	//knoten mit nur einer kante/isolierter knoten
 			{	my_random=point_placement[i]*2*PI/possible_places;
-				verticles[i]->coords.X =(int)((System::Math::Sin(my_random))*35+x_start);
-				verticles[i]->coords.Y =(int)((System::Math::Cos(my_random))*35+y_start);
+				verticles[i]->coords.X =(int)((System::Math::Sin(my_random))*40+x_start);
+				verticles[i]->coords.Y =(int)((System::Math::Cos(my_random))*40+y_start);
 			}else
 				if(my_switch)
 				{
