@@ -43,9 +43,9 @@ public:
 	static Graph^ load_graph(System::String ^string_fileName);
 	static Dijkstra^ init_dijkstra(Knoten ^knoten_start);
 
-	int optimize();
+	int optimize(int n);
 private:
-	bool crossing();
+	bool crossing(System::Drawing::Rectangle rec1,System::Drawing::Rectangle rec2,Kante^ ka1,Kante^ ka2);
 	
 };
 

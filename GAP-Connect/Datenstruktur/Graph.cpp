@@ -174,20 +174,37 @@ void Graph::convert_adjacency_to_graph(array<int,2>^ array_adj)
 	int N_array_adj =array_adj->GetLength(0);	// "N" as in NxN matrix
 	for (int i=0;i<N_array_adj;i++)
 	{
-		create_vertex("",10,10);
+		create_vertex("",10);
 	}
+	//obere rechte Dreiecksmatrix
 	for (int i=0;i < N_array_adj;i++)
 	{
-		for (int j=0;j < N_array_adj;j++)
+		for (int j=N_array_adj-1;j > i;j--)
 		{
 			if(array_adj[i,j]==1)
 			{	if (array_adj[j,i]==1)
-					create_edge(verticles[i],verticles[j],2);	//wenn beidseitig vorhanden dann 1 doppelseitige kante
+					create_edge(verticles[i],verticles[j],0);	//wenn beidseitig vorhanden dann 1 doppelseitige kante
 				else
 					create_edge(verticles[i],verticles[j],1);
 			}
 		}
 	}
+	//
+	for (int j=0;j < N_array_adj;j++)
+	{
+		for (int i=N_array_adj-1;i>=j;i--)
+		{
+			if(array_adj[i,j]==1)
+			{	
+				if(i==j)
+					create_edge(verticles[i],verticles[i],0);//Schleifen	
+				else
+					if (array_adj[j,i]!=1)//doppelseitige bereits erschaffen
+						create_edge(verticles[i],verticles[j],1);
+			}
+		}
+	}
+
 }
 
 void Graph::write_adjacency_to_file( System::String^ string_fileName,array<int,2>^ array_adj )
@@ -229,7 +246,18 @@ array<int,2>^ Graph::read_file_to_adjacency( System::String^ string_fileName )
 		array_adj = gcnew array<int,2>(N,N);
 
 		for(int j=0;j<N;j++)							//schreibe erste zeile in Matrix
-			array_adj[0,j]=string_line[2*j];
+			if (string_line[2*j]==49)
+				array_adj[0,j]=1;
+			else
+			{
+				if (string_line[2*j]==48)
+					array_adj[0,j]=0;
+				else
+				{
+					sr->Close();
+					return nullptr;
+				}
+			}
 		int i = 1;									//beginn des counters bei 2.Zeile
 		while ((string_line = sr->ReadLine()) != nullptr) 
 		{
@@ -361,31 +389,103 @@ Dijkstra^ Graph::init_dijkstra(Knoten ^knoten_start)
 	return gcnew Dijkstra(knoten_start);
 }
 
-int Graph::optimize()
+int Graph::optimize(int n)
 {
-	//Rectangle creation
-	System::Collections::Generic::List<System::Drawing::Rectangle> ^rectangles=gcnew List<System::Drawing::Rectangle>();
-	/*for each(Kante^ ka in edges)
+	System::Collections::Generic::List<System::Drawing::Point> ^positions=gcnew List<System::Drawing::Point>();
+	int v_count=verticles->Count;
+	for(int i=0;i<v_count;i++)
 	{
-		int x1 = ka->get_knoten_start()->coords.X;
-		int y1 = ka->get_knoten_start()->coords.Y;
-		int x2 = ka->get_knoten_end()->coords.X;
-		int y2 = ka->get_knoten_end()->coords.Y;
-		if(x1<x2)
-			if(y1<y2)
-				System::Drawing::Rectangle(x1,y1,x2-x1,y2-y1);
-			else
-				System::Drawing::Rectangle(x1,y2,x2-x1,y1-y2);
-		else
-			if
-		
+		positions->Add(verticles[i]->coords);
+	}
+	
 
-	}*/
-	return 0;
+
+	int crossing_counter=-1;
+	for(n;n>0;n--)
+	{
+		//Rectangle creation
+		System::Collections::Generic::List<System::Drawing::Rectangle> ^rectangles=gcnew List<System::Drawing::Rectangle>();
+		for each(Kante^ ka in edges)
+		{
+			int x1 = ka->get_knoten_start()->coords.X;
+			int y1 = ka->get_knoten_start()->coords.Y;
+			int x2 = ka->get_knoten_end()->coords.X;
+			int y2 = ka->get_knoten_end()->coords.Y;
+			if(x1<x2)
+				if(y1<y2)
+					rectangles->Add(System::Drawing::Rectangle(x1,y1,x2-x1,y2-y1));
+				else
+					rectangles->Add(System::Drawing::Rectangle(x1,y2,x2-x1,y1-y2));
+			else
+				if(y1<y2)
+					rectangles->Add(System::Drawing::Rectangle(x2,y1,x1-x2,y2-y1));
+				else
+					rectangles->Add(System::Drawing::Rectangle(x2,y2,x1-x2,y1-y2));
+		}//*for end*
+		int temp_crossing_counter=0;
+		int count= rectangles->Count;
+		for (int i=0; i<count;i++)
+		{	for (int j=count; j<i;j--)
+				if (crossing(rectangles[i],rectangles[j],edges[i],edges[j]))
+					temp_crossing_counter++;
+		}
+		delete rectangles;
+		//wenn weniger kreuzungen vorhanden, knotenpositionen speichern (außer beim ersten mal) und kreuzungs-zahl merken
+		if (temp_crossing_counter<crossing_counter || crossing_counter!=-1)
+		{	crossing_counter=temp_crossing_counter;
+			for(int i=0;i<v_count;i++)
+				positions[i] = verticles[i]->coords;
+		}
+		else
+			if(crossing_counter==-1)
+				crossing_counter=temp_crossing_counter;
+		if(crossing_counter==0 || n<=0)
+			break;	//abbruch bei 0 kreuzungen oder n==0;
+
+		//eigentlicher random-algoritmus:
+
+
+
+	}//*algorithm end*
+	//setzen der Knoten-koordinaten auf bestes ergebnis
+	for(int i=0;i<v_count;i++)
+		verticles[i]->coords = positions[i];
+	return crossing_counter;
 }
 
-bool Graph::crossing()
+bool Graph::crossing(System::Drawing::Rectangle rec1,System::Drawing::Rectangle rec2,Kante^ ka1,Kante^ ka2)
 {
-	return false;
+	//Kontrollrechtecke müssen sich überschneiden
+	if (rec1.IntersectsWith(rec2))
+	{
+		if ((ka1->get_knoten_start() == ka2->get_knoten_start() && ka1->get_knoten_end() == ka2->get_knoten_end() || ka1->get_knoten_start() == ka2->get_knoten_end() && ka1->get_knoten_end() == ka2->get_knoten_start())){
+			//Doppelkante, Falsch zurückgeben, da diese durch Knotenverschiebung nicht behoben wird
+			return(false);
+		}else if (ka1->get_knoten_start() == ka2->get_knoten_start() || ka1->get_knoten_start() == ka2->get_knoten_end() || ka1->get_knoten_end() == ka2->get_knoten_start() || ka1->get_knoten_end() == ka2->get_knoten_end()){
+			//wenn startpunkt oder endpunkt gleich, dann kann es keine crossings geben, lediglich inclusionen wenn ein rechteck im anderen ist
+			if (rec1.Contains(rec2) || rec2.Contains(rec1))
+			{
+				return(true);
+			}
+			return(false);
+		}
+		//Geradengleichung aufstellen
+		System::Drawing::PointF rv1 = System::Drawing::PointF(float((ka1->get_knoten_end()->coords.X)-(ka1->get_knoten_start()->coords.X)),float((ka1->get_knoten_end()->coords.Y)-(ka1->get_knoten_start()->coords.Y)));
+		System::Drawing::PointF rv2 = System::Drawing::PointF(float((ka2->get_knoten_end()->coords.X)-(ka2->get_knoten_start()->coords.X)),float((ka2->get_knoten_end()->coords.Y)-(ka2->get_knoten_start()->coords.Y)));
+		//wenn Richtungsvektor linear abhängig zu einander dann Parallel; keine Fallunterscheidung, einfach rechnen lassen, findet in dem fall keinen schnittpunkt
+		System::Drawing::PointF ov1 = System::Drawing::PointF(float(ka1->get_knoten_start()->coords.X),float(ka1->get_knoten_start()->coords.Y));
+		System::Drawing::PointF ov2 = System::Drawing::PointF(float(ka2->get_knoten_start()->coords.X),float(ka2->get_knoten_start()->coords.Y));
+		//Umgestelltes Gleichungssystem ov1 + faktor1 * rv1 = ov2 + faktor2 * rv2
+		float faktor2 = (rv1.Y * (ov1.X-ov2.X) + rv1.X * (ov2.Y - ov1.Y)) / (rv1.Y * rv2.X - rv1.X * rv2.Y);
+		float faktor1 = (ov2.Y - ov1.Y + faktor2*rv2.Y)/rv1.Y;
+		//Schnittpunkt
+		System::Drawing::Point schnittpunkt = System::Drawing::Point(int(ceil(ov1.X+faktor1*rv1.X)), int(ceil(ov1.Y+faktor1*rv1.Y)));
+		if (rec1.Contains(schnittpunkt))
+		{
+			return(true);
+		}
+	}
+	return(false);
+
 }
 
