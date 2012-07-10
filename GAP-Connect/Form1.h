@@ -56,6 +56,8 @@ namespace GAPConnect {
 		double dragAndDropLoopOldAngle;
 	///<summary> Filename der Datei </summary>
 		String^ filename;
+	///<summary> State of ToolBar Element </summary>
+		bool StateOfCheckedElement;
 
 	private: System::Windows::Forms::MenuStrip^  mainmenuStrip;
 	private: System::Windows::Forms::ToolStripMenuItem^  dateiToolStripMenuItem;
@@ -122,6 +124,14 @@ private: System::Windows::Forms::OpenFileDialog^  ImportDialog;
 private: System::Windows::Forms::SaveFileDialog^  ExportDialog;
 private: System::Windows::Forms::ProgressBar^  pBOptimize;
 private: System::Windows::Forms::Button^  buttonOptimize;
+private: System::Windows::Forms::ToolStripButton^  ZoomToolStripButton;
+
+
+
+
+
+
+
 	private: System::Windows::Forms::ImageList^  imageListToolbar;
 
 	///<summary>Änderungen am Graph in Property vermerken. set routine setzt auch enable im Menü</summary>
@@ -200,6 +210,7 @@ private: System::Windows::Forms::Button^  buttonOptimize;
 			System::Windows::Forms::ToolStripSeparator^  toolStripSeparator3;
 			System::Windows::Forms::ToolStripLabel^  toolStripLabel1;
 			System::Windows::Forms::ToolStripSeparator^  toolStripSeparator8;
+			System::Windows::Forms::ToolStripSeparator^  toolStripSeparator9;
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Form1::typeid));
 			this->mainmenuStrip = (gcnew System::Windows::Forms::MenuStrip());
 			this->dateiToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -240,6 +251,7 @@ private: System::Windows::Forms::Button^  buttonOptimize;
 			this->toolStripButtonCompleteGraph = (gcnew System::Windows::Forms::ToolStripButton());
 			this->toolStripButtonEdit = (gcnew System::Windows::Forms::ToolStripButton());
 			this->toolStripTextBoxGraphenname = (gcnew System::Windows::Forms::ToolStripTextBox());
+			this->ZoomToolStripButton = (gcnew System::Windows::Forms::ToolStripButton());
 			this->mainstatusStrip = (gcnew System::Windows::Forms::StatusStrip());
 			this->toolStripLabelMouseX = (gcnew System::Windows::Forms::ToolStripStatusLabel());
 			this->toolStripLabelMouseY = (gcnew System::Windows::Forms::ToolStripStatusLabel());
@@ -276,6 +288,7 @@ private: System::Windows::Forms::Button^  buttonOptimize;
 			toolStripSeparator3 = (gcnew System::Windows::Forms::ToolStripSeparator());
 			toolStripLabel1 = (gcnew System::Windows::Forms::ToolStripLabel());
 			toolStripSeparator8 = (gcnew System::Windows::Forms::ToolStripSeparator());
+			toolStripSeparator9 = (gcnew System::Windows::Forms::ToolStripSeparator());
 			this->mainmenuStrip->SuspendLayout();
 			this->maintoolStrip->SuspendLayout();
 			this->mainstatusStrip->SuspendLayout();
@@ -347,6 +360,12 @@ private: System::Windows::Forms::Button^  buttonOptimize;
 			// 
 			toolStripSeparator8->Name = L"toolStripSeparator8";
 			toolStripSeparator8->Size = System::Drawing::Size(140, 6);
+			// 
+			// toolStripSeparator9
+			// 
+			toolStripSeparator9->Alignment = System::Windows::Forms::ToolStripItemAlignment::Right;
+			toolStripSeparator9->Name = L"toolStripSeparator9";
+			toolStripSeparator9->Size = System::Drawing::Size(6, 25);
 			// 
 			// mainmenuStrip
 			// 
@@ -569,10 +588,11 @@ private: System::Windows::Forms::Button^  buttonOptimize;
 			// 
 			this->maintoolStrip->BackColor = System::Drawing::SystemColors::MenuBar;
 			this->maintoolStrip->GripStyle = System::Windows::Forms::ToolStripGripStyle::Hidden;
-			this->maintoolStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(16) {this->toolStripButtonNew, 
+			this->maintoolStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(18) {this->toolStripButtonNew, 
 				this->toolStripButtonOpen, this->toolStripButtonSave, toolStripSeparator2, this->toolStripButtonGridControl, this->toolStripButtonGridFixed, 
 				toolStripSeparator4, this->toolStripButtonVertexAutoEdit, this->toolStripButtonEdgeAutoEdit, this->toolStripSeparator5, this->toolStripButtonDelete, 
-				toolStripSeparator6, this->toolStripButtonCompleteGraph, this->toolStripButtonEdit, this->toolStripTextBoxGraphenname, toolStripLabel1});
+				toolStripSeparator6, this->toolStripButtonCompleteGraph, this->toolStripButtonEdit, this->toolStripTextBoxGraphenname, toolStripLabel1, 
+				toolStripSeparator9, this->ZoomToolStripButton});
 			this->maintoolStrip->Location = System::Drawing::Point(0, 24);
 			this->maintoolStrip->Name = L"maintoolStrip";
 			this->maintoolStrip->RenderMode = System::Windows::Forms::ToolStripRenderMode::System;
@@ -710,6 +730,20 @@ private: System::Windows::Forms::Button^  buttonOptimize;
 			this->toolStripTextBoxGraphenname->Size = System::Drawing::Size(100, 25);
 			this->toolStripTextBoxGraphenname->TextChanged += gcnew System::EventHandler(this, &Form1::toolStripTextBoxGraphenname_TextChanged);
 			// 
+			// ZoomToolStripButton
+			// 
+			this->ZoomToolStripButton->Alignment = System::Windows::Forms::ToolStripItemAlignment::Right;
+			this->ZoomToolStripButton->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
+			this->ZoomToolStripButton->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"ZoomToolStripButton.Image")));
+			this->ZoomToolStripButton->ImageTransparentColor = System::Drawing::Color::Magenta;
+			this->ZoomToolStripButton->Name = L"ZoomToolStripButton";
+			this->ZoomToolStripButton->Size = System::Drawing::Size(60, 22);
+			this->ZoomToolStripButton->Text = L"Vorschau";
+			this->ZoomToolStripButton->ToolTipText = L"Vorschau";
+			this->ZoomToolStripButton->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &Form1::ZoomToolStripButton_MouseDown);
+			this->ZoomToolStripButton->MouseLeave += gcnew System::EventHandler(this, &Form1::ZoomToolStripButton_MouseLeave);
+			this->ZoomToolStripButton->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &Form1::ZoomToolStripButton_MouseUp);
+			// 
 			// mainstatusStrip
 			// 
 			this->mainstatusStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {this->toolStripLabelMouseX, 
@@ -769,7 +803,7 @@ private: System::Windows::Forms::Button^  buttonOptimize;
 			this->buttonOptimize->TabIndex = 2;
 			this->buttonOptimize->Text = L"Graph Optimieren";
 			this->buttonOptimize->UseVisualStyleBackColor = true;
-			this->buttonOptimize->Click += gcnew System::EventHandler(this, &Form1::buttonOptimize_Click);
+			this->buttonOptimize->Click += gcnew System::EventHandler(this, &Form1::buttonRandomize_Click);
 			// 
 			// gBStatus
 			// 
@@ -922,7 +956,6 @@ private: System::Windows::Forms::Button^  buttonOptimize;
 			// 
 			// drawPanel
 			// 
-			this->drawPanel->AllowDrop = true;
 			this->drawPanel->AutoScroll = true;
 			this->drawPanel->AutoScrollMinSize = System::Drawing::Size(3000, 3000);
 			this->drawPanel->BackColor = System::Drawing::SystemColors::Window;
@@ -936,6 +969,7 @@ private: System::Windows::Forms::Button^  buttonOptimize;
 			// 
 			// drawBox
 			// 
+			this->drawBox->BackColor = System::Drawing::Color::White;
 			this->drawBox->BackgroundImage = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"drawBox.BackgroundImage")));
 			this->drawBox->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->drawBox->Location = System::Drawing::Point(0, 0);
@@ -971,13 +1005,15 @@ private: System::Windows::Forms::Button^  buttonOptimize;
 			// 
 			// pBOptimize
 			// 
-			this->pBOptimize->BackColor = System::Drawing::SystemColors::MenuBar;
+			this->pBOptimize->BackColor = System::Drawing::Color::Black;
+			this->pBOptimize->ForeColor = System::Drawing::Color::DarkRed;
 			this->pBOptimize->Location = System::Drawing::Point(307, 1);
 			this->pBOptimize->Name = L"pBOptimize";
 			this->pBOptimize->RightToLeftLayout = true;
 			this->pBOptimize->Size = System::Drawing::Size(477, 23);
 			this->pBOptimize->Style = System::Windows::Forms::ProgressBarStyle::Continuous;
 			this->pBOptimize->TabIndex = 8;
+			this->pBOptimize->Visible = false;
 			// 
 			// Form1
 			// 
@@ -1220,7 +1256,6 @@ private: void drawBoxCursorChange( void ){
 				this->drawBox->Cursor = gcnew System::Windows::Forms::Cursor(L"cursor_arc.cur");
 			}
 		 }
-
 ///<summary> mit Beenden des Klicks (Up) zeichnen des Objekts an der Stelle des Mousecursors. </summary>
 private: System::Void drawBox_MouseUp(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
 			 //nur executen wenn auch Zeichnen Modus ausgewählt
@@ -1315,6 +1350,12 @@ private: System::Void drawBox_MouseDown(System::Object^  sender, System::Windows
 		 }
 ///<summary> OnPaint Ereigniss, muß Zeichenfeld zeichnen </summary>
 private: System::Void drawBox_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
+			 if (this->ZoomToolStripButton->Pressed)
+			 {
+				 e->Graphics->ScaleTransform(0.2F, 0.2F);
+				 e->Graphics->DrawRectangle(System::Drawing::Pens::Black, this->drawBox->Bounds);
+				 e->Graphics->FillRectangle(System::Drawing::Brushes::White, this->drawBox->Bounds);
+			 }
 			 e->Graphics->PixelOffsetMode = System::Drawing::Drawing2D::PixelOffsetMode::HighQuality;
 			 //Anti Aliasing
 			 e->Graphics->SmoothingMode = System::Drawing::Drawing2D::SmoothingMode::AntiAlias;
@@ -1495,7 +1536,6 @@ private: void ExtractCommentFromElement(Point pkt){
 				 this->tBKommentar->Text = L"";
 			 }
 		 }
-	
 ///<summary> Gleichschaltung des Zeichnen Menüs und der entsprechenden Toolbox</summary>
 private: System::Void zeichnenToolStripMenuItems_Click(System::Object^  sender, System::EventArgs^  e) {
 			 if (sender == this->runderKnotenToolStripMenuItem)
@@ -1550,18 +1590,48 @@ private: System::Void exporttoolStripMenuItem_Click(System::Object^  sender, Sys
 				 }
 			 }
 		 }
-///<summary> Optimierungsvorgang gestartet </summary>
-private: System::Void buttonOptimize_Click(System::Object^  sender, System::EventArgs^  e) {
+///<summary> Randomiesierung gestartet </summary>
+private: System::Void buttonRandomize_Click(System::Object^  sender, System::EventArgs^  e) {
 			 //INIT
 			this->UseWaitCursor = true;
 			this->pBOptimize->Minimum = 0;
-			this->pBOptimize->Maximum = 500000;
+			this->pBOptimize->Maximum = 50000;
+			this->pBOptimize->Visible = true;
 
-			this->m_graph->StartOptimization(500000);
+			this->m_graph->StartOptimization(50000);
 
 			//FINALIZE
 			this->UseWaitCursor = false;
 			this->pBOptimize->Value = 0;
+			this->pBOptimize->Visible = false;
+		 }
+///<summary> Übersichtsbutton Zoom um Faktor 5 rein </summary>
+private: System::Void ZoomToolStripButton_MouseDown(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+			 this->drawPanel->AutoScroll = false;
+			 this->StateOfCheckedElement = this->toolStripButtonGridControl->Checked;
+			 if (this->StateOfCheckedElement){//wenn es geklickt ist, dann wird auch grid eingeblendet
+				 this->toolStripButtonGridControl->PerformClick();
+			 }
+			 this->drawBox->BackColor = System::Drawing::Color::Gainsboro;
+			 this->RefreshDrawBox();
+		 }
+///<summary> Bereinigung beim Beenden des Clicks </summary>
+private: System::Void ZoomToolStripButton_MouseUp(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+			 this->FinalizeZoom();
+		 }
+///<summary> Bereinigung auch bei Verlassen des Elements </summary>
+private: System::Void ZoomToolStripButton_MouseLeave(System::Object^  sender, System::EventArgs^  e) {
+			 this->FinalizeZoom();
+		 }
+///<summary> Bereinigungs Methode </summary>
+private: System::Void FinalizeZoom( void ){
+			 this->drawPanel->AutoScroll = true;
+			 if (this->StateOfCheckedElement){//wenn es geklickt ist, dann muss grid wieder eingeblendet werden
+				 this->toolStripButtonGridControl->PerformClick();
+				 this->StateOfCheckedElement = false;
+			 }
+			 this->drawBox->BackColor = System::Drawing::Color::White;
+			 this->RefreshDrawBox();
 		 }
 };//Form1 class
 }//namespace
