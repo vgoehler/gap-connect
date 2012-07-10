@@ -139,11 +139,18 @@ public:
 	///<summary> Schreibt den Winkel </summary>
 	property double LoopAngle{
 		void set(double inValue){
-			this->m_angle = inValue;
-			this->calculateLoopPosition();
+			this->m_dataEdge->loop_direction = inValue;
+			if (this->IsLoop){
+				this->calculateLoopPosition();
+			}
 		}
 		double get(void){
-			return(this->m_angle);
+			if (this->m_dataEdge == nullptr)
+			{
+				return(0);
+			}else{
+				return(this->m_dataEdge->loop_direction);
+			}
 		}
 	}
 	///<summary> Holt den Winkel vom Zentrum bis zum übergebennen Punkt </summary>
@@ -183,8 +190,6 @@ private:
 	bool m_aidLine;
 	///<summary> Anschluß an Datenmember </summary>
 	Kante^ m_dataEdge;
-	///<summary> Gibt den Winkel der Loop Mitte an. </summary>
-	double m_angle;
 	///<summary> oberer Kontrollpunkt für Loop </summary>
 	Point m_startLoopCtrlPt;
 	///<summary> unterer Kontrollpunkt für Loop </summary>

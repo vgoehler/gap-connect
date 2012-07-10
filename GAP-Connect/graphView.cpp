@@ -338,6 +338,7 @@ bool graphView::ImportGraph( String^ filename )
 		return(false);//Fehler beim Einlesen
 	}
 	this->m_dataGraph->convert_adjacency_to_graph(arrTmp);
+	this->m_dataGraph->optimize(666, false);//Anzahl, false == keine Platzierten knoten
 
 	//ViewObjekte bauen
 	this->BuildViewFromData();

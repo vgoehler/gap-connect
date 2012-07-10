@@ -3,7 +3,7 @@
 
 
 namespace GAPConnect {
-edgeView::edgeView(System::Windows::Forms::Form^ inParent, GAPConnect::drawTools^ inDrawTools, vertexView^ startVertex, vertexView^ endVertex, int mode, Graph^ parentDataGraph):basicView(inParent, inDrawTools, parentDataGraph), m_startVertex(nullptr), m_endVertex(nullptr), m_aidLine(false), m_angle(0)
+edgeView::edgeView(System::Windows::Forms::Form^ inParent, GAPConnect::drawTools^ inDrawTools, vertexView^ startVertex, vertexView^ endVertex, int mode, Graph^ parentDataGraph):basicView(inParent, inDrawTools, parentDataGraph), m_startVertex(nullptr), m_endVertex(nullptr), m_aidLine(false)
 {
 	this->StartVertex = startVertex;
 	this->EndVertex = endVertex;
@@ -11,13 +11,15 @@ edgeView::edgeView(System::Windows::Forms::Form^ inParent, GAPConnect::drawTools
 	this->m_dataEdge = this->m_dataGraph->create_edge(startVertex->DataVertex, endVertex->DataVertex);
 	this->IsArc = (mode == 0)? false:true;//hier setzen um auch Daten mit entsprechenden Informationen zu füllen
 	this->IsEnabled = true;//Enablen um Stift zu initialisieren
+	this->LoopAngle = 0;//Winkel auf 0
 }
 
-edgeView::edgeView( System::Windows::Forms::Form^ inParent, GAPConnect::drawTools^ inDrawTools, Graph^ parentDataGraph, Kante^ dataEdge ):basicView(inParent, inDrawTools, parentDataGraph), m_startVertex(nullptr), m_endVertex(nullptr), m_aidLine(false), m_dataEdge(dataEdge), m_angle(0)
+edgeView::edgeView( System::Windows::Forms::Form^ inParent, GAPConnect::drawTools^ inDrawTools, Graph^ parentDataGraph, Kante^ dataEdge ):basicView(inParent, inDrawTools, parentDataGraph), m_startVertex(nullptr), m_endVertex(nullptr), m_aidLine(false), m_dataEdge(dataEdge)
 {
 	this->m_lineMode = this->m_dataEdge->gerichtet == 0 ? 0 : 1;//ignorieren hier alle anderen Werte
 	this->IsEnabled = this->m_dataEdge->shape == DISABLED ? true : false;
 	this->AidLine = this->m_dataEdge->aid_line;
+	this->LoopAngle = this->m_dataEdge->loop_direction;
 }
 
 System::Drawing::Size edgeView::createSize( void )
@@ -127,7 +129,7 @@ void edgeView::drawArrow( System::Windows::Forms::PaintEventArgs^ e ){
 		angleStart = this->getAnglePointToPoint(this->m_startDock, this->m_endDock);
 	}else{
 		//Winkel entspricht endDock Winkel + .5 -PI
-		angleStart = this->m_angle + 0.5 - PI;
+		angleStart = this->LoopAngle + 0.5 - PI;
 	}
 	Point arrowPeakOne, arrowPeakTwo;
 	arrowPeakOne = this->calculatePointFromAngle(angleStart-.20, 15.0, this->m_endDock);
@@ -313,8 +315,8 @@ edgeView::~edgeView()
 void edgeView::calculateLoopPosition( void )
 {
 	//EingangsWinkel benutzen um oberen und unteren Winkel zu erzeugen jeweils .5 auseinander
-	double obererWinkel = this->m_angle - 0.5;
-	double untererWinkel = this->m_angle + 0.5;
+	double obererWinkel = this->LoopAngle - 0.5;
+	double untererWinkel = this->LoopAngle + 0.5;
 	//Dockpunkte berechnen
 	this->m_startDock = this->StartVertex->getDockPoint(obererWinkel);
 	this->m_endDock = this->StartVertex->getDockPoint(untererWinkel);
