@@ -25,7 +25,11 @@ public:
 	///<summary> Ist eine Schlinge </summary>
 	property bool IsLoop{
 		bool get(void){
-			return(this->m_startVertex == this->m_endVertex ? true : false);
+			if (this->StartVertex != nullptr && this->EndVertex != nullptr){
+				return(this->m_startVertex == this->m_endVertex ? true : false);
+			}else{
+				return(false);//wenn wir keine Knoten definiert haben falsch zurückgeben; kann nur im Ladefall passieren.
+			}
 		}
 		void set(bool inValue){
 			if (inValue){//Gleich setzen geht
@@ -70,7 +74,7 @@ public:
 			}else{
 				this->m_edgePen = this->m_drawTools->m_edgeDeactivated;
 			}
-			this->m_dataEdge->shape = inValue ? DISABLED : NORMAL;
+			this->m_dataEdge->shape = inValue ? NORMAL : DISABLED;
 		}
 	}
 	///<summary> Methode zum Aufrufen des Konfigurationsdialogs</summary>

@@ -120,6 +120,8 @@ private: System::Windows::Forms::ToolStripMenuItem^  importtoolStripMenuItem;
 private: System::Windows::Forms::ToolStripMenuItem^  exporttoolStripMenuItem;
 private: System::Windows::Forms::OpenFileDialog^  ImportDialog;
 private: System::Windows::Forms::SaveFileDialog^  ExportDialog;
+private: System::Windows::Forms::ProgressBar^  pBOptimize;
+private: System::Windows::Forms::Button^  buttonOptimize;
 	private: System::Windows::Forms::ImageList^  imageListToolbar;
 
 	///<summary>Änderungen am Graph in Property vermerken. set routine setzt auch enable im Menü</summary>
@@ -173,6 +175,12 @@ private: System::Windows::Forms::SaveFileDialog^  ExportDialog;
 					 return(nullptr);
 				 }
 			 }
+	///<summary> Setzt Optimizable Progressbar inkrementär</summary>
+	public: property Int32 OptimizerPanel{
+				void set(Int32 inValue){
+					this->pBOptimize->Value += inValue;
+				}
+			}
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -239,6 +247,7 @@ private: System::Windows::Forms::SaveFileDialog^  ExportDialog;
 			this->openFileDialog1 = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->saveFileDialog1 = (gcnew System::Windows::Forms::SaveFileDialog());
 			this->control = (gcnew System::Windows::Forms::Panel());
+			this->buttonOptimize = (gcnew System::Windows::Forms::Button());
 			this->gBStatus = (gcnew System::Windows::Forms::GroupBox());
 			this->tbTyp = (gcnew System::Windows::Forms::TextBox());
 			this->tBKommentar = (gcnew System::Windows::Forms::TextBox());
@@ -256,6 +265,7 @@ private: System::Windows::Forms::SaveFileDialog^  ExportDialog;
 			this->imageListToolbar = (gcnew System::Windows::Forms::ImageList(this->components));
 			this->ImportDialog = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->ExportDialog = (gcnew System::Windows::Forms::SaveFileDialog());
+			this->pBOptimize = (gcnew System::Windows::Forms::ProgressBar());
 			toolStripSeparator1 = (gcnew System::Windows::Forms::ToolStripSeparator());
 			toolStripSeparator2 = (gcnew System::Windows::Forms::ToolStripSeparator());
 			toolStripSeparator4 = (gcnew System::Windows::Forms::ToolStripSeparator());
@@ -281,7 +291,7 @@ private: System::Windows::Forms::SaveFileDialog^  ExportDialog;
 			// toolStripSeparator1
 			// 
 			toolStripSeparator1->Name = L"toolStripSeparator1";
-			toolStripSeparator1->Size = System::Drawing::Size(149, 6);
+			toolStripSeparator1->Size = System::Drawing::Size(140, 6);
 			// 
 			// toolStripSeparator2
 			// 
@@ -336,7 +346,7 @@ private: System::Windows::Forms::SaveFileDialog^  ExportDialog;
 			// toolStripSeparator8
 			// 
 			toolStripSeparator8->Name = L"toolStripSeparator8";
-			toolStripSeparator8->Size = System::Drawing::Size(149, 6);
+			toolStripSeparator8->Size = System::Drawing::Size(140, 6);
 			// 
 			// mainmenuStrip
 			// 
@@ -361,35 +371,35 @@ private: System::Windows::Forms::SaveFileDialog^  ExportDialog;
 			// neuToolStripMenuItem
 			// 
 			this->neuToolStripMenuItem->Name = L"neuToolStripMenuItem";
-			this->neuToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->neuToolStripMenuItem->Size = System::Drawing::Size(143, 22);
 			this->neuToolStripMenuItem->Text = L"&Neu";
 			this->neuToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::neuMenu_Click);
 			// 
 			// ladenToolStripMenuItem
 			// 
 			this->ladenToolStripMenuItem->Name = L"ladenToolStripMenuItem";
-			this->ladenToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->ladenToolStripMenuItem->Size = System::Drawing::Size(143, 22);
 			this->ladenToolStripMenuItem->Text = L"&Laden";
 			this->ladenToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::ladenMenu_Click);
 			// 
 			// speichernToolStripMenuItem
 			// 
 			this->speichernToolStripMenuItem->Name = L"speichernToolStripMenuItem";
-			this->speichernToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->speichernToolStripMenuItem->Size = System::Drawing::Size(143, 22);
 			this->speichernToolStripMenuItem->Text = L"&Speichern";
 			this->speichernToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::speichernMenu_Click);
 			// 
 			// speichernalsToolStripMenuItem
 			// 
 			this->speichernalsToolStripMenuItem->Name = L"speichernalsToolStripMenuItem";
-			this->speichernalsToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->speichernalsToolStripMenuItem->Size = System::Drawing::Size(143, 22);
 			this->speichernalsToolStripMenuItem->Text = L"Speichern &als";
 			this->speichernalsToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::speichernMenu_Click);
 			// 
 			// importtoolStripMenuItem
 			// 
 			this->importtoolStripMenuItem->Name = L"importtoolStripMenuItem";
-			this->importtoolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->importtoolStripMenuItem->Size = System::Drawing::Size(143, 22);
 			this->importtoolStripMenuItem->Text = L"&Importieren";
 			this->importtoolStripMenuItem->ToolTipText = L"Liest eine Adjazenzmatrix ein und konvertiert diese zu einem Graph.";
 			this->importtoolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::importtoolStripMenuItem_Click);
@@ -397,7 +407,7 @@ private: System::Windows::Forms::SaveFileDialog^  ExportDialog;
 			// exporttoolStripMenuItem
 			// 
 			this->exporttoolStripMenuItem->Name = L"exporttoolStripMenuItem";
-			this->exporttoolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->exporttoolStripMenuItem->Size = System::Drawing::Size(143, 22);
 			this->exporttoolStripMenuItem->Text = L"&Exportieren";
 			this->exporttoolStripMenuItem->ToolTipText = L"Graph als Adjazenzmatrix exportieren";
 			this->exporttoolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::exporttoolStripMenuItem_Click);
@@ -405,7 +415,7 @@ private: System::Windows::Forms::SaveFileDialog^  ExportDialog;
 			// beendenToolStripMenuItem
 			// 
 			this->beendenToolStripMenuItem->Name = L"beendenToolStripMenuItem";
-			this->beendenToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->beendenToolStripMenuItem->Size = System::Drawing::Size(143, 22);
 			this->beendenToolStripMenuItem->Text = L"&Beenden";
 			this->beendenToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::beendenToolStripMenuItem_Click);
 			// 
@@ -742,6 +752,7 @@ private: System::Windows::Forms::SaveFileDialog^  ExportDialog;
 			// control
 			// 
 			this->control->BackColor = System::Drawing::SystemColors::Control;
+			this->control->Controls->Add(this->buttonOptimize);
 			this->control->Controls->Add(this->gBStatus);
 			this->control->Controls->Add(this->zeichentools);
 			this->control->Dock = System::Windows::Forms::DockStyle::Left;
@@ -749,6 +760,16 @@ private: System::Windows::Forms::SaveFileDialog^  ExportDialog;
 			this->control->Name = L"control";
 			this->control->Size = System::Drawing::Size(198, 491);
 			this->control->TabIndex = 6;
+			// 
+			// buttonOptimize
+			// 
+			this->buttonOptimize->Location = System::Drawing::Point(7, 400);
+			this->buttonOptimize->Name = L"buttonOptimize";
+			this->buttonOptimize->Size = System::Drawing::Size(185, 23);
+			this->buttonOptimize->TabIndex = 2;
+			this->buttonOptimize->Text = L"Graph Optimieren";
+			this->buttonOptimize->UseVisualStyleBackColor = true;
+			this->buttonOptimize->Click += gcnew System::EventHandler(this, &Form1::buttonOptimize_Click);
 			// 
 			// gBStatus
 			// 
@@ -905,14 +926,12 @@ private: System::Windows::Forms::SaveFileDialog^  ExportDialog;
 			this->drawPanel->AutoScroll = true;
 			this->drawPanel->AutoScrollMinSize = System::Drawing::Size(3000, 3000);
 			this->drawPanel->BackColor = System::Drawing::SystemColors::Window;
-			this->drawPanel->BackgroundImage = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"drawPanel.BackgroundImage")));
 			this->drawPanel->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
 			this->drawPanel->Controls->Add(this->drawBox);
 			this->drawPanel->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->drawPanel->Location = System::Drawing::Point(198, 49);
-			this->drawPanel->MinimumSize = System::Drawing::Size(500, 500);
 			this->drawPanel->Name = L"drawPanel";
-			this->drawPanel->Size = System::Drawing::Size(586, 500);
+			this->drawPanel->Size = System::Drawing::Size(586, 491);
 			this->drawPanel->TabIndex = 7;
 			// 
 			// drawBox
@@ -950,12 +969,23 @@ private: System::Windows::Forms::SaveFileDialog^  ExportDialog;
 			this->ExportDialog->Filter = L"Adjazenzmatritzen|*.adj|All|*.*";
 			this->ExportDialog->InitialDirectory = L".";
 			// 
+			// pBOptimize
+			// 
+			this->pBOptimize->BackColor = System::Drawing::SystemColors::MenuBar;
+			this->pBOptimize->Location = System::Drawing::Point(307, 1);
+			this->pBOptimize->Name = L"pBOptimize";
+			this->pBOptimize->RightToLeftLayout = true;
+			this->pBOptimize->Size = System::Drawing::Size(477, 23);
+			this->pBOptimize->Style = System::Windows::Forms::ProgressBarStyle::Continuous;
+			this->pBOptimize->TabIndex = 8;
+			// 
 			// Form1
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->AutoSize = true;
 			this->ClientSize = System::Drawing::Size(784, 562);
+			this->Controls->Add(this->pBOptimize);
 			this->Controls->Add(this->drawPanel);
 			this->Controls->Add(this->control);
 			this->Controls->Add(this->mainstatusStrip);
@@ -1151,19 +1181,13 @@ private: System::Void toolStripButtonGridFixed_Click(System::Object^  sender, Sy
 ///<summary> Enabled bzw. Disabled ToolStripButtons die Kanten zeichnen.</summary>
 private: void toolStripButtonEdgesEnable(){
 			 //Toolbox Schalter
-			 if (this->m_graph->CountVertex > 0){
-				 for each (System::Windows::Forms::ToolStripButton^ element in this->zeichnenEdge->Items)
-				 {
-					 element->Enabled = true;
-				 }
-				 this->exporttoolStripMenuItem->Enabled = true;
-			 }else{
-				 for each (System::Windows::Forms::ToolStripButton^ element in this->zeichnenEdge->Items)
-				 {
-					 element->Enabled = false;
-				 }
-				 this->exporttoolStripMenuItem->Enabled = false;
+			 bool switchValue = this->m_graph->CountVertex > 0 ? true : false;
+			 for each (System::Windows::Forms::ToolStripButton^ element in this->zeichnenEdge->Items)
+			 {
+				 element->Enabled = switchValue;
 			 }
+			 this->exporttoolStripMenuItem->Enabled = switchValue;
+			 this->buttonOptimize->Enabled = switchValue;
 			 //Menü Einträge auf enbling der ToolButtons abstimmen
 			 this->kanteToolStripMenuItem->Enabled = this->toolStripButtonArc->Enabled;
 			 this->kanteMitWertToolStripMenuItem->Enabled = this->toolStripButtonArc->Enabled;
@@ -1525,6 +1549,19 @@ private: System::Void exporttoolStripMenuItem_Click(System::Object^  sender, Sys
 					 MessageBox::Show(L"Fehler beim Exportieren. Keine Daten geschrieben.", L"Fehler beim Exportieren", MessageBoxButtons::OK, MessageBoxIcon::Error);
 				 }
 			 }
+		 }
+///<summary> Optimierungsvorgang gestartet </summary>
+private: System::Void buttonOptimize_Click(System::Object^  sender, System::EventArgs^  e) {
+			 //INIT
+			this->UseWaitCursor = true;
+			this->pBOptimize->Minimum = 0;
+			this->pBOptimize->Maximum = 500000;
+
+			this->m_graph->StartOptimization(500000);
+
+			//FINALIZE
+			this->UseWaitCursor = false;
+			this->pBOptimize->Value = 0;
 		 }
 };//Form1 class
 }//namespace

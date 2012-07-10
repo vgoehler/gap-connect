@@ -17,7 +17,7 @@ edgeView::edgeView(System::Windows::Forms::Form^ inParent, GAPConnect::drawTools
 edgeView::edgeView( System::Windows::Forms::Form^ inParent, GAPConnect::drawTools^ inDrawTools, Graph^ parentDataGraph, Kante^ dataEdge ):basicView(inParent, inDrawTools, parentDataGraph), m_startVertex(nullptr), m_endVertex(nullptr), m_aidLine(false), m_dataEdge(dataEdge)
 {
 	this->m_lineMode = this->m_dataEdge->gerichtet == 0 ? 0 : 1;//ignorieren hier alle anderen Werte
-	this->IsEnabled = this->m_dataEdge->shape == DISABLED ? true : false;
+	this->IsEnabled = this->m_dataEdge->shape == DISABLED ? false : true;
 	this->AidLine = this->m_dataEdge->aid_line;
 	this->LoopAngle = this->m_dataEdge->loop_direction;
 }

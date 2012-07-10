@@ -338,12 +338,25 @@ bool graphView::ImportGraph( String^ filename )
 		return(false);//Fehler beim Einlesen
 	}
 	this->m_dataGraph->convert_adjacency_to_graph(arrTmp);
-	this->m_dataGraph->optimize(666, false);//Anzahl, false == keine Platzierten knoten
+	this->m_dataGraph->optimize(6666, false);//Anzahl, false == keine Platzierten knoten
 
 	//ViewObjekte bauen
 	this->BuildViewFromData();
 
 	return (true);
+}
+
+bool graphView::StartOptimization( Int32 maximum )
+{
+	Int32 outer = Int32(float(maximum) /100);
+	Int32 step = Int32(float(maximum) /10000);
+	for (int i = 0; i< outer; i++){
+		if (this->m_dataGraph->optimize(step, true) == 0){
+			return true;
+		}
+		dynamic_cast<GAPConnect::Form1^ > (this->m_parent)->OptimizerPanel = step;
+	}
+	return false;
 }
 
 }//namespace

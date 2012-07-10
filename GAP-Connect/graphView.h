@@ -96,6 +96,8 @@ public:
 	bool ImportGraph( String^ filename );
 	///<summary> Zum Exportieren von Graphen in eine Adjazenzmatrix </summary>
 	bool ExportGraph( String^ filename );
+	///<summary> Startet die Optimisierung des Datengraphen </summary>
+	bool StartOptimization( Int32 maximum );
 
 private:
 	///<summary>Handle um edge Zeichnen in progress zu signalisieren, speichert den Start, ansonsten nullptr</summary>
