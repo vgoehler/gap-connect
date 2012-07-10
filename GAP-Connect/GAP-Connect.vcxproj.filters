@@ -37,6 +37,9 @@
     <None Include="cursor_arc.cur">
       <Filter>Ressourcendateien</Filter>
     </None>
+    <None Include="..\Pictures\graph.ico">
+      <Filter>Ressourcendateien</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GAP-Connect.cpp">

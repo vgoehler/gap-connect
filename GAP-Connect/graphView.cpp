@@ -141,8 +141,25 @@ GAPConnect::basicView^ graphView::getHandleOfElement( System::Drawing::Point pkt
 	if (tmpList.Count == 1){
 		return (tmpList[0]);//bei nur einem Ergebniss einfach 
 	}else if (tmpList.Count > 1){
-		//TODO! hier brauchen wir eigentlich irgendeine Fallunterscheidung, wir geben aber mal den ersten zurück
-		return (tmpList[0]);
+		//mehrere! Fallunterscheidung!
+		System::Collections::Generic::List< GAPConnect::basicView^ > tmpLoops = gcnew System::Collections::Generic::List< GAPConnect::basicView^ >();
+		for each(GAPConnect::basicView^ element in tmpList){
+			if (dynamic_cast<GAPConnect::vertexView^ > (element) != nullptr){//Vertex bevorzugen
+				return(element);
+			}else{
+				edgeView^ testEdge = dynamic_cast<GAPConnect::edgeView^ >(element);
+				if (testEdge != nullptr){
+					//Normale Kanten vor Loops
+					if (! testEdge->IsLoop){
+						return(element);
+					}else{
+						tmpLoops.Add(element);
+					}
+				}
+			}
+		}
+		//wenn wir hier noch nicht zurückgegeben sind müssen wir den ersten Loop zurückgeben
+		return (tmpLoops[0]);
 	}
 	//in allen anderen Fällen
 	return (nullptr);

@@ -84,6 +84,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Pictures\graph.ico" />
     <None Include="app.ico" />
     <None Include="cursor_arc.cur" />
     <None Include="cursor_edge.cur" />

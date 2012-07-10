@@ -15,7 +15,7 @@ namespace GAPConnect {
 	public ref class Form1 : public System::Windows::Forms::Form
 	{
 	public:
-		Form1(void):dragBoxFromMouseDown(System::Drawing::Rectangle::Empty), dragAndDropVertexOldLocation(System::Drawing::Point::Empty), m_graph(nullptr), filename(L"")
+		Form1(void):dragBoxFromMouseDown(System::Drawing::Rectangle::Empty), dragAndDropVertexOldLocation(System::Drawing::Point::Empty), m_graph(nullptr), filename(L""), dragAndDropHandleOfVertex(nullptr), dragAndDropHandleOfLoop(nullptr), dragAndDropLoopOldAngle(NULL)
 		{
 			InitializeComponent();
 			this->changedGraph = false;
@@ -50,6 +50,10 @@ namespace GAPConnect {
 		GAPConnect::graphView^ m_graph;
 	///<summary> Drag and Drop - speichern der Ursprungslokation für Rücksetzen </summary>
 		System::Drawing::Point dragAndDropVertexOldLocation; 
+	///<summary> Drag and Drop - Loop</summary>
+		GAPConnect::edgeView^ dragAndDropHandleOfLoop;
+	///<summary> Drag and Drop - StartWinkel des Loop  für Rollback</summary>
+		double dragAndDropLoopOldAngle;
 	///<summary> Filename der Datei </summary>
 		String^ filename;
 
@@ -124,7 +128,6 @@ private: System::Windows::Forms::SaveFileDialog^  ExportDialog;
 					 this->m_unsavedChanges = InValue;
 					 //änderungen im graph triggern zulassen des speicherns
 					 this->speichernToolStripMenuItem->Enabled = InValue;
-					 this->speichernalsToolStripMenuItem->Enabled = InValue;
 					 this->toolStripButtonSave->Enabled = InValue;
 				 }
 				 bool get(void){
@@ -278,7 +281,7 @@ private: System::Windows::Forms::SaveFileDialog^  ExportDialog;
 			// toolStripSeparator1
 			// 
 			toolStripSeparator1->Name = L"toolStripSeparator1";
-			toolStripSeparator1->Size = System::Drawing::Size(140, 6);
+			toolStripSeparator1->Size = System::Drawing::Size(149, 6);
 			// 
 			// toolStripSeparator2
 			// 
@@ -333,7 +336,7 @@ private: System::Windows::Forms::SaveFileDialog^  ExportDialog;
 			// toolStripSeparator8
 			// 
 			toolStripSeparator8->Name = L"toolStripSeparator8";
-			toolStripSeparator8->Size = System::Drawing::Size(140, 6);
+			toolStripSeparator8->Size = System::Drawing::Size(149, 6);
 			// 
 			// mainmenuStrip
 			// 
@@ -342,7 +345,7 @@ private: System::Windows::Forms::SaveFileDialog^  ExportDialog;
 				this->bearbeitenToolStripMenuItem, this->zeichnenToolStripMenuItem, this->optionenToolStripMenuItem, this->hilfeToolStripMenuItem});
 			this->mainmenuStrip->Location = System::Drawing::Point(0, 0);
 			this->mainmenuStrip->Name = L"mainmenuStrip";
-			this->mainmenuStrip->Size = System::Drawing::Size(1008, 24);
+			this->mainmenuStrip->Size = System::Drawing::Size(784, 24);
 			this->mainmenuStrip->TabIndex = 1;
 			this->mainmenuStrip->Text = L"menuStrip1";
 			// 
@@ -358,35 +361,35 @@ private: System::Windows::Forms::SaveFileDialog^  ExportDialog;
 			// neuToolStripMenuItem
 			// 
 			this->neuToolStripMenuItem->Name = L"neuToolStripMenuItem";
-			this->neuToolStripMenuItem->Size = System::Drawing::Size(143, 22);
+			this->neuToolStripMenuItem->Size = System::Drawing::Size(152, 22);
 			this->neuToolStripMenuItem->Text = L"&Neu";
 			this->neuToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::neuMenu_Click);
 			// 
 			// ladenToolStripMenuItem
 			// 
 			this->ladenToolStripMenuItem->Name = L"ladenToolStripMenuItem";
-			this->ladenToolStripMenuItem->Size = System::Drawing::Size(143, 22);
+			this->ladenToolStripMenuItem->Size = System::Drawing::Size(152, 22);
 			this->ladenToolStripMenuItem->Text = L"&Laden";
 			this->ladenToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::ladenMenu_Click);
 			// 
 			// speichernToolStripMenuItem
 			// 
 			this->speichernToolStripMenuItem->Name = L"speichernToolStripMenuItem";
-			this->speichernToolStripMenuItem->Size = System::Drawing::Size(143, 22);
+			this->speichernToolStripMenuItem->Size = System::Drawing::Size(152, 22);
 			this->speichernToolStripMenuItem->Text = L"&Speichern";
 			this->speichernToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::speichernMenu_Click);
 			// 
 			// speichernalsToolStripMenuItem
 			// 
 			this->speichernalsToolStripMenuItem->Name = L"speichernalsToolStripMenuItem";
-			this->speichernalsToolStripMenuItem->Size = System::Drawing::Size(143, 22);
+			this->speichernalsToolStripMenuItem->Size = System::Drawing::Size(152, 22);
 			this->speichernalsToolStripMenuItem->Text = L"Speichern &als";
 			this->speichernalsToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::speichernMenu_Click);
 			// 
 			// importtoolStripMenuItem
 			// 
 			this->importtoolStripMenuItem->Name = L"importtoolStripMenuItem";
-			this->importtoolStripMenuItem->Size = System::Drawing::Size(143, 22);
+			this->importtoolStripMenuItem->Size = System::Drawing::Size(152, 22);
 			this->importtoolStripMenuItem->Text = L"&Importieren";
 			this->importtoolStripMenuItem->ToolTipText = L"Liest eine Adjazenzmatrix ein und konvertiert diese zu einem Graph.";
 			this->importtoolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::importtoolStripMenuItem_Click);
@@ -394,7 +397,7 @@ private: System::Windows::Forms::SaveFileDialog^  ExportDialog;
 			// exporttoolStripMenuItem
 			// 
 			this->exporttoolStripMenuItem->Name = L"exporttoolStripMenuItem";
-			this->exporttoolStripMenuItem->Size = System::Drawing::Size(143, 22);
+			this->exporttoolStripMenuItem->Size = System::Drawing::Size(152, 22);
 			this->exporttoolStripMenuItem->Text = L"&Exportieren";
 			this->exporttoolStripMenuItem->ToolTipText = L"Graph als Adjazenzmatrix exportieren";
 			this->exporttoolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::exporttoolStripMenuItem_Click);
@@ -402,7 +405,7 @@ private: System::Windows::Forms::SaveFileDialog^  ExportDialog;
 			// beendenToolStripMenuItem
 			// 
 			this->beendenToolStripMenuItem->Name = L"beendenToolStripMenuItem";
-			this->beendenToolStripMenuItem->Size = System::Drawing::Size(143, 22);
+			this->beendenToolStripMenuItem->Size = System::Drawing::Size(152, 22);
 			this->beendenToolStripMenuItem->Text = L"&Beenden";
 			this->beendenToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::beendenToolStripMenuItem_Click);
 			// 
@@ -563,7 +566,7 @@ private: System::Windows::Forms::SaveFileDialog^  ExportDialog;
 			this->maintoolStrip->Location = System::Drawing::Point(0, 24);
 			this->maintoolStrip->Name = L"maintoolStrip";
 			this->maintoolStrip->RenderMode = System::Windows::Forms::ToolStripRenderMode::System;
-			this->maintoolStrip->Size = System::Drawing::Size(1008, 25);
+			this->maintoolStrip->Size = System::Drawing::Size(784, 25);
 			this->maintoolStrip->TabIndex = 3;
 			this->maintoolStrip->Text = L"toolStrip1";
 			// 
@@ -701,9 +704,9 @@ private: System::Windows::Forms::SaveFileDialog^  ExportDialog;
 			// 
 			this->mainstatusStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {this->toolStripLabelMouseX, 
 				this->toolStripLabelMouseY, this->toolStripStatusLabelModus});
-			this->mainstatusStrip->Location = System::Drawing::Point(0, 740);
+			this->mainstatusStrip->Location = System::Drawing::Point(0, 540);
 			this->mainstatusStrip->Name = L"mainstatusStrip";
-			this->mainstatusStrip->Size = System::Drawing::Size(1008, 22);
+			this->mainstatusStrip->Size = System::Drawing::Size(784, 22);
 			this->mainstatusStrip->TabIndex = 4;
 			this->mainstatusStrip->Text = L"statusStrip1";
 			// 
@@ -744,7 +747,7 @@ private: System::Windows::Forms::SaveFileDialog^  ExportDialog;
 			this->control->Dock = System::Windows::Forms::DockStyle::Left;
 			this->control->Location = System::Drawing::Point(0, 49);
 			this->control->Name = L"control";
-			this->control->Size = System::Drawing::Size(198, 691);
+			this->control->Size = System::Drawing::Size(198, 491);
 			this->control->TabIndex = 6;
 			// 
 			// gBStatus
@@ -909,7 +912,7 @@ private: System::Windows::Forms::SaveFileDialog^  ExportDialog;
 			this->drawPanel->Location = System::Drawing::Point(198, 49);
 			this->drawPanel->MinimumSize = System::Drawing::Size(500, 500);
 			this->drawPanel->Name = L"drawPanel";
-			this->drawPanel->Size = System::Drawing::Size(810, 691);
+			this->drawPanel->Size = System::Drawing::Size(586, 500);
 			this->drawPanel->TabIndex = 7;
 			// 
 			// drawBox
@@ -952,7 +955,7 @@ private: System::Windows::Forms::SaveFileDialog^  ExportDialog;
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->AutoSize = true;
-			this->ClientSize = System::Drawing::Size(1008, 762);
+			this->ClientSize = System::Drawing::Size(784, 562);
 			this->Controls->Add(this->drawPanel);
 			this->Controls->Add(this->control);
 			this->Controls->Add(this->mainstatusStrip);
@@ -961,7 +964,7 @@ private: System::Windows::Forms::SaveFileDialog^  ExportDialog;
 			this->Cursor = System::Windows::Forms::Cursors::Default;
 			this->DoubleBuffered = true;
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^  >(resources->GetObject(L"$this.Icon")));
-			this->MinimumSize = System::Drawing::Size(500, 600);
+			this->MinimumSize = System::Drawing::Size(800, 600);
 			this->Name = L"Form1";
 			this->Text = L"GAP-Connect";
 			this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &Form1::Form1_FormClosing);
@@ -1236,7 +1239,7 @@ private: System::Void drawBox_MouseUp(System::Object^  sender, System::Windows::
 				this->RefreshDrawBox();
 			 }else{
 				 //nicht im ZeichnenModus
-				 if (this->dragAndDropHandleOfVertex != nullptr){
+				 if (this->dragBoxFromMouseDown != System::Drawing::Rectangle::Empty){
 					 //DnD Vertex gesetzt, also Drop
 					 this->DoDrop(Point(mouseX, mouseY));
 				 }
@@ -1263,6 +1266,10 @@ private: bool markElementAtKoords(System::Drawing::Point pkt){
 				 {
 					 //also doch Kante
 					 this->m_graph->markElement(edge);
+					 //Drag and Drop Start vielleicht?
+					 if (chosenOption == nullptr && edge->IsLoop){
+						 this->StartDragAndDrop(edge, pkt);
+					 }
 					 return(true);
 				 }else{
 					 //kein Knoten und keine Kante
@@ -1344,22 +1351,43 @@ private: System::Void EditMarkedObject_Click(System::Object^  sender, System::Ev
 		 }
 ///<summary> Setzt das Drag and Drop zurück</summary>
 private: void ResetDragAndDrop( void ){
-			 if (this->dragAndDropHandleOfVertex != nullptr){//Gibts überhaupt einen Drag
-				 this->dragAndDropHandleOfVertex->Location = this->dragAndDropVertexOldLocation;
-				 this->m_graph->ReCalcDockingPoints(this->dragAndDropHandleOfVertex);
-				 this->RefreshDrawBox();
-				 this->dragAndDropHandleOfVertex = nullptr;
-				 this->dragAndDropVertexOldLocation = Point::Empty;
+			 if (this->dragBoxFromMouseDown != System::Drawing::Rectangle::Empty){//Gibts überhaupt einen Drag
+
 				 this->dragBoxFromMouseDown = System::Drawing::Rectangle::Empty;
 				 this->toolStripStatusLabelModus->Text = L"";
+
+				 if (this->dragAndDropHandleOfVertex != nullptr){//Vertex Drag
+					 this->dragAndDropHandleOfVertex->Location = this->dragAndDropVertexOldLocation;
+					 this->m_graph->ReCalcDockingPoints(this->dragAndDropHandleOfVertex);
+					 this->RefreshDrawBox();
+					 this->dragAndDropHandleOfVertex = nullptr;
+					 this->dragAndDropVertexOldLocation = Point::Empty;
+				 }else{
+					 if (this->dragAndDropHandleOfLoop != nullptr){//Loop Drag
+						 this->dragAndDropHandleOfLoop->LoopAngle = this->dragAndDropLoopOldAngle;
+						 this->RefreshDrawBox();
+						 this->dragAndDropHandleOfLoop = nullptr;
+						 this->dragAndDropLoopOldAngle = NULL;
+					 }
+				 }
 			 }
 		 }
+///<summary> Beginn des Drag and Drop -vorgangs. Überladen!</summary>
 private: void StartDragAndDrop( vertexView^ vertexToDrag, Point pkt ){
-			 //Drag Rectangle generieren
-			 System::Drawing::Size dragSize = System::Windows::Forms::SystemInformation::DragSize;
+			 this->StartDragAndDrop(pkt);
 			 //Drag Vertex merken im Falle es ist ein Drag
 			 this->dragAndDropHandleOfVertex = vertexToDrag;
 			 this->dragAndDropVertexOldLocation = vertexToDrag->Location;
+		 }
+private: void StartDragAndDrop( edgeView^ loopToDrag, Point pkt ){//Überladen für Loop Drag
+			 this->StartDragAndDrop(pkt);
+			 //Drag Loop
+			 this->dragAndDropHandleOfLoop = loopToDrag;
+			 this->dragAndDropLoopOldAngle = loopToDrag->LoopAngle;
+		 }
+private: void StartDragAndDrop ( Point pkt ){//Überladen die 2. hier nur für internen gebrauch
+			 //Drag Rectangle generieren
+			 System::Drawing::Size dragSize = System::Windows::Forms::SystemInformation::DragSize;
 			 //D&D Rechteck hat mouse click koords in der Mitte
 			 System::Drawing::Point ddRectangleLocation = System::Drawing::Point(pkt.X - (dragSize.Width /2), pkt.Y - (dragSize.Height /2));
 			 this->dragBoxFromMouseDown = Rectangle(ddRectangleLocation, dragSize);
@@ -1372,11 +1400,23 @@ private: void DoDrag( Point pkt ){
 		 if (this->dragBoxFromMouseDown != System::Drawing::Rectangle::Empty){
 			 //mouse außerhalb der dragBox ->  dragging
 			 if ( !this->dragBoxFromMouseDown.Contains(pkt) ){
-				 //Label updaten
-				 this->toolStripStatusLabelModus->Text = String::Concat(L"Dragging X = ",abs(this->dragBoxFromMouseDown.X - pkt.X), L" Y = ", abs(this->dragBoxFromMouseDown.Y - pkt.Y));
-				 //neue Position an Knoten übergeben
-				 this->dragAndDropHandleOfVertex->LocationCenter = pkt;
-				 this->m_graph->ReCalcDockingPoints(this->dragAndDropHandleOfVertex);
+				 //Vertex Drag
+				 if (this->dragAndDropHandleOfVertex != nullptr){
+					 //Label updaten
+					 this->toolStripStatusLabelModus->Text = String::Concat(L"Dragging X = ",abs(this->dragBoxFromMouseDown.X - pkt.X), L" Y = ", abs(this->dragBoxFromMouseDown.Y - pkt.Y));
+					 //neue Position an Knoten übergeben
+					 this->dragAndDropHandleOfVertex->LocationCenter = pkt;
+					 this->m_graph->ReCalcDockingPoints(this->dragAndDropHandleOfVertex);
+				 }
+				 //Loop Drag
+				 if (this->dragAndDropHandleOfLoop != nullptr){
+					 //winkel berechnen
+					 double newAngle = this->dragAndDropHandleOfLoop->getAngleCenterToPoint(pkt);
+					 //übergeben
+					 this->dragAndDropHandleOfLoop->LoopAngle = newAngle;
+					 //Label updaten
+					 this->toolStripStatusLabelModus->Text = String::Concat(L"Dragging Loop: ", newAngle, " radians");
+				 }
 				 //Änderungen Darstellen
 				 this->RefreshDrawBox();
 			 }
@@ -1390,15 +1430,24 @@ private: void DoDrop( Point pkt ){
 				 //In bounds der Anwendung
 				 if (!this->drawBox->Bounds.Contains(pkt))
 				 {
-					 MessageBox::Show(L"Kein Ablegen außerhalb des Zeichenbereichs.", L"Knoten Außerhalb!", MessageBoxButtons::OK, MessageBoxIcon::Hand);
-				 }else if (this->m_graph->vertexTooClose(pkt, this->dragAndDropHandleOfVertex->Size, this->dragAndDropHandleOfVertex)){
-					 //testen ob aktuelle Position gut zum ablegen ist - Nähe zu anderem Knoten
-					 MessageBox::Show(L"Sie können keinen Knoten auf einem Anderen oder in seiner Nähe ablegen!", L"Knoten Konflikt!", MessageBoxButtons::OK, MessageBoxIcon::Hand);
+					 MessageBox::Show(L"Kein Ablegen außerhalb des Zeichenbereichs.", L"Außerhalb!", MessageBoxButtons::OK, MessageBoxIcon::Hand);
 				 }else{
-					 //ablegen, Punkt modifizieren, so dass er auf die Mitte weist um Refresh zu verhindern
-					 this->dragAndDropVertexOldLocation = Point(pkt.X - this->dragAndDropHandleOfVertex->Width/2, pkt.Y - this->dragAndDropHandleOfVertex->Height/2);
-					 this->changedGraph = true;
+					 if (this->dragAndDropHandleOfVertex != nullptr){//Vertex Drag
+						 if (this->m_graph->vertexTooClose(pkt, this->dragAndDropHandleOfVertex->Size, this->dragAndDropHandleOfVertex)){
+							 //testen ob aktuelle Position gut zum ablegen ist - Nähe zu anderem Knoten
+							 MessageBox::Show(L"Sie können keinen Knoten auf einem Anderen oder in seiner Nähe ablegen!", L"Knoten Konflikt!", MessageBoxButtons::OK, MessageBoxIcon::Hand);
+						 }else{
+							 //ablegen, Punkt modifizieren, so dass er auf die Mitte weist um Refresh zu verhindern
+							 this->dragAndDropVertexOldLocation = Point(pkt.X - this->dragAndDropHandleOfVertex->Width/2, pkt.Y - this->dragAndDropHandleOfVertex->Height/2);
+							 this->changedGraph = true;
+						 }
+					 }
+					 if(this->dragAndDropHandleOfLoop != nullptr){//Loop Drag
+						 this->dragAndDropLoopOldAngle = this->dragAndDropHandleOfLoop->LoopAngle;
+						 this->changedGraph = true;
+					 }
 				 }
+
 			 }
 			 this->ResetDragAndDrop();
 		 }

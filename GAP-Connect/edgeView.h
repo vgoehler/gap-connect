@@ -42,8 +42,6 @@ public:
 			if (this->m_endVertex != nullptr)
 			{//Vermeiden von Initialiserungsfehlern
 				this->calculateDockingPoint();
-				this->Location = this->createLocation();
-				this->Size = this->createSize();
 			}
 		}
 		vertexView^ get(void){
@@ -55,8 +53,6 @@ public:
 		void set(vertexView^ inValue){
 			this->m_endVertex = inValue;
 			this->calculateDockingPoint();
-			this->Location = this->createLocation();
-			this->Size = this->createSize();
 		}
 		vertexView^ get(void){
 			return(this->m_endVertex);
@@ -140,6 +136,19 @@ public:
 			}
 		}
 	}
+	///<summary> Schreibt den Winkel </summary>
+	property double LoopAngle{
+		void set(double inValue){
+			this->m_angle = inValue;
+			this->calculateLoopPosition();
+		}
+		double get(void){
+			return(this->m_angle);
+		}
+	}
+	///<summary> Holt den Winkel vom Zentrum bis zum übergebennen Punkt </summary>
+	double getAngleCenterToPoint(Point^ pkt);
+
 
 private:
 	vertexView^ m_startVertex;
@@ -165,13 +174,23 @@ private:
 	///<summary> Methode, die die Kante aus den Werten des Dialogs initialisiert</summary>
 	void SetDialogValues (System::Windows::Forms::Form^ configDialog);
 	///<summary> schreibt die Kantenbewertung </summary>
-	void drawText ( System::Windows::Forms::PaintEventArgs^ e);
+	void drawText ( System::Windows::Forms::PaintEventArgs^ e, bool straightToCenter);
 	///<summary> berechnet die Entfernung zwischen 2 Punkten </summary>
 	double edgeView::LengthFromPointToPoint(Point^ pkt1, Point^ pkt2);
+	///<summary> Zeichnet einen Loop </summary>
+	void edgeView::drawLoop( System::Windows::Forms::PaintEventArgs^ e);
 	///<summary> sollen Hilfslinien von der Kante zum Text angezeigt werden </summary>
 	bool m_aidLine;
 	///<summary> Anschluß an Datenmember </summary>
 	Kante^ m_dataEdge;
+	///<summary> Gibt den Winkel der Loop Mitte an. </summary>
+	double m_angle;
+	///<summary> oberer Kontrollpunkt für Loop </summary>
+	Point m_startLoopCtrlPt;
+	///<summary> unterer Kontrollpunkt für Loop </summary>
+	Point m_endLoopCtrlPt;
+	///<summary> berechnet die Rahmenpunkte des Loop und die Position des Kontrollrechtecks</summary>
+	void calculateLoopPosition( void );
 };
 
 }//namespace

@@ -151,7 +151,7 @@ namespace GAPConnect {
 				}
 				ydiff = tan(angle)*xdiff;
 			}else{
-				throw 666;
+				throw gcnew Exception("Can't calculate DockPoint");
 			}
 		}
 		if (xdiff < 0 && ydiff < 0)// in Sektor 4 muss aufgerundet werden um bei ungeraden durchmessern nicht in den Knoten zu zeichnen

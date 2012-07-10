@@ -3,7 +3,7 @@
 
 
 namespace GAPConnect {
-edgeView::edgeView(System::Windows::Forms::Form^ inParent, GAPConnect::drawTools^ inDrawTools, vertexView^ startVertex, vertexView^ endVertex, int mode, Graph^ parentDataGraph):basicView(inParent, inDrawTools, parentDataGraph), m_startVertex(nullptr), m_endVertex(nullptr), m_aidLine(false)
+edgeView::edgeView(System::Windows::Forms::Form^ inParent, GAPConnect::drawTools^ inDrawTools, vertexView^ startVertex, vertexView^ endVertex, int mode, Graph^ parentDataGraph):basicView(inParent, inDrawTools, parentDataGraph), m_startVertex(nullptr), m_endVertex(nullptr), m_aidLine(false), m_angle(0)
 {
 	this->StartVertex = startVertex;
 	this->EndVertex = endVertex;
@@ -13,7 +13,7 @@ edgeView::edgeView(System::Windows::Forms::Form^ inParent, GAPConnect::drawTools
 	this->IsEnabled = true;//Enablen um Stift zu initialisieren
 }
 
-edgeView::edgeView( System::Windows::Forms::Form^ inParent, GAPConnect::drawTools^ inDrawTools, Graph^ parentDataGraph, Kante^ dataEdge ):basicView(inParent, inDrawTools, parentDataGraph), m_startVertex(nullptr), m_endVertex(nullptr), m_aidLine(false), m_dataEdge(dataEdge)
+edgeView::edgeView( System::Windows::Forms::Form^ inParent, GAPConnect::drawTools^ inDrawTools, Graph^ parentDataGraph, Kante^ dataEdge ):basicView(inParent, inDrawTools, parentDataGraph), m_startVertex(nullptr), m_endVertex(nullptr), m_aidLine(false), m_dataEdge(dataEdge), m_angle(0)
 {
 	this->m_lineMode = this->m_dataEdge->gerichtet == 0 ? 0 : 1;//ignorieren hier alle anderen Werte
 	this->IsEnabled = this->m_dataEdge->shape == DISABLED ? true : false;
@@ -31,21 +31,15 @@ System::Drawing::Size edgeView::createSize( void )
 
 System::Void edgeView::drawEdge( System::Windows::Forms::PaintEventArgs^ e )
 {
-	//Markieren
-	if (this->IsMarked)
-	{
-		//Markierungslinie untendrunter zeichnen
-		e->Graphics->DrawLine(this->m_drawTools->m_edgeMarked, this->m_startDock, this->m_endDock);
-	}
-	if (this->IsLoop){
-		Point m = this->StartVertex->LocationCenter;
-		System::Drawing::Size s = this->StartVertex->Size;
-		e->Graphics->DrawBezier(this->m_edgePen, 
-			Point(m.X + s.Width/2, m.Y -2),
-			Point(m.X + s.Width/2+100, m.Y - 50), 
-			Point(m.X + s.Width/2+100, m.Y + 50), 
-			Point(m.X + s.Width/2, m.Y +2));
+	if(this->IsLoop){
+		this->drawLoop( e );
 	}else{
+		//Markieren
+		if (this->IsMarked)
+		{
+			//Markierungslinie untendrunter zeichnen
+			e->Graphics->DrawLine(this->m_drawTools->m_edgeMarked, this->m_startDock, this->m_endDock);
+		}
 		//Linie
 		e->Graphics->DrawLine(this->m_edgePen, this->m_startDock, this->m_endDock);
 		//Modus beachten
@@ -53,11 +47,43 @@ System::Void edgeView::drawEdge( System::Windows::Forms::PaintEventArgs^ e )
 		{
 			this->drawArrow(e);
 		}
+		if (!String::IsNullOrWhiteSpace(this->Text))
+		{
+			this->drawText(e, false);
+		}
 	}
-	if (!String::IsNullOrWhiteSpace(this->Text))
-	{
-		this->drawText(e);
-	}
+}
+
+void edgeView::drawLoop( System::Windows::Forms::PaintEventArgs^ e){
+		//Loop Rechteck
+		//e->Graphics->DrawRectangle(System::Drawing::Pens::Yellow, this->GetBorderRectangle);//DEBUGDRAW
+		//e->Graphics->DrawLine(System::Drawing::Pens::YellowGreen, m_startDock, m_startLoopCtrlPt);
+		//e->Graphics->DrawLine(System::Drawing::Pens::YellowGreen, m_endDock, m_endLoopCtrlPt);
+
+		//Markieren
+		if (this->IsMarked)
+		{
+			e->Graphics->DrawBezier(this->m_drawTools->m_edgeMarked, 
+				this->m_startDock,
+				this->m_startLoopCtrlPt,
+				this->m_endLoopCtrlPt,
+				this->m_endDock);
+		}
+		//Zeichnen
+		e->Graphics->DrawBezier(this->m_edgePen, 
+			this->m_startDock,
+			this->m_startLoopCtrlPt,
+			this->m_endLoopCtrlPt,
+			this->m_endDock);
+		//Modus
+		if (this->IsArc){//Gerichtet
+			this->drawArrow(e);
+		}
+
+		//Text
+		if(!String::IsNullOrWhiteSpace(this->Text)){
+			this->drawText(e, true);//schreiben direkt in die Schlaufe
+		}
 }
 
 System::Drawing::Point edgeView::createLocation( void ){
@@ -79,6 +105,8 @@ void edgeView::calculateDockingPoint( void ){
 		//Rechteck neu berechnen
 		this->Location = this->createLocation();
 		this->Size = this->createSize();
+	}else{
+		this->calculateLoopPosition();
 	}
 	}
 
@@ -91,21 +119,23 @@ double edgeView::getAnglePointToPoint( Point^ startPoint, Point^ endPoint ){
 }
 
 void edgeView::drawArrow( System::Windows::Forms::PaintEventArgs^ e ){
+	double angleStart;
 	//außerhalb des LOOP Modus
 	if (! this->IsLoop)
 	{
-		double angleStart;
 		//Winkel bei Start holen Richtung Ende
 		angleStart = this->getAnglePointToPoint(this->m_startDock, this->m_endDock);
-
-		Point arrowPeakOne, arrowPeakTwo;
-		arrowPeakOne = this->calculatePointFromAngle(angleStart-.20, 15.0, this->m_endDock);
-		arrowPeakTwo = this->calculatePointFromAngle(angleStart+.20, 15.0, this->m_endDock);
-
-		//Zeichnen
-		e->Graphics->DrawLine(this->m_edgePen, this->m_endDock, arrowPeakOne);
-		e->Graphics->DrawLine(this->m_edgePen, this->m_endDock, arrowPeakTwo);
+	}else{
+		//Winkel entspricht endDock Winkel + .5 -PI
+		angleStart = this->m_angle + 0.5 - PI;
 	}
+	Point arrowPeakOne, arrowPeakTwo;
+	arrowPeakOne = this->calculatePointFromAngle(angleStart-.20, 15.0, this->m_endDock);
+	arrowPeakTwo = this->calculatePointFromAngle(angleStart+.20, 15.0, this->m_endDock);
+
+	//Zeichnen
+	e->Graphics->DrawLine(this->m_edgePen, this->m_endDock, arrowPeakOne);
+	e->Graphics->DrawLine(this->m_edgePen, this->m_endDock, arrowPeakTwo);
 }
 
 Point edgeView::calculatePointFromAngle( double angle, double hypothenuse, Point origin )
@@ -165,20 +195,25 @@ void edgeView::SetDialogValues( System::Windows::Forms::Form^ configDialog )
 	this->AidLine = dialog->withAidLine;
 }
 
-void edgeView::drawText( System::Windows::Forms::PaintEventArgs^ e )
+void edgeView::drawText( System::Windows::Forms::PaintEventArgs^ e, bool straightToCenter )
 {
 	//Mitte berechnen
 	System::Drawing::Point mitteEdge = Point(this->Location.X + this->Width / 2, this->Location.Y + this->Height / 2);
-	//Länge berechnen
-	double lengthToMitte = this->LengthFromPointToPoint(m_startDock, mitteEdge);
-	//20 px als Entfernung für den zu schreibenden Text und dann den inneren Winkel berechnen
-	double angleRotation = atan2(10.0, lengthToMitte);
-	//originaler WInkel
-	double angleOriginal = this->getAnglePointToPoint(this->m_startDock,this->m_endDock);
-	//Berechnungen des Textpunktes
-	Int32 ydiff = int(sin(angleOriginal-angleRotation-PI)*lengthToMitte);
-	Int32 xdiff = int(cos(angleOriginal-angleRotation-PI)*lengthToMitte);
-	Point textPkt = Point(this->m_startDock.X + xdiff,this->m_startDock.Y + ydiff);
+	Point textPkt;
+	if (straightToCenter){//direkt auf die mitte schreiben;Berechnung sparen
+		textPkt = mitteEdge;
+	}else{
+		//Länge berechnen
+		double lengthToMitte = this->LengthFromPointToPoint(m_startDock, mitteEdge);
+		//20 px als Entfernung für den zu schreibenden Text und dann den inneren Winkel berechnen
+		double angleRotation = atan2(10.0, lengthToMitte);
+		//originaler WInkel
+		double angleOriginal = this->getAnglePointToPoint(this->m_startDock,this->m_endDock);
+		//Berechnungen des Textpunktes
+		Int32 ydiff = int(sin(angleOriginal-angleRotation-PI)*lengthToMitte);
+		Int32 xdiff = int(cos(angleOriginal-angleRotation-PI)*lengthToMitte);
+		textPkt = Point(this->m_startDock.X + xdiff,this->m_startDock.Y + ydiff);
+	}
 	//stringFormat
 	System::Drawing::StringFormat^ sf = gcnew System::Drawing::StringFormat();
 	sf->Alignment = System::Drawing::StringAlignment::Center;
@@ -253,9 +288,14 @@ bool edgeView::Crosses( GAPConnect::edgeView^ otherEdge )
 		PointF ov2 = otherEdge->Ortsvektor;
 		//Umgestelltes Gleichungssystem ov1 + faktor1 * rv1 = ov2 + faktor2 * rv2
 		float faktor2 = (rv1.Y * (ov1.X-ov2.X) + rv1.X * (ov2.Y - ov1.Y)) / (rv1.Y * rv2.X - rv1.X * rv2.Y);
-		float faktor1 = (ov2.Y - ov1.Y + faktor2*rv2.Y)/rv1.Y;
-		//Schnittpunkt
-		Point schnittpunkt = Point(int(ceil(ov1.X+faktor1*rv1.X)), int(ceil(ov1.Y+faktor1*rv1.Y)));
+		Point schnittpunkt;
+		if (rv1.Y == 0){
+			schnittpunkt = Point(int(ceil(ov2.X+faktor2*rv2.X)), int(ceil(ov2.Y+faktor2*rv2.Y)));
+		}else{
+			float faktor1 = (ov2.Y - ov1.Y + faktor2*rv2.Y)/rv1.Y;
+			//Schnittpunkt
+			schnittpunkt = Point(int(ceil(ov1.X+faktor1*rv1.X)), int(ceil(ov1.Y+faktor1*rv1.Y)));
+		}
 		if (this->GetBorderRectangle.Contains(schnittpunkt))
 		{
 			return(true);
@@ -268,6 +308,30 @@ edgeView::~edgeView()
 {
 	delete this->m_dataEdge;
 	this->m_dataEdge = nullptr;
+}
+
+void edgeView::calculateLoopPosition( void )
+{
+	//EingangsWinkel benutzen um oberen und unteren Winkel zu erzeugen jeweils .5 auseinander
+	double obererWinkel = this->m_angle - 0.5;
+	double untererWinkel = this->m_angle + 0.5;
+	//Dockpunkte berechnen
+	this->m_startDock = this->StartVertex->getDockPoint(obererWinkel);
+	this->m_endDock = this->StartVertex->getDockPoint(untererWinkel);
+	//Kontrollpunkte für Bezierkurve (PI Abziehen sonst gegenWinkel)
+	this->m_startLoopCtrlPt = this->calculatePointFromAngle(obererWinkel - PI, 100, this->m_startDock);
+	this->m_endLoopCtrlPt = this->calculatePointFromAngle(untererWinkel - PI, 100, this->m_endDock);
+	//oberer Punkt ist minimum über alle 4
+	this->Location = Point( Math::Min( Math::Min(m_startDock.X, m_endDock.X), Math::Min(m_startLoopCtrlPt.X, m_endLoopCtrlPt.X) ),
+		Math::Min( Math::Min(m_startDock.Y, m_endDock.Y), Math::Min(m_startLoopCtrlPt.Y, m_endLoopCtrlPt.Y) ) );
+	//größe ist oberer Punkt vom unteren Punkt (also maximal x und y)
+	this->Size = System::Drawing::Size( Math::Max( Math::Max(m_startDock.X, m_endDock.X), Math::Max(m_startLoopCtrlPt.X, m_endLoopCtrlPt.X) ) - this->Location.X,
+		Math::Max( Math::Max(m_startDock.Y, m_endDock.Y), Math::Max(m_startLoopCtrlPt.Y, m_endLoopCtrlPt.Y) ) - this->Location.Y);
+}
+
+double edgeView::getAngleCenterToPoint( Point^ pkt )
+{
+	return(this->getAnglePointToPoint(this->StartVertex->LocationCenter, pkt));
 }
 
 }//namespace ende
