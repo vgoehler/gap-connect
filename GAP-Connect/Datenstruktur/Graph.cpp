@@ -514,10 +514,12 @@ bool Graph::crossing(System::Drawing::Rectangle rec1,System::Drawing::Rectangle 
 		float faktor2 = (rv1.Y * (ov1.X-ov2.X) + rv1.X * (ov2.Y - ov1.Y)) / (rv1.Y * rv2.X - rv1.X * rv2.Y);
 		float faktor1 = (ov2.Y - ov1.Y + faktor2*rv2.Y)/rv1.Y;
 		
-		if(rv1.Y == 0)//vorläufig
-			return (true);
 		//Schnittpunkt
-		System::Drawing::Point schnittpunkt = System::Drawing::Point(int(ceil(ov1.X+faktor1*rv1.X)), int(ceil(ov1.Y+faktor1*rv1.Y)));
+		System::Drawing::Point schnittpunkt;
+		if(rv1.Y == 0)
+			schnittpunkt = System::Drawing::Point(int(ceil(ov2.X+faktor2*rv2.X)), int(ceil(ov2.Y+faktor2*rv2.Y)));
+		else
+			schnittpunkt = System::Drawing::Point(int(ceil(ov1.X+faktor1*rv1.X)), int(ceil(ov1.Y+faktor1*rv1.Y)));
 		if (rec1.Contains(schnittpunkt))
 		{
 			return(true);

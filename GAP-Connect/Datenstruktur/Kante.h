@@ -19,6 +19,7 @@ public:
 					 */
 	KantenFormat shape;	//methode für redraw bei änderung?
 	bool aid_line;
+	double loop_direction;
 	Kommentar^ comment;
 private:
 	Knoten^ knoten_start;
