@@ -6,7 +6,7 @@ public ref class Kommentar
 private:
 	System::String^ string_label;
 public:
-	Kommentar(System::String^ string_label,int coord_x,int coord_y);
+	Kommentar(System::String^ string_label);
 	Kommentar(void);
 	~Kommentar(void);
 	property System::String^ label{

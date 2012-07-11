@@ -3,7 +3,7 @@
 #include "Kommentar.h"
 
 
-Kommentar::Kommentar(System::String^ str_label,int coord_x,int coord_y)
+Kommentar::Kommentar(System::String^ str_label)
 {
 	string_label=str_label;
 }
