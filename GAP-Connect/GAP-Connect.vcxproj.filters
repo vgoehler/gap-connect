@@ -40,6 +40,63 @@
     <None Include="..\Pictures\graph.ico">
       <Filter>Ressourcendateien</Filter>
     </None>
+    <None Include="..\Pictures\completegraph.png">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="..\Pictures\delete.png">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="..\Pictures\edge.png">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="..\Pictures\edge_gerichtet.png">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="..\Pictures\edge_gerichtet_value.png">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="..\Pictures\edge_value.png">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="..\Pictures\edgeText.png">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="..\Pictures\edit.png">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="..\Pictures\graph.png">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="..\Pictures\grid.png">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="..\Pictures\grid_activated.png">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="..\Pictures\grid_deactivated.png">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="..\Pictures\gridicon.png">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="..\Pictures\knotenText.png">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="..\Pictures\new.png">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="..\Pictures\open.png">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="..\Pictures\save.png">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="..\Pictures\vertex.png">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="..\Pictures\vertex_square.png">
+      <Filter>Ressourcendateien</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GAP-Connect.cpp">
@@ -175,6 +232,9 @@
       <Filter>Ressourcendateien</Filter>
     </EmbeddedResource>
     <EmbeddedResource Include="EdgeChangeDialog.resx">
+      <Filter>Ressourcendateien</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AlgorithmusRunDialog.resx">
       <Filter>Ressourcendateien</Filter>
     </EmbeddedResource>
   </ItemGroup>

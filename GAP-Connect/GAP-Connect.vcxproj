@@ -84,7 +84,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Pictures\completegraph.png" />
+    <None Include="..\Pictures\delete.png" />
+    <None Include="..\Pictures\edge.png" />
+    <None Include="..\Pictures\edgeText.png" />
+    <None Include="..\Pictures\edge_gerichtet.png" />
+    <None Include="..\Pictures\edge_gerichtet_value.png" />
+    <None Include="..\Pictures\edge_value.png" />
+    <None Include="..\Pictures\edit.png" />
     <None Include="..\Pictures\graph.ico" />
+    <None Include="..\Pictures\graph.png" />
+    <None Include="..\Pictures\grid.png" />
+    <None Include="..\Pictures\gridicon.png" />
+    <None Include="..\Pictures\grid_activated.png" />
+    <None Include="..\Pictures\grid_deactivated.png" />
+    <None Include="..\Pictures\knotenText.png" />
+    <None Include="..\Pictures\new.png" />
+    <None Include="..\Pictures\open.png" />
+    <None Include="..\Pictures\save.png" />
+    <None Include="..\Pictures\vertex.png" />
+    <None Include="..\Pictures\vertex_square.png" />
     <None Include="app.ico" />
     <None Include="cursor_arc.cur" />
     <None Include="cursor_edge.cur" />

@@ -116,14 +116,10 @@ public:
 	void DijkstraCancel (void);
 
 	///<summary> holt die Korrespondierende Kante zu einer Datenkante </summary>
-	edgeView^ GetEdgeFromData( Kante^ dataEdge){
-		for each(edgeView^ edge in this->edgeList){
-			if (edge->DataEdge == dataEdge){//wenn es sich um die Kante handelt
-				return(edge);
-			}
-		}
-		return(nullptr);
-	}
+	edgeView^ GetEdgeFromData( Kante^ dataEdge);
+
+	///<summary> entfernt das Backup </summary>
+	void RemoveBackup( void );
 
 private:
 	///<summary>Handle um edge Zeichnen in progress zu signalisieren, speichert den Start, ansonsten nullptr</summary>

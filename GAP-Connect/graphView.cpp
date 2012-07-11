@@ -459,4 +459,16 @@ bool graphView::DijkstraStep( void )
 	return(true);
 }
 
+edgeView^ graphView::GetEdgeFromData( Kante^ dataEdge){
+	for each(edgeView^ edge in this->edgeList){
+		if (edge->DataEdge == dataEdge){//wenn es sich um die Kante handelt
+			return(edge);
+		}
+	}
+	return(nullptr);
+}
+void graphView::RemoveBackup( void ){
+	this->m_backupPositions = nullptr;
+}
+
 }//namespace

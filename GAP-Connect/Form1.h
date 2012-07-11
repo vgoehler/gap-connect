@@ -140,7 +140,12 @@ namespace GAPConnect {
 					 this->speichernToolStripMenuItem->Enabled = InValue;
 					 this->toolStripButtonSave->Enabled = InValue;
 					 if (this->m_graph != nullptr){
-						 this->UndotoolStripButton->Enabled = this->m_graph->HasBackup() ? true : false;
+						 if(this->UndotoolStripButton->Enabled && this->m_graph->HasBackup()){//Änderungen müssen Backup deaktivieren
+							 this->m_graph->RemoveBackup();
+							 this->UndotoolStripButton->Enabled = false;
+						 }else{
+							 this->UndotoolStripButton->Enabled = this->m_graph->HasBackup() ? true : false;
+						 }
 					 }
 				 }
 				 bool get(void){
