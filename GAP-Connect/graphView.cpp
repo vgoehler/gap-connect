@@ -3,7 +3,7 @@
 
 namespace GAPConnect {
 
-graphView::graphView(System::Windows::Forms::Form^ inParent): m_parent(inParent), m_startedDrawing(nullptr), m_lastMarkedElement(nullptr)
+graphView::graphView(System::Windows::Forms::Form^ inParent): m_parent(inParent), m_startedDrawing(nullptr), m_lastMarkedElement(nullptr), m_backupPositions(nullptr)
 {
 	this->vertexList = gcnew System::Collections::Generic::List< GAPConnect::vertexView^ >();
 	this->edgeList = gcnew System::Collections::Generic::List< GAPConnect::edgeView^ >();
@@ -11,7 +11,7 @@ graphView::graphView(System::Windows::Forms::Form^ inParent): m_parent(inParent)
 	this->m_dataGraph = gcnew Graph();
 }
 
-graphView::graphView( void ): m_parent(nullptr), m_startedDrawing(nullptr)
+graphView::graphView( void ): m_parent(nullptr), m_startedDrawing(nullptr), m_backupPositions(nullptr)
 {
 }
 
@@ -49,6 +49,10 @@ bool graphView::CreateEdge( Point location, bool isArc, bool withConfigDialog, b
 			//speichern des starts wenn noch nicht gestartet
 			this->m_startedDrawing = clickedVertex;
 		}else{
+			//auf Doppelkanten testen und ignorieren
+			if (this->EdgeAllreadyThere(this->m_startedDrawing, clickedVertex)){
+				return(false);
+			}
 			//wenn bereits gestartet dann ende vermerken und objekt initialisieren
 			edgeView^ edge = gcnew edgeView(this->m_parent, this->m_drawTools, this->m_startedDrawing, clickedVertex, isArc?1:0, this->m_dataGraph);
 
@@ -109,7 +113,7 @@ void graphView::drawGraph( System::Windows::Forms::PaintEventArgs^ e )
 {
 	//Knoten zeichnen
 	for each (GAPConnect::vertexView^ vertex in this->vertexList){
-		vertex->paintVertex(e);
+		vertex->drawVertex(e);
 	}
 	//Kanten zeichnen
 	for each (GAPConnect::edgeView^ edge in this->edgeList){
@@ -227,7 +231,7 @@ void graphView::CreateCompleteGraph( void )
 	this->edgeList = gcnew System::Collections::Generic::List< GAPConnect::edgeView^ >();
 	for each (GAPConnect::vertexView^ vertex in this->vertexList){
 		for each (GAPConnect::vertexView^ neighbor in this->vertexList){
-			if (vertex != neighbor){//wenn wir nicht wir selber sind: Kante - haben hier doppelt soviele Kanten wie nötig
+			if (vertex != neighbor && ! this->EdgeAllreadyThere(vertex, neighbor)){//wenn wir nicht wir selber sind: Kante; noch überprüfen ob wir entsprechende Kante bereits haben
 				GAPConnect::edgeView^ edge = gcnew GAPConnect::edgeView(this->m_parent, this->m_drawTools, vertex, neighbor, 0, this->m_dataGraph);
 				this->edgeList->Add(edge);
 			}
@@ -290,8 +294,14 @@ void graphView::BuildViewFromData( void )
 				break;//Abbruchkriterium
 			}
 		}
-		eV->StartVertex = startV;
-		eV->EndVertex = endV;
+		if (edge->gerichtet == -1){
+			eV->StartVertex = endV;
+			eV->EndVertex = startV;
+			edge->gerichtet = 1;
+		}else{
+			eV->StartVertex = startV;
+			eV->EndVertex = endV;
+		}
 		this->edgeList->Add(eV);
 	}
 }
@@ -346,7 +356,7 @@ bool graphView::ImportGraph( String^ filename )
 	return (true);
 }
 
-bool graphView::StartOptimization( Int32 maximum )
+bool graphView::StartRandomize( Int32 maximum )
 {
 	Int32 outer = Int32(float(maximum) /100);
 	Int32 step = Int32(float(maximum) /10000);
@@ -357,6 +367,52 @@ bool graphView::StartOptimization( Int32 maximum )
 		dynamic_cast<GAPConnect::Form1^ > (this->m_parent)->OptimizerPanel = step;
 	}
 	return false;
+}
+
+void graphView::UpdateLocationsFromData( void )
+{
+	for each (GAPConnect::vertexView^ vertex in this->vertexList){//Über ganze Knotenliste iterieren
+		vertex->updateLocationFromDataVertex();
+	}//Da sich nun alle Locations geändert haben, müssen auch alle Dockpunkte neu berechnet werden
+	for each (GAPConnect::vertexView^ vertex in this->vertexList){
+		this->ReCalcDockingPoints(vertex);
+	}
+}
+
+bool graphView::EdgeAllreadyThere( vertexView^ One, vertexView^ Two )
+{
+	for each (edgeView^ edge in this->edgeList){
+		if (edge->StartVertex == One && edge->EndVertex == Two || edge->StartVertex == Two && edge->EndVertex == One){//wenn beide Knoten übereinstimmen
+			return(true);
+		}
+	}
+	return(false);
+}
+
+bool graphView::HasBackup( void )
+{
+	if (this->m_backupPositions != nullptr){
+		return(true);
+	}
+	return(false);
+}
+
+void graphView::BackupSecure( void )
+{
+	this->m_backupPositions = gcnew List<System::Drawing::Point>();
+	int vCount = this->m_dataGraph->verticles->Count;
+	for(int i=0;i<vCount;i++){
+		this->m_backupPositions->Add(this->m_dataGraph->verticles[i]->coords);
+	}
+}
+
+void graphView::BackupWriteBack( void )
+{
+	int vCount = this->m_dataGraph->verticles->Count;
+	for(int i=0;i<vCount;i++){
+		this->m_dataGraph->verticles[i]->coords = this->m_backupPositions[i];
+	}
+	this->m_backupPositions = nullptr;
 }
 
 }//namespace

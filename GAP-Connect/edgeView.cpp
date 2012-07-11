@@ -161,6 +161,11 @@ void edgeView::startConfigDialog( bool refreshAfterDialog)
 		this->SetDialogValues(configDialog);
 		//Richtungstausch Modus
 		if (configDialog->RevertDirection){
+			if ( this->DataEdge->gerichtet == 1){
+				this->DataEdge->gerichtet = -1;
+			}else if(this->DataEdge->gerichtet == -1){
+				this->DataEdge->gerichtet = 1;
+			}
 			vertexView^ realEnd = this->m_endVertex;
 			this->m_endVertex = this->m_startVertex;//hier über Variablen gehen, um reDraw zu verhindern
 			this->StartVertex = realEnd;

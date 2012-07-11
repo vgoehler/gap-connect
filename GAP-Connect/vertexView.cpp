@@ -46,7 +46,7 @@ namespace GAPConnect {
 		this->Location = this->m_dataVertex->coords;
 	}
 
-	void vertexView::paintVertex(System::Windows::Forms::PaintEventArgs^ e)
+	void vertexView::drawVertex(System::Windows::Forms::PaintEventArgs^ e)
 	{
 		//graphic
 		System::Drawing::Graphics^ g = e->Graphics;
@@ -186,6 +186,11 @@ namespace GAPConnect {
 				}
 			}
 		}
+	}
+
+	void vertexView::updateLocationFromDataVertex( void )
+	{
+		this->Location = this->DataVertex->coords;
 	}
 
 

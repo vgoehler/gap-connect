@@ -97,7 +97,17 @@ public:
 	///<summary> Zum Exportieren von Graphen in eine Adjazenzmatrix </summary>
 	bool ExportGraph( String^ filename );
 	///<summary> Startet die Optimisierung des Datengraphen </summary>
-	bool StartOptimization( Int32 maximum );
+	bool StartRandomize( Int32 maximum );
+	///<summary> Schreibt die Locationen aus den Daten wieder in die Darstellungsknoten </summary>
+	void UpdateLocationsFromData (void);
+	///<summary> Überprüft ob zwischen gegebenen vertexen eine Kante bereits vorhanden ist </summary>
+	bool EdgeAllreadyThere ( vertexView^ One, vertexView^ Two );
+	///<summary> gibt an ob der Graph eine Positionen gebackuped hat</summary>
+	bool HasBackup ( void );
+	///<summary> schreibt Backup </summary>
+	void BackupSecure( void );
+	///<summary> liest das Backup wieder ein</summary>
+	void BackupWriteBack( void );
 
 private:
 	///<summary>Handle um edge Zeichnen in progress zu signalisieren, speichert den Start, ansonsten nullptr</summary>
@@ -114,6 +124,9 @@ private:
 	GAPConnect::basicView^ m_lastMarkedElement;
 	///<summary> Anschluß an den Datenteil </summary>
 	Graph^ m_dataGraph;
+	///<summary> Positionen Backup </summary>
+	System::Collections::Generic::List<System::Drawing::Point>^ m_backupPositions;
+
 };
 
 }//namespace

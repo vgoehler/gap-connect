@@ -18,6 +18,10 @@ namespace GAPConnect {
 		Form1(void):dragBoxFromMouseDown(System::Drawing::Rectangle::Empty), dragAndDropVertexOldLocation(System::Drawing::Point::Empty), m_graph(nullptr), filename(L""), dragAndDropHandleOfVertex(nullptr), dragAndDropHandleOfLoop(nullptr), dragAndDropLoopOldAngle(NULL)
 		{
 			InitializeComponent();
+			//Tooltip initialisieren
+			this->SetToolTips();
+
+			//Member setzen
 			this->changedGraph = false;
 			this->m_graph = gcnew GAPConnect::graphView(this);
 			this->toolStripTextBoxGraphenname->Text = this->m_graph->Graphname;
@@ -125,6 +129,9 @@ private: System::Windows::Forms::SaveFileDialog^  ExportDialog;
 private: System::Windows::Forms::ProgressBar^  pBOptimize;
 private: System::Windows::Forms::Button^  buttonOptimize;
 private: System::Windows::Forms::ToolStripButton^  ZoomToolStripButton;
+private: System::Windows::Forms::ToolTip^  toolTip;
+
+private: System::Windows::Forms::ToolStripButton^  UndotoolStripButton;
 
 
 
@@ -141,6 +148,9 @@ private: System::Windows::Forms::ToolStripButton^  ZoomToolStripButton;
 					 //änderungen im graph triggern zulassen des speicherns
 					 this->speichernToolStripMenuItem->Enabled = InValue;
 					 this->toolStripButtonSave->Enabled = InValue;
+					 if (this->m_graph != nullptr){
+						 this->UndotoolStripButton->Enabled = this->m_graph->HasBackup() ? true : false;
+					 }
 				 }
 				 bool get(void){
 					 return(this->m_unsavedChanges);
@@ -211,6 +221,7 @@ private: System::Windows::Forms::ToolStripButton^  ZoomToolStripButton;
 			System::Windows::Forms::ToolStripLabel^  toolStripLabel1;
 			System::Windows::Forms::ToolStripSeparator^  toolStripSeparator8;
 			System::Windows::Forms::ToolStripSeparator^  toolStripSeparator9;
+			System::Windows::Forms::ToolStripSeparator^  toolStripSeparator10;
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Form1::typeid));
 			this->mainmenuStrip = (gcnew System::Windows::Forms::MenuStrip());
 			this->dateiToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -252,6 +263,7 @@ private: System::Windows::Forms::ToolStripButton^  ZoomToolStripButton;
 			this->toolStripButtonEdit = (gcnew System::Windows::Forms::ToolStripButton());
 			this->toolStripTextBoxGraphenname = (gcnew System::Windows::Forms::ToolStripTextBox());
 			this->ZoomToolStripButton = (gcnew System::Windows::Forms::ToolStripButton());
+			this->UndotoolStripButton = (gcnew System::Windows::Forms::ToolStripButton());
 			this->mainstatusStrip = (gcnew System::Windows::Forms::StatusStrip());
 			this->toolStripLabelMouseX = (gcnew System::Windows::Forms::ToolStripStatusLabel());
 			this->toolStripLabelMouseY = (gcnew System::Windows::Forms::ToolStripStatusLabel());
@@ -278,6 +290,7 @@ private: System::Windows::Forms::ToolStripButton^  ZoomToolStripButton;
 			this->ImportDialog = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->ExportDialog = (gcnew System::Windows::Forms::SaveFileDialog());
 			this->pBOptimize = (gcnew System::Windows::Forms::ProgressBar());
+			this->toolTip = (gcnew System::Windows::Forms::ToolTip(this->components));
 			toolStripSeparator1 = (gcnew System::Windows::Forms::ToolStripSeparator());
 			toolStripSeparator2 = (gcnew System::Windows::Forms::ToolStripSeparator());
 			toolStripSeparator4 = (gcnew System::Windows::Forms::ToolStripSeparator());
@@ -289,6 +302,7 @@ private: System::Windows::Forms::ToolStripButton^  ZoomToolStripButton;
 			toolStripLabel1 = (gcnew System::Windows::Forms::ToolStripLabel());
 			toolStripSeparator8 = (gcnew System::Windows::Forms::ToolStripSeparator());
 			toolStripSeparator9 = (gcnew System::Windows::Forms::ToolStripSeparator());
+			toolStripSeparator10 = (gcnew System::Windows::Forms::ToolStripSeparator());
 			this->mainmenuStrip->SuspendLayout();
 			this->maintoolStrip->SuspendLayout();
 			this->mainstatusStrip->SuspendLayout();
@@ -352,9 +366,11 @@ private: System::Windows::Forms::ToolStripButton^  ZoomToolStripButton;
 			// toolStripLabel1
 			// 
 			toolStripLabel1->Alignment = System::Windows::Forms::ToolStripItemAlignment::Right;
+			toolStripLabel1->AutoToolTip = true;
 			toolStripLabel1->Name = L"toolStripLabel1";
 			toolStripLabel1->Size = System::Drawing::Size(111, 22);
 			toolStripLabel1->Text = L"Name des Graphen:";
+			toolStripLabel1->ToolTipText = L"Der Name des Graphen";
 			// 
 			// toolStripSeparator8
 			// 
@@ -366,6 +382,12 @@ private: System::Windows::Forms::ToolStripButton^  ZoomToolStripButton;
 			toolStripSeparator9->Alignment = System::Windows::Forms::ToolStripItemAlignment::Right;
 			toolStripSeparator9->Name = L"toolStripSeparator9";
 			toolStripSeparator9->Size = System::Drawing::Size(6, 25);
+			// 
+			// toolStripSeparator10
+			// 
+			toolStripSeparator10->Alignment = System::Windows::Forms::ToolStripItemAlignment::Right;
+			toolStripSeparator10->Name = L"toolStripSeparator10";
+			toolStripSeparator10->Size = System::Drawing::Size(6, 25);
 			// 
 			// mainmenuStrip
 			// 
@@ -588,11 +610,11 @@ private: System::Windows::Forms::ToolStripButton^  ZoomToolStripButton;
 			// 
 			this->maintoolStrip->BackColor = System::Drawing::SystemColors::MenuBar;
 			this->maintoolStrip->GripStyle = System::Windows::Forms::ToolStripGripStyle::Hidden;
-			this->maintoolStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(18) {this->toolStripButtonNew, 
+			this->maintoolStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(20) {this->toolStripButtonNew, 
 				this->toolStripButtonOpen, this->toolStripButtonSave, toolStripSeparator2, this->toolStripButtonGridControl, this->toolStripButtonGridFixed, 
 				toolStripSeparator4, this->toolStripButtonVertexAutoEdit, this->toolStripButtonEdgeAutoEdit, this->toolStripSeparator5, this->toolStripButtonDelete, 
 				toolStripSeparator6, this->toolStripButtonCompleteGraph, this->toolStripButtonEdit, this->toolStripTextBoxGraphenname, toolStripLabel1, 
-				toolStripSeparator9, this->ZoomToolStripButton});
+				toolStripSeparator9, this->ZoomToolStripButton, toolStripSeparator10, this->UndotoolStripButton});
 			this->maintoolStrip->Location = System::Drawing::Point(0, 24);
 			this->maintoolStrip->Name = L"maintoolStrip";
 			this->maintoolStrip->RenderMode = System::Windows::Forms::ToolStripRenderMode::System;
@@ -726,8 +748,10 @@ private: System::Windows::Forms::ToolStripButton^  ZoomToolStripButton;
 			// toolStripTextBoxGraphenname
 			// 
 			this->toolStripTextBoxGraphenname->Alignment = System::Windows::Forms::ToolStripItemAlignment::Right;
+			this->toolStripTextBoxGraphenname->AutoToolTip = true;
 			this->toolStripTextBoxGraphenname->Name = L"toolStripTextBoxGraphenname";
 			this->toolStripTextBoxGraphenname->Size = System::Drawing::Size(100, 25);
+			this->toolStripTextBoxGraphenname->ToolTipText = L"Der Name des Graphen";
 			this->toolStripTextBoxGraphenname->TextChanged += gcnew System::EventHandler(this, &Form1::toolStripTextBoxGraphenname_TextChanged);
 			// 
 			// ZoomToolStripButton
@@ -739,10 +763,23 @@ private: System::Windows::Forms::ToolStripButton^  ZoomToolStripButton;
 			this->ZoomToolStripButton->Name = L"ZoomToolStripButton";
 			this->ZoomToolStripButton->Size = System::Drawing::Size(60, 22);
 			this->ZoomToolStripButton->Text = L"Vorschau";
-			this->ZoomToolStripButton->ToolTipText = L"Vorschau";
+			this->ZoomToolStripButton->ToolTipText = L"Zeigt eine Vorschau des ganzen Zeichenbereichs verkleinert an";
 			this->ZoomToolStripButton->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &Form1::ZoomToolStripButton_MouseDown);
 			this->ZoomToolStripButton->MouseLeave += gcnew System::EventHandler(this, &Form1::ZoomToolStripButton_MouseLeave);
 			this->ZoomToolStripButton->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &Form1::ZoomToolStripButton_MouseUp);
+			// 
+			// UndotoolStripButton
+			// 
+			this->UndotoolStripButton->Alignment = System::Windows::Forms::ToolStripItemAlignment::Right;
+			this->UndotoolStripButton->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
+			this->UndotoolStripButton->Enabled = false;
+			this->UndotoolStripButton->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"UndotoolStripButton.Image")));
+			this->UndotoolStripButton->ImageTransparentColor = System::Drawing::Color::Magenta;
+			this->UndotoolStripButton->Name = L"UndotoolStripButton";
+			this->UndotoolStripButton->Size = System::Drawing::Size(40, 22);
+			this->UndotoolStripButton->Text = L"Undo";
+			this->UndotoolStripButton->ToolTipText = L"Aktion Rückgängig machen";
+			this->UndotoolStripButton->Click += gcnew System::EventHandler(this, &Form1::UndotoolStripButton_Click);
 			// 
 			// mainstatusStrip
 			// 
@@ -876,6 +913,7 @@ private: System::Windows::Forms::ToolStripButton^  ZoomToolStripButton;
 			this->toolStripButtonEdge->Size = System::Drawing::Size(190, 36);
 			this->toolStripButtonEdge->Text = L"Kante";
 			this->toolStripButtonEdge->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
+			this->toolStripButtonEdge->ToolTipText = L"Zeichnet eine Kante";
 			this->toolStripButtonEdge->CheckedChanged += gcnew System::EventHandler(this, &Form1::toolStripButtonsOnlyOneChecked);
 			// 
 			// toolStripButtonEdgeCapacity
@@ -914,6 +952,7 @@ private: System::Windows::Forms::ToolStripButton^  ZoomToolStripButton;
 			this->toolStripButtonArcCapacity->Size = System::Drawing::Size(190, 36);
 			this->toolStripButtonArcCapacity->Text = L"gerichtete Kante mit Wert";
 			this->toolStripButtonArcCapacity->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
+			this->toolStripButtonArcCapacity->ToolTipText = L"Zeichnet eine gerichtete Kante mit Wertung";
 			this->toolStripButtonArcCapacity->CheckedChanged += gcnew System::EventHandler(this, &Form1::toolStripButtonsOnlyOneChecked);
 			// 
 			// zeichnenVertex
@@ -1597,13 +1636,18 @@ private: System::Void buttonRandomize_Click(System::Object^  sender, System::Eve
 			this->pBOptimize->Minimum = 0;
 			this->pBOptimize->Maximum = 50000;
 			this->pBOptimize->Visible = true;
+			//Backup
+			this->m_graph->BackupSecure();
 
-			this->m_graph->StartOptimization(50000);
+			this->m_graph->StartRandomize(50000);
 
 			//FINALIZE
 			this->UseWaitCursor = false;
 			this->pBOptimize->Value = 0;
 			this->pBOptimize->Visible = false;
+			this->m_graph->UpdateLocationsFromData();
+			this->RefreshDrawBox();
+			this->changedGraph = true;
 		 }
 ///<summary> Übersichtsbutton Zoom um Faktor 5 rein </summary>
 private: System::Void ZoomToolStripButton_MouseDown(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
@@ -1632,6 +1676,21 @@ private: System::Void FinalizeZoom( void ){
 			 }
 			 this->drawBox->BackColor = System::Drawing::Color::White;
 			 this->RefreshDrawBox();
+		 }
+///<summary> Führt ein Undo aus </summary>
+private: System::Void UndotoolStripButton_Click(System::Object^  sender, System::EventArgs^  e) {
+			//Backup einspielen
+			this->m_graph->BackupWriteBack();
+			//View Daten updaten
+			this->m_graph->UpdateLocationsFromData();
+			//Finalizen
+			this->changedGraph = true;
+			this->RefreshDrawBox();
+		 }
+private: System::Void SetToolTips( void ){
+			this->toolTip->SetToolTip(this->buttonOptimize, L"Führt eine Randomisierung des Graphen mit Ausrichtung auf möglichst wenige Kreuzungen durch.");
+			this->toolTip->SetToolTip(this->tbTyp, L"Der Typ des Elements unter der Maus.");
+			this->toolTip->SetToolTip(this->tBKommentar, L"Der Kommentar des Elements unter der Maus.");
 		 }
 };//Form1 class
 }//namespace

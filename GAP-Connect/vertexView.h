@@ -46,7 +46,7 @@ namespace GAPConnect {
 		///<summary> startet den Dialog zum Konfigurieren des Knotens.</summary>
 		virtual void startConfigDialog(bool refreshAfterDialog) override;
 		///<summary> je nach gewünschter Art des Knotens wird eine andere Darstellungsform gewählt</summary>
-		void paintVertex(System::Windows::Forms::PaintEventArgs^ e);
+		void drawVertex(System::Windows::Forms::PaintEventArgs^ e);
 		///<summary> Aktivierungszustand des Elements kann gesetzt werden bzw. abgefragt. Überschrieben.</summary>
 		property bool IsEnabled{
 			virtual void set(bool inValue) override{
@@ -100,6 +100,8 @@ namespace GAPConnect {
 					return(this->m_dataVertex->comment->label);
 				}
 			}
+		///<summary> Location aus den Daten neu Laden im Falle das ein Algorithmus auf Datenebene die geändert hat. </summary>
+		void updateLocationFromDataVertex(void);
 
 	private:
 			///<summary> Typ des Knotens 0 - Rund; 1 - Eckig </summary>
