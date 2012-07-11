@@ -349,12 +349,11 @@ bool graphView::ImportGraph( String^ filename )
 bool graphView::StartRandomize( Int32 maximum )
 {
 	Int32 outer = Int32(float(maximum) /100);
-	Int32 step = Int32(float(maximum) /10000);
-	for (int i = 0; i< outer; i++){
-		if (this->m_dataGraph->optimize(step, true) == 0){
+	for (int i = 0; i< 100; i++){
+		if (this->m_dataGraph->optimize(outer, true) == 0){
 			return true;
 		}
-		dynamic_cast<GAPConnect::Form1^ > (this->m_parent)->OptimizerPanel = step;
+		dynamic_cast<GAPConnect::Form1^ > (this->m_parent)->OptimizerPanel = outer;
 	}
 	return false;
 }
