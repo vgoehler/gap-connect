@@ -267,50 +267,6 @@ double edgeView::LengthFromPointToPoint(Point^ pkt1, Point^ pkt2){
 		return( sqrt(double(xdiff*xdiff + ydiff*ydiff)));
 }
 
-bool edgeView::Crosses( GAPConnect::edgeView^ otherEdge )
-{
-	//testen ob das selbe
-	if (this == otherEdge){
-		return(false);
-	}
-	//Kontrollrechtecke müssen sich überschneiden
-	if (this->GetBorderRectangle.IntersectsWith(otherEdge->GetBorderRectangle))
-	{
-		if ((this->StartVertex == otherEdge->StartVertex && this->EndVertex == otherEdge->EndVertex || this->StartVertex == otherEdge->EndVertex && this->EndVertex == otherEdge->StartVertex)){
-			//Doppelkante, Falsch zurückgeben, da diese durch Knotenverschiebung nicht behoben wird
-			return(false);
-		}else if (this->StartVertex == otherEdge->StartVertex || this->StartVertex == otherEdge->EndVertex || this->EndVertex == otherEdge->StartVertex || this->EndVertex == otherEdge->EndVertex){
-			//wenn startpunkt oder endpunkt gleich, dann kann es keine crossings geben, lediglich inclusionen wenn ein rechteck im anderen ist
-			if (this->GetBorderRectangle.Contains(otherEdge->GetBorderRectangle) || otherEdge->GetBorderRectangle.Contains(this->GetBorderRectangle))
-			{
-				return(true);
-			}
-			return(false);
-		}
-		//Geradengleichung aufstellen
-		PointF rv1 = this->RichtungsVektor;
-		PointF rv2 = otherEdge->RichtungsVektor;
-		//wenn Richtungsvektor linear abhängig zu einander dann Parallel; keine Fallunterscheidung, einfach rechnen lassen, findet in dem fall keinen schnittpunkt
-		PointF ov1 = this->Ortsvektor;
-		PointF ov2 = otherEdge->Ortsvektor;
-		//Umgestelltes Gleichungssystem ov1 + faktor1 * rv1 = ov2 + faktor2 * rv2
-		float faktor2 = (rv1.Y * (ov1.X-ov2.X) + rv1.X * (ov2.Y - ov1.Y)) / (rv1.Y * rv2.X - rv1.X * rv2.Y);
-		Point schnittpunkt;
-		if (rv1.Y == 0){
-			schnittpunkt = Point(int(ceil(ov2.X+faktor2*rv2.X)), int(ceil(ov2.Y+faktor2*rv2.Y)));
-		}else{
-			float faktor1 = (ov2.Y - ov1.Y + faktor2*rv2.Y)/rv1.Y;
-			//Schnittpunkt
-			schnittpunkt = Point(int(ceil(ov1.X+faktor1*rv1.X)), int(ceil(ov1.Y+faktor1*rv1.Y)));
-		}
-		if (this->GetBorderRectangle.Contains(schnittpunkt))
-		{
-			return(true);
-		}
-	}
-	return(false);
-}
-
 edgeView::~edgeView()
 {
 	delete this->m_dataEdge;

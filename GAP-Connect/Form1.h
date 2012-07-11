@@ -25,8 +25,6 @@ namespace GAPConnect {
 			this->changedGraph = false;
 			this->m_graph = gcnew GAPConnect::graphView(this);
 			this->toolStripTextBoxGraphenname->Text = this->m_graph->Graphname;
-			//TODO Werte aus Ini Laden
-			this->loadDefaultValues();
 			//Disablen
 			this->toolStripButtonEdgesEnable();
 		}
@@ -115,33 +113,23 @@ namespace GAPConnect {
 	private: System::Windows::Forms::GroupBox^  gBStatus;
 	private: System::Windows::Forms::TextBox^  tBKommentar;
 	private: System::Windows::Forms::TextBox^  tbTyp;
-private: System::Windows::Forms::ToolStripMenuItem^  runderKnotenToolStripMenuItem;
-private: System::Windows::Forms::ToolStripMenuItem^  eckigerKnotenToolStripMenuItem;
-private: System::Windows::Forms::ToolStripMenuItem^  kanteToolStripMenuItem;
-private: System::Windows::Forms::ToolStripMenuItem^  kanteMitWertToolStripMenuItem;
-private: System::Windows::Forms::ToolStripMenuItem^  bogenToolStripMenuItem;
-private: System::Windows::Forms::ToolStripMenuItem^  bogenMitWertToolStripMenuItem;
-private: System::Windows::Forms::ToolStripTextBox^  toolStripTextBoxGraphenname;
-private: System::Windows::Forms::ToolStripMenuItem^  importtoolStripMenuItem;
-private: System::Windows::Forms::ToolStripMenuItem^  exporttoolStripMenuItem;
-private: System::Windows::Forms::OpenFileDialog^  ImportDialog;
-private: System::Windows::Forms::SaveFileDialog^  ExportDialog;
-private: System::Windows::Forms::ProgressBar^  pBOptimize;
-private: System::Windows::Forms::Button^  buttonOptimize;
-private: System::Windows::Forms::ToolStripButton^  ZoomToolStripButton;
-private: System::Windows::Forms::ToolTip^  toolTip;
-
-private: System::Windows::Forms::ToolStripButton^  UndotoolStripButton;
-private: System::Windows::Forms::Button^  DijkstraButton;
-
-
-
-
-
-
-
-
-
+	private: System::Windows::Forms::ToolStripMenuItem^  runderKnotenToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  eckigerKnotenToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  kanteToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  kanteMitWertToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  bogenToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  bogenMitWertToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripTextBox^  toolStripTextBoxGraphenname;
+	private: System::Windows::Forms::ToolStripMenuItem^  importtoolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  exporttoolStripMenuItem;
+	private: System::Windows::Forms::OpenFileDialog^  ImportDialog;
+	private: System::Windows::Forms::SaveFileDialog^  ExportDialog;
+	private: System::Windows::Forms::ProgressBar^  pBOptimize;
+	private: System::Windows::Forms::Button^  buttonOptimize;
+	private: System::Windows::Forms::ToolStripButton^  ZoomToolStripButton;
+	private: System::Windows::Forms::ToolTip^  toolTip;
+	private: System::Windows::Forms::ToolStripButton^  UndotoolStripButton;
+	private: System::Windows::Forms::Button^  DijkstraButton;
 	private: System::Windows::Forms::ImageList^  imageListToolbar;
 
 	///<summary>Änderungen am Graph in Property vermerken. set routine setzt auch enable im Menü</summary>
@@ -1112,12 +1100,6 @@ private: System::Windows::Forms::Button^  DijkstraButton;
 
 		}
 #pragma endregion
-///<summary> Laden der Iniwerte </summary>
-public: void loadDefaultValues(void){
-			/*isGridActivated
-			isGridFixed*/
-		}
-
 ///<summary> zeigt nach Menü Klick den About Dialog an.</summary>
 private: System::Void aboutToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 			 about^ aboutDialog = gcnew about();

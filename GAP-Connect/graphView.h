@@ -57,8 +57,6 @@ public:
 	bool IsSomethingMarked( void );
 	///<summary> Gibt an ob ein Knoten markiert ist</summary>
 	bool IsVertexMarked( void );
-	///<summary> Gibt Wahrheitswert zurück wenn sich Übergabekante mit irgendeiner anderen Kante schneidet. </summary>
-	bool IsEdgeCrossing( edgeView^ inEdge );
 	///<summary> Löscht alle Kanten und Zeichnet dann alle Möglichen! Kompletter Graph!</summary>
 	void CreateCompleteGraph( void );
 	///<summary> Zeigt an ob wir uns im Linienzeichnen befinden </summary>

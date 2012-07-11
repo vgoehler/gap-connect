@@ -214,16 +214,6 @@ bool graphView::IsSomethingMarked( void )
 	return(this->m_lastMarkedElement != nullptr);
 }
 
-bool graphView::IsEdgeCrossing( edgeView^ inEdge )
-{
-	for each(edgeView^ edge in this->edgeList){
-		if (edge->Crosses(inEdge)){//sobald sich eine Kante kreuzt rückgabe!
-			return (true);
-		}
-	}
-	return(false);
-}
-
 void graphView::CreateCompleteGraph( void )
 {
 	//bestehende Kanten löschen

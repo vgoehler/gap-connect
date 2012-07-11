@@ -89,21 +89,8 @@ public:
 			this->m_dataEdge->gerichtet = this->m_lineMode;
 		}
 	}
-	property PointF RichtungsVektor{
-		PointF get( void ){
-			return(PointF(float(this->m_endDock.X - this->m_startDock.X), float(this->m_endDock.Y - this->m_startDock.Y)));
-		}
-	}
-	property PointF Ortsvektor{
-		PointF get(void){
-			return(PointF(float(this->m_startDock.X), float(this->m_startDock.Y)));
-		}
-	}
-
 	///<summary> Contains Methode des Parent hier Überschrieben</summary>
 	bool Contains (System::Drawing::Point pkt);
-	///<summary> Zwei Ecken kreuzen einander </summary>
-	bool Crosses (GAPConnect::edgeView^ otherEdge);
 	///<summary> Dockpunkt berechnen </summary>
 	void calculateDockingPoint( void );
 	///<summary> Gibt Daten Kante zurück, kann auch gesetzt werden </summary>
