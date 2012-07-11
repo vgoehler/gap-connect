@@ -415,4 +415,49 @@ void graphView::BackupWriteBack( void )
 	this->m_backupPositions = nullptr;
 }
 
+bool graphView::IsVertexMarked( void )
+{
+	if (dynamic_cast<GAPConnect::vertexView^ >(this->m_lastMarkedElement) != nullptr){
+		return(true);
+	}
+	return(false);
+}
+
+void graphView::InitDijkstra( void )
+{
+	this->m_Dijkstra = Graph::init_dijkstra(dynamic_cast<GAPConnect::vertexView^ >(this->m_lastMarkedElement)->DataVertex);
+	//deaktiviert alle Kanten
+	for each(GAPConnect::edgeView^ edge in this->edgeList){
+		edge->IsEnabled = false;
+	}
+}
+
+void graphView::DijkstraCancel( void )
+{
+	this->m_Dijkstra = nullptr;
+	//alle kanten aktivieren
+	for each(GAPConnect::edgeView^ edge in this->edgeList){
+		edge->IsEnabled = true;
+	}
+}
+
+bool graphView::DijkstraStep( void )
+{
+	bool fertig = this->m_Dijkstra->next_step() == nullptr;
+	//alle bearbeiteten Kanten markieren
+	for each(Kante^ kante in this->m_Dijkstra->edges){
+		this->GetEdgeFromData(kante)->IsEnabled = true;
+	}
+	//hier noch die outdated kanten deaktivieren; sind wahrscheinlich in einem vorherigen schritt aktiviert worden.
+	for each(int idx in this->m_Dijkstra->int_outdated){
+		this->GetEdgeFromData(this->m_Dijkstra->edges[idx-1])->IsEnabled = false;
+	}
+
+	//Rückgabe
+	if (fertig){
+		return(false);
+	}
+	return(true);
+}
+
 }//namespace

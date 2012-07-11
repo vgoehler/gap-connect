@@ -55,6 +55,8 @@ public:
 	}
 	///<summary> Gibt an ob noch ein Element ausgewählt ist </summary>
 	bool IsSomethingMarked( void );
+	///<summary> Gibt an ob ein Knoten markiert ist</summary>
+	bool IsVertexMarked( void );
 	///<summary> Gibt Wahrheitswert zurück wenn sich Übergabekante mit irgendeiner anderen Kante schneidet. </summary>
 	bool IsEdgeCrossing( edgeView^ inEdge );
 	///<summary> Löscht alle Kanten und Zeichnet dann alle Möglichen! Kompletter Graph!</summary>
@@ -108,6 +110,22 @@ public:
 	void BackupSecure( void );
 	///<summary> liest das Backup wieder ein</summary>
 	void BackupWriteBack( void );
+	///<summary> Initialisiert den Djikstra Algorithmus </summary>
+	void InitDijkstra ( void );
+	///<summary> führt jeweils einen Dijkstra Schritt durch und gibt falsch zurück, wenn Algorithmus am Ende ist.</summary>
+	bool DijkstraStep ( void );
+	///<summary> Beendet den Djikstra Algorithmus </summary>
+	void DijkstraCancel (void);
+
+	///<summary> holt die Korrespondierende Kante zu einer Datenkante </summary>
+	edgeView^ GetEdgeFromData( Kante^ dataEdge){
+		for each(edgeView^ edge in this->edgeList){
+			if (edge->DataEdge == dataEdge){//wenn es sich um die Kante handelt
+				return(edge);
+			}
+		}
+		return(nullptr);
+	}
 
 private:
 	///<summary>Handle um edge Zeichnen in progress zu signalisieren, speichert den Start, ansonsten nullptr</summary>
@@ -126,6 +144,8 @@ private:
 	Graph^ m_dataGraph;
 	///<summary> Positionen Backup </summary>
 	System::Collections::Generic::List<System::Drawing::Point>^ m_backupPositions;
+	///<summary> Djikstra Variable </summary>
+	Dijkstra^ m_Dijkstra;
 
 };
 

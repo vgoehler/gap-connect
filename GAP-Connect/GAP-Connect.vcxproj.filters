@@ -96,6 +96,9 @@
     <ClCompile Include="Datenstruktur\Kommentar.cpp">
       <Filter>Quelldateien\DatenStruktur</Filter>
     </ClCompile>
+    <ClCompile Include="AlgorithmusRunDialog.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Form1.h">
@@ -151,6 +154,9 @@
     </ClInclude>
     <ClInclude Include="Datenstruktur\Kommentar.h">
       <Filter>Headerdateien\DatenStruktur</Filter>
+    </ClInclude>
+    <ClInclude Include="AlgorithmusRunDialog.h">
+      <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

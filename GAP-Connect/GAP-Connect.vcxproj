@@ -94,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="about.cpp" />
+    <ClCompile Include="AlgorithmusRunDialog.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="basicView.cpp" />
     <ClCompile Include="Datenstruktur\Dijkstra.cpp" />
@@ -117,6 +118,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="about.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="AlgorithmusRunDialog.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="basicView.h" />
@@ -149,6 +153,9 @@
   <ItemGroup>
     <EmbeddedResource Include="about.resx">
       <DependentUpon>about.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AlgorithmusRunDialog.resx">
+      <DependentUpon>AlgorithmusRunDialog.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EdgeChangeDialog.resx">
       <DependentUpon>EdgeChangeDialog.h</DependentUpon>

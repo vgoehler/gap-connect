@@ -132,6 +132,9 @@ private: System::Windows::Forms::ToolStripButton^  ZoomToolStripButton;
 private: System::Windows::Forms::ToolTip^  toolTip;
 
 private: System::Windows::Forms::ToolStripButton^  UndotoolStripButton;
+private: System::Windows::Forms::Button^  DijkstraButton;
+
+
 
 
 
@@ -271,6 +274,7 @@ private: System::Windows::Forms::ToolStripButton^  UndotoolStripButton;
 			this->openFileDialog1 = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->saveFileDialog1 = (gcnew System::Windows::Forms::SaveFileDialog());
 			this->control = (gcnew System::Windows::Forms::Panel());
+			this->DijkstraButton = (gcnew System::Windows::Forms::Button());
 			this->buttonOptimize = (gcnew System::Windows::Forms::Button());
 			this->gBStatus = (gcnew System::Windows::Forms::GroupBox());
 			this->tbTyp = (gcnew System::Windows::Forms::TextBox());
@@ -823,6 +827,7 @@ private: System::Windows::Forms::ToolStripButton^  UndotoolStripButton;
 			// control
 			// 
 			this->control->BackColor = System::Drawing::SystemColors::Control;
+			this->control->Controls->Add(this->DijkstraButton);
 			this->control->Controls->Add(this->buttonOptimize);
 			this->control->Controls->Add(this->gBStatus);
 			this->control->Controls->Add(this->zeichentools);
@@ -831,6 +836,17 @@ private: System::Windows::Forms::ToolStripButton^  UndotoolStripButton;
 			this->control->Name = L"control";
 			this->control->Size = System::Drawing::Size(198, 491);
 			this->control->TabIndex = 6;
+			// 
+			// DijkstraButton
+			// 
+			this->DijkstraButton->Enabled = false;
+			this->DijkstraButton->Location = System::Drawing::Point(7, 430);
+			this->DijkstraButton->Name = L"DijkstraButton";
+			this->DijkstraButton->Size = System::Drawing::Size(185, 23);
+			this->DijkstraButton->TabIndex = 3;
+			this->DijkstraButton->Text = L"Dijkstra Algorithmus starten";
+			this->DijkstraButton->UseVisualStyleBackColor = true;
+			this->DijkstraButton->Click += gcnew System::EventHandler(this, &Form1::DijkstraButton_Click);
 			// 
 			// buttonOptimize
 			// 
@@ -1105,7 +1121,7 @@ public: void loadDefaultValues(void){
 ///<summary> zeigt nach Menü Klick den About Dialog an.</summary>
 private: System::Void aboutToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 			 about^ aboutDialog = gcnew about();
-			 aboutDialog->Show(this);//Anzeige des About Dialogs
+			 aboutDialog->ShowDialog(this);//Anzeige des About Dialogs
 			 delete aboutDialog;
 		 }
 ///<summary> Schließen-Schaltfläche des Menü. </summary>
@@ -1427,6 +1443,8 @@ private: System::Void deleteMarkedElement_Click(System::Object^  sender, System:
 ///<summary> Refresh auf dem DrawPanel </summary>
 public: void RefreshDrawBox( void ){
 			this->activateItemsOnMark(this->m_graph->IsSomethingMarked() && ! this->m_graph->IsDrawingLine);//Items nur aktivieren wenn Objekt markiert, aber nicht wenn dies nur zum linien ziehen genutzt wird
+			//Algorithmus Buttons nur Enablen wenn Knoten markiert ist.
+			this->DijkstraButton->Enabled = this->m_graph->IsVertexMarked();
 			this->drawBox->Refresh();
 		}
 ///<summary>Zeichnen eines Vollständigen Graphen</summary>
@@ -1687,11 +1705,32 @@ private: System::Void UndotoolStripButton_Click(System::Object^  sender, System:
 			this->changedGraph = true;
 			this->RefreshDrawBox();
 		 }
+///<summary> Setzt die Tooltip für alle nicht ToolBar Elemente.</summary>
 private: System::Void SetToolTips( void ){
 			this->toolTip->SetToolTip(this->buttonOptimize, L"Führt eine Randomisierung des Graphen mit Ausrichtung auf möglichst wenige Kreuzungen durch.");
 			this->toolTip->SetToolTip(this->tbTyp, L"Der Typ des Elements unter der Maus.");
 			this->toolTip->SetToolTip(this->tBKommentar, L"Der Kommentar des Elements unter der Maus.");
+			this->toolTip->SetToolTip(this->DijkstraButton, L"Startet den Dijkstra Algorithmus vom markierten Knoten aus. Dabei werden alle Kanten ohne Integer oder ganz ohne Kantenbewertung mit 0 bewertet. Achtung: Kanten Aktivierungen werden überschrieben.");
 		 }
+///<summary> Initiiert den Dijkstra Algorithmus</summary>
+private: System::Void DijkstraButton_Click(System::Object^  sender, System::EventArgs^  e) {
+			 //hier alles deaktivieren, bis auf NextStep Button und Abbrechen
+			 this->m_graph->InitDijkstra();
+			 this->RefreshDrawBox();
+			 //dialog starten
+
+			 AlgorithmusRunDialog^ dijkstraDialog = gcnew AlgorithmusRunDialog();
+			 dijkstraDialog->ShowDialog(this);//Anzeige des About Dialogs
+			 delete dijkstraDialog;
+
+			 //beenden
+			 this->m_graph->DijkstraCancel();
+			 this->RefreshDrawBox();
+		 }
+///<summary>führt einen Schritt auf dem Dijkstra durch </summary>
+public: bool ViewGraphDijkstraStep( void ){
+			return(this->m_graph->DijkstraStep());
+		}
 };//Form1 class
 }//namespace
 

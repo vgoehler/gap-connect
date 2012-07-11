@@ -17,6 +17,7 @@
 #include "about.h"
 #include "VertexChangeDialog.h"
 #include "EdgeChangeDialog.h"
+#include "AlgorithmusRunDialog.h"
 #include "basicView.h"
 #include "vertexView.h"
 #include "edgeView.h"
