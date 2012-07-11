@@ -432,7 +432,8 @@ void graphView::DijkstraCancel( void )
 
 bool graphView::DijkstraStep( void )
 {
-	bool fertig = this->m_Dijkstra->next_step() == nullptr;
+	Knoten^ rueck = this->m_Dijkstra->next_step();
+	bool fertig = rueck == nullptr;
 	//alle bearbeiteten Kanten markieren
 	for each(Kante^ kante in this->m_Dijkstra->edges){
 		this->GetEdgeFromData(kante)->IsEnabled = true;
@@ -440,6 +441,15 @@ bool graphView::DijkstraStep( void )
 	//hier noch die outdated kanten deaktivieren; sind wahrscheinlich in einem vorherigen schritt aktiviert worden.
 	for each(int idx in this->m_Dijkstra->int_outdated){
 		this->GetEdgeFromData(this->m_Dijkstra->edges[idx-1])->IsEnabled = false;
+	}
+	//Knoten markieren
+	this->m_lastMarkedElement->IsMarked = false;
+	for each(GAPConnect::vertexView^ vertex in this->vertexList){
+		if (vertex->DataVertex == rueck){
+			vertex->IsMarked = true;
+			this->m_lastMarkedElement = vertex;
+			break;
+		}
 	}
 
 	//Rückgabe
